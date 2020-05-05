@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pymongo import MongoClient
 
-from signals.signals import word_exposure
+from mq.signals import word_exposure
 
 client = MongoClient('mongodb://localhost:27017')
 db = client['lomb']
