@@ -7,5 +7,5 @@ from services.tracking.rest_controllers import tracking
 import services
 
 app = Flask(__name__)
+CORS(tracking, resources=r'*')
 app.register_blueprint(tracking, url_prefix='/tracking')
-CORS(app)
