@@ -6,11 +6,12 @@ from jsonschema import validate
 from config import DEBUG
 
 from .rest_models import *
-from .domain import exposure_was_received_handler, review_was_received_handler
+from .db_repository import TrackingRepository
 
 
 tracking = Blueprint('tracking', __name__)
 event_types = ['EXPOSURE', 'REVIEW']
+repository = TrackingRepository()
 
 
 @tracking.route('/', methods=['POST'])
@@ -24,9 +25,9 @@ def rest_handler():
     type_, payload, context = itemgetter('type', 'payload', 'context')(content)
 
     if type_ == 'EXPOSURE':
-        exposure_was_received_handler(context, payload == 'LOOKUP')
+        repository.add_phrase_exposure(context, payload == 'LOOKUP')
     elif type_ == 'REVIEW':
-        review_was_received_handler(context, payload == "CLICK")
+        repository.add_review(context, payload == "CLICK")
     else:
         return 'wrong type'
 

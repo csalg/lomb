@@ -3,29 +3,30 @@ from dataclasses import asdict
 from pymongo import MongoClient, ASCENDING
 
 from .db_models import PendingWordReview_from_exposure, PendingWordReview
-from .db_init import pending_reviews, past_reviews
+import services.tracking.db_init as db
 
 
-def log_word_exposure(word, was_looked_up=False, pending_reviews=pending_reviews):
+def log_word_exposure(word, was_looked_up=False):
     """
     Upserts the word entry in 'pending_reviews' with latest exposure info
     """
-    print(word)
-    print(pending_reviews.name)
 
-    word_pending_review = pending_reviews.find_one({'word':word})
+    word_pending_review = db.pending_reviews.find_one({'word':word})
     print(word_pending_review)
     if word_pending_review:
         del word_pending_review['_id']
         word_pending_review_wr = PendingWordReview(**word_pending_review)
         word_pending_review_wr.update_from_exposure(word,was_looked_up)
-        pending_reviews.update({'word':word}, asdict(word_pending_review_wr))
+        db.pending_reviews.update({'word':word}, asdict(word_pending_review_wr))
 
     else:
         new_pending_review = PendingWordReview_from_exposure(word, was_looked_up)
-        pending_reviews.insert_one(asdict(new_pending_review))
+        db.pending_reviews.insert_one(asdict(new_pending_review))
         print(asdict(new_pending_review))
-    
+
+
+
+
     # pending_reviews.delete_many({})
 
 
