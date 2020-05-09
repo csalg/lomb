@@ -40,3 +40,40 @@ Activity logged for each word can therefore be summarised into a sequence, which
 The program keeps a database with these sequences. There is also a `next_review` entry  which is created whenever a `REVIEW_CLICKED` or `REVIEW_NOT_CLICKED` event is received, and which is updated whenever the reading data of that word is received.
 
 A LSTM is trained using this data. Hopefully, it can predict something!!
+
+# Keywords
+
+- Personalized learning.
+- Computer testing
+- CSC Computer Supported Cooperative work
+- CHI Computer Human Interaction
+- Psychology journals.
+- Transaction on learning technology
+- Education technology
+- Adaptive learning (that seems to be more of a ML term)
+- 
+
+# 2020/05/08
+
+I wrote the first service of the Lomb application. It is the tracking, which is the most important part. Initially it had terrible performance, because every time it received a request it would convert between the MongoDB and a dataclass. I rewrote the domain and db modules so that they are now together (yes, coupled). This allows me to execute the MongoDB queries, particularly the updates, directly. CPU usage went from ~30% to ~10% by doing this.
+
+Stuff to do:
+
+- Implement word lookups in the reader by dividing the window into three parts (similar to the words view).
+
+- Look into why the word cumulative percentage counts are wrong (they clearly are).
+
+- Implement a users service to handle registrations, logins and tokens.
+
+- Implement a library. This should just keep texts as arrays of chunks (locations). It could also do all of the heavy NLP lifting and store that for each location. This would make a lot of sense for stuff like filtering by tag.
+
+- Implement a word service. Among other things, this keeps the known words for users, so that the frontend can filter words sent to tracking.
+
+- Implement a reader which grabs known words, text (the array of locations and tokens, etc.). I guess the most performant way to make this work is to shift a lot of logic to the frontend. Otherwise Python will have to do a lot of work...
+
+- Implement a simple RNN or LSTM with the data so that I go through the process.
+
+- Implement other algorithms to see how they work.
+
+
+

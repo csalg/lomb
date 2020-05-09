@@ -25,15 +25,15 @@ class TrackingRepository:
             words = matches_punctuation.split(exposed_phrase)
             for word in words:
                 if word:
-                    self.add_word_exposure(word, was_looked_up)
+                    self.add_phrase_word_exposure(word, was_looked_up)
 
-    def add_word_exposure(self, word, was_looked_up):
+    def add_phrase_word_exposure(self, word, was_looked_up=True):
         query = {'word': word}
         pending_word_review = self.pending_reviews.find_one(query)
         if pending_word_review:
             self._add_exposure_to_pending_word_review(query, was_looked_up)
-        else:
-            self._add_new_pending_word_review_from_exposure(word, was_looked_up)
+        # else:
+            # self._add_new_pending_word_review_from_exposure(word, was_looked_up)
 
     def _add_exposure_to_pending_word_review(self, query, was_looked_up):
         if was_looked_up:
@@ -63,5 +63,19 @@ class TrackingRepository:
                 self.past_reviews.insert_one(asdict(past_wr))
                 self.pending_reviews.delete_one({'_id': id})
 
-            new_pending_wr = PendingWordReview_from_review(word, was_clicked)
-            self.pending_reviews.insert_one(asdict(new_pending_wr))
+                new_pending_wr = PendingWordReview_from_review(word, was_clicked)
+                self.pending_reviews.insert_one(asdict(new_pending_wr))
+
+    def add_direct_word_lookup(self, word):
+        query = {'word':word}
+        pending_word_review = self.pending_reviews.find_one()
+        if pending_word_review:
+            update = {
+                '$inc': {'direct_lookup__amount': 1},
+                '$set': {'direct_lookup__latest_timestamp': now_timestamp()}
+            }
+            self.pending_reviews.update_one(query, update)
+        else:
+            pending_word_review = PendingWordReview_from_direct_lookup(word)
+            print(pending_word_review)
+            self.pending_reviews.insert_one(asdict(pending_word_review))

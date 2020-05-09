@@ -24,8 +24,10 @@ def rest_handler():
     
     type_, payload, context = itemgetter('type', 'payload', 'context')(content)
 
-    if type_ == 'EXPOSURE':
+    if type_ == 'SENTENCE_EXPOSURE':
         repository.add_phrase_exposure(context, payload == 'LOOKUP')
+    elif type_ == 'WORD_EXPOSURE':
+        repository.add_direct_word_lookup(context)
     elif type_ == 'REVIEW':
         repository.add_review(context, payload == "CLICK")
     else:

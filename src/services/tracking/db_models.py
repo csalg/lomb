@@ -15,14 +15,9 @@ class PendingWordReview:
     no_lookup__amount: int
     no_lookup__latest_timestamp: int
 
-    def update_from_exposure(self, word, was_looked_up):
-        now = now_timestamp()
-        if was_looked_up:
-            self.lookup__latest_timestamp = now
-            self.lookup__amount += 1
-        else:
-            self.no_lookup__latest_timestamp = now
-            self.no_lookup__amount += 1
+    direct_lookup__amount : int
+    direct_lookup__latest_timestamp : int
+
 
 
 def PendingWordReview_from_exposure(word, was_looked_up):
@@ -31,18 +26,13 @@ def PendingWordReview_from_exposure(word, was_looked_up):
     before there are any pending reviews.
     """
     now = now_timestamp()
-    word_review = PendingWordReview(word, 0, False, 0, 0, 0, 0)
+    word_review = PendingWordReview(word, 0, False, 0, 0, 0, 0, 0, 0)
     if was_looked_up:
-        # Since the word is new and presumably not known, we will assume the user
-        # would have clicked on the word if it were presented for review.
-        word_review.previous_review__timestamp = now
-        word_review.previous_review_was_clicked = True
         word_review.lookup__latest_timestamp = now
         word_review.lookup__amount = 1
-
+        word_review.direct_lookup__amount = 1
+        word_review.direct_lookup__latest_timestamp = now
     else:
-        # In this case presumably the user knows the meaning of the sentence and
-        # therefore the word.
         word_review.no_lookup__latest_timestamp = now
         word_review.no_lookup__amount = 1
 
@@ -50,7 +40,7 @@ def PendingWordReview_from_exposure(word, was_looked_up):
 
 
 def PendingWordReview_from_review(word, was_clicked):
-    pending_wr = PendingWordReview(word, now_timestamp(), was_clicked, 0, 0, 0, 0)
+    pending_wr = PendingWordReview(word, now_timestamp(), was_clicked, 0, 0, 0, 0, 0, 0)
     if was_clicked:
         # We will log a lookup
         pending_wr.lookup__latest_timestamp = now_timestamp()
@@ -59,6 +49,11 @@ def PendingWordReview_from_review(word, was_clicked):
         pending_wr.no_lookup__latest_timestamp = now_timestamp()
         pending_wr.no_lookup__amount = 1
     return pending_wr
+
+
+def PendingWordReview_from_direct_lookup(word):
+    now = now_timestamp()
+    return PendingWordReview(word, now, True, 0, 0, 0, 0, 1, now)
 
 
 @dataclass
