@@ -1,0 +1,11 @@
+{% extends 'base_user_area.html.j2' %}
+{% block title %}Upload file{% endblock %}
+{% block content %}
+   <p>Upload a text or book as a json file</p>
+      <form action = "http://localhost:5000/library/upload_file" method = "POST"
+         enctype = "multipart/form-data">
+          <input type="file" name="files" multiple="">
+          <input type = "submit"/>
+      </form>
+   <p>Texts will not appear immediately in your library as pre-processing will be done on upload.</p>
+{% endblock %}

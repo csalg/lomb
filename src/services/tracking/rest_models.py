@@ -4,6 +4,11 @@ tracking_event_schema = {
     "properties": {
         "type": {"type": "string"},
         "payload": {"type": "string"}, 
-        "context": {"type": "string"}, 
+        "examples": {"type": "string"},
+        "context": {"type": "array",
+                     "items": {
+                         "type": "string"
+                     }
+                     }
     }
 }

@@ -1,0 +1,6 @@
+{% extends 'base_user_area.html.j2' %}
+{% block content %}
+{% for chapter in chapters %}
+    <p><a href="{{loop.index0}}">Chapter {{loop.index0}}</a></p>
+{% endfor %}
+{% endblock %}

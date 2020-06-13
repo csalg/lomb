@@ -1,7 +1,5 @@
-import pytest
 from .util import *
-from .db_repository import TrackingRepository
-
+from .util import *
 
 repository = None
 FIRST_WORD = 'firstWord'
