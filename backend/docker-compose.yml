@@ -27,8 +27,8 @@ services:
     restart: unless-stopped
     command: mongod --auth
     environment:
-      MONGO_INITDB_ROOT_USERNAME: mongodbuser
-      MONGO_INITDB_ROOT_PASSWORD: your_mongodb_root_password
+      MONGO_INITDB_ROOT_USERNAME: lomb
+      MONGO_INITDB_ROOT_PASSWORD: secret
       MONGO_INITDB_DATABASE: lomb
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null

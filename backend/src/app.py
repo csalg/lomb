@@ -2,10 +2,10 @@ from flask_jwt_extended import JWTManager
 
 from flask import Flask, render_template, jsonify
 from flask_cors import CORS
-from services.library.http_controllers import library
-from services.tracking.rest_controllers import tracking
+# from services.library.http_controllers import library
+# from services.tracking.rest_controllers import tracking
 from services.users.http_controllers import users
-from services.vocabulary.http_controllers import vocabulary
+# from services.vocabulary.http_controllers import vocabulary
 
 app = Flask(__name__)
 # app.register_blueprint(tracking, url_prefix='/tracking')

@@ -1,12 +1,14 @@
 from pymongo import MongoClient
 
+from lib.db import get_db
+
 
 class UsersRepository:
 
     def __init__(self,
                  users_collection_name='users'):
-        self.client = MongoClient('mongodb://mongodb:27017')
-        self.db = self.client['lomb']
+
+        self.db = get_db()
         self.users = self.db[users_collection_name]
         self.users.create_index("_id")
 
