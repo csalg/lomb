@@ -1,9 +1,7 @@
 version: '3'
 services:
   frontend:
-    build: 
-      context: ./frontend
-      dockerfile: Dockerfile
+    build: ./frontend
     container_name: frontend
     restart: unless-stopped
     environment:
