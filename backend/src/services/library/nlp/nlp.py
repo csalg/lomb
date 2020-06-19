@@ -1,6 +1,6 @@
 import os
 
-import spacy
+# import spacy
 
 from lib.regex import *
 
