@@ -60,8 +60,6 @@ const Login = () => {
   );
 };
 
-let 
-
 const layout = {
     labelCol: {
         span: 8,
