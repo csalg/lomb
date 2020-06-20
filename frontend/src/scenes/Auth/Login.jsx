@@ -1,10 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import { Form, Input, Button, Checkbox } from 'antd';
+import AuthService from '../../services/auth.js'
+import {layout, tailLayout} from "./util";
 
 const Login = () => {
+
+    const [error, setError] = useState("")
   const onFinish = values => {
     console.log('Success:', values);
+    AuthService.login(values.username, values.password).then(
+        () => {
+            this.props.history.push('/library');
+            window.location.reload();
+        },
+        error => {
+            setError(error.response.data.error);
+        }
+    )
   };
 
   const onFinishFailed = errorInfo => {
@@ -21,6 +34,9 @@ const Login = () => {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
       >
+          <p>
+              {error}
+          </p>
         <Form.Item
             label="Username"
             name="username"
@@ -60,21 +76,4 @@ const Login = () => {
   );
 };
 
-const layout = {
-    labelCol: {
-        span: 8,
-    },
-    wrapperCol: {
-        span: 16,
-    },
-};
-const tailLayout = {
-    wrapperCol: {
-        offset: 8,
-        span: 16,
-    },
-};
-
-
 export default Login;
-export {tailLayout};
