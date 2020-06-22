@@ -20,9 +20,7 @@ function App() {
                       <RegisterTab/>
                   </Route>
                   <PrivateRoute path='/user' component={UserAreaContainer}/>
-                  <PrivateRoute>
-                      <UserAreaContainer/>
-                  </PrivateRoute>
+                  <PrivateRoute component={UserAreaContainer}/>
 
               </Switch>
           </BrowserRouter>

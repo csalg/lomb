@@ -3,7 +3,7 @@ import { Layout, Menu, Dropdown } from 'antd';
 import Library from './Library'
 import Upload from "./Upload";
 import { DownOutlined } from '@ant-design/icons';
-import {Link, Switch, Route} from "react-router-dom";
+import {Link, Switch, Route } from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 
 const menu = (
@@ -35,7 +35,7 @@ export default ({match}) => (
             <Menu
                 theme="dark"
                 mode="horizontal"
-                defaultSelectedKeys={['upload']}
+                defaultSelectedKeys={['library']}
                 onChange={(e) => console.log(e)}
             >
                 <Menu.Item key="library"><Link to={`${match.url}/library`}>Library</Link></Menu.Item>
