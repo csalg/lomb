@@ -12,16 +12,13 @@ library = Library()
 @library_blueprint.route('/upload', methods=['POST'])
 @jwt_required
 def upload():
-    print(request)
-    uploaded_files = request.files.getlist("files")
-    print(uploaded_files)
+    uploaded_file = request.files['file']
     response_msg = ""
-    # for f in uploaded_files:
-    #     try:
-    #         library.add(f.stream)
-    #     except Exception as e:
-    #         response_msg += str(e) + '\n'
-    return response_msg if response_msg else 'file uploaded successfully'
+    try:
+        library.add(uploaded_file.stream)
+    except Exception as e:
+        response_msg += str(e) + '\n'
+    return response_msg if response_msg else str(request.files)
 
 @library_blueprint.route('/')
 @jwt_required

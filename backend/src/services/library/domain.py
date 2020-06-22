@@ -68,9 +68,9 @@ class _Chunk:
 
 class _Chunks:
     @staticmethod
-    def _from_file():
+    def _from_file(file):
         pass
 
     @staticmethod
-    def __from_html():
+    def __from_html(file):
         pass
