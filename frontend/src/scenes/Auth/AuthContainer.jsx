@@ -3,26 +3,29 @@ import {Layout, Tabs} from 'antd';
 import Login from "./Login";
 import Register from "./Register";
 const { TabPane } = Tabs;
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 
 
 function callback(key) {
     console.log(key);
 }
 
-const AuthContainer = () => (
-    <Layout className="auth-layout">
+const AuthContainer = tab_number => () => {
+    return (
+    <Layout className="auth-layout" style={{minHeight: '100vh'}}>
         <Content style={{ padding: '2em 50px' }}>
-            <Tabs defaultActiveKey="1" onChange={callback}>
-                <TabPane tab="Login" key="1">
-                    <Login></Login>
+            <Tabs defaultActiveKey={tab_number} onChange={callback}>
+                <TabPane tab="Login" key="login">
+                    <Login/>
                 </TabPane>
-                <TabPane tab="Register" key="2">
-                    <Register></Register>
+                <TabPane tab="Register" key="register">
+                    <Register/>
                 </TabPane>
             </Tabs>
         </Content>
     </Layout>
-);
+    )
+};
 
-export default AuthContainer
+export const LoginTab = AuthContainer("login")
+export const RegisterTab = AuthContainer("register")
