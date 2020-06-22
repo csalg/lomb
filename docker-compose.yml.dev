@@ -1,16 +1,17 @@
 version: '3'
 services:
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     container_name: frontend
     restart: unless-stopped
-    stdin_open: true
-    volumes:
-      - ./frontend:/app
     environment:
       HOST: "0.0.0.0"
     ports: 
       - 3000:3000
+    volumes:
+      - ./frontend:/app
     stdin_open: true
   backend:
     build: ./backend
@@ -28,7 +29,6 @@ services:
       - 5000:5000
     volumes:
       - ./backend:/app
-      - /uploads:/uploads
     depends_on:
       - mongodb
     networks:

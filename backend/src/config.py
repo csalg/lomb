@@ -18,8 +18,8 @@ SUPPORT_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru', 'jp', 'zh']
 MINIMUM_PASSWORD_LENGTH = 8
 MAXIMUM_PASSWORD_LENGTH = 40
 
+UPLOADS_FOLDER = '/uploads'
+
 # COLLECTION NAMES
-
-
 LIBRARY_CHUNKS_COLLECTION_NAME = 'library_chunks'
 LIBRARY_METADATA_COLLECTION_NAME = 'library_metadata'
