@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {API_URL, LOGIN, REGISTER} from "../endpoints";
+import {LOGIN, REGISTER} from "../endpoints";
 
 
 class AuthService {
@@ -11,9 +11,8 @@ class AuthService {
                 password
             })
             .then(response => {
-                if (response.data.accessToken) {
-                    localStorage.setItem('user', JSON.stringify(response.data))
-                }
+                if (response.data.access_token)
+                    localStorage.setItem('user', JSON.stringify(response.data.access_token))
                 return response.data;
             })
     }

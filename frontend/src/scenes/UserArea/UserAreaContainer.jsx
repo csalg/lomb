@@ -3,6 +3,7 @@ import { Layout, Menu, Dropdown } from 'antd';
 import Library from './Library'
 import Upload from "./Upload";
 import { DownOutlined } from '@ant-design/icons';
+import {Link, Switch, Route} from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 
 const menu = (
@@ -27,23 +28,38 @@ const VocabularyDropdown = () =>
         </a>
     </Dropdown>
 
-export default () => (
+export default ({match}) => (
     <Layout className="layout" style={{minHeight: '100vh'}}>
         <Header>
             <div className="logo" />
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1">Library</Menu.Item>
-                <Menu.Item key="2">Upload</Menu.Item>
-                <Menu.Item key="3"><VocabularyDropdown/></Menu.Item>
+            <Menu
+                theme="dark"
+                mode="horizontal"
+                defaultSelectedKeys={['upload']}
+                onChange={(e) => console.log(e)}
+            >
+                <Menu.Item key="library"><Link to={`${match.url}/library`}>Library</Link></Menu.Item>
+                <Menu.Item key="upload"><Link to={`${match.url}/upload`}>Upload</Link></Menu.Item>
+                <Menu.Item key="vocabulary"><VocabularyDropdown/></Menu.Item>
             </Menu>
         </Header>
         <Content style={{ padding: '0 50px' }}>
 
             <div className="site-layout-content">
-                <Upload/>
+                <Switch>
+                    <Route path={`${match.url}/upload`}>
+                        <Upload/>
+                    </Route>
+                    <Route path='/library'>
+                        <Library/>
+                    </Route>
+                    <Route>
+                        <Library/>
+                    </Route>
+                </Switch>
 
             </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+        <Footer style={{ textAlign: 'center' }}>GPL License. You may do whatever you want with this software except make money off it.</Footer>
     </Layout>
 );

@@ -2,11 +2,10 @@ import React, {Fragment} from 'react';
 import './App.css';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
-import LibraryContainer from "./scenes/UserArea/UserAreaContainer";
 import UserAreaContainer from "./scenes/UserArea/UserAreaContainer";
-import AuthContainer from "./scenes/Auth/AuthContainer";
-import {BrowserRouter, Link, Route, Switch} from "react-router-dom";
-
+import {LoginTab, RegisterTab} from "./scenes/Auth/AuthContainer";
+import {BrowserRouter, Link, Route, Switch, useHistory} from "react-router-dom";
+import AuthService from './services/auth'
 
 function App() {
   return (
@@ -14,13 +13,14 @@ function App() {
           <BrowserRouter>
               <Switch>
                   <Route path='/login'>
-                      <AuthContainer/>
+                      <LoginTab/>
                   </Route>
-                  <Route path='/library'>
-                      <LibraryContainer/>
+                  <Route path='/register'>
+                      <RegisterTab/>
                   </Route>
+                  <Route path='/user' component={UserAreaContainer}/>
                   <Route>
-                      <Home/>
+                      <DecideWhereToGo/>
                   </Route>
 
               </Switch>
@@ -29,7 +29,13 @@ function App() {
   )
 }
 
-function Home(){
+function DecideWhereToGo(){
+    const history = useHistory()
+    if (AuthService.getCurrentUser())
+        history.push('/user')
+    else
+        history.push('/login')
+
     return <div>Welcome to Lomb. <Link to='/login'>Click here to login or register</Link></div>
 }
 

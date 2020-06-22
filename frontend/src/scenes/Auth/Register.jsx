@@ -3,13 +3,6 @@ import {
     Form,
     Input,
     Button,
-    Radio,
-    Select,
-    Cascader,
-    DatePicker,
-    InputNumber,
-    TreeSelect,
-    Switch,
     Checkbox
 } from 'antd';
 import AuthService from "../../services/auth";

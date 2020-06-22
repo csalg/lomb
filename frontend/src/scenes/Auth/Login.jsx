@@ -3,15 +3,19 @@ import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import { Form, Input, Button, Checkbox } from 'antd';
 import AuthService from '../../services/auth.js'
 import {layout, tailLayout} from "./util";
+import {useHistory} from 'react-router-dom'
 
 const Login = () => {
 
+    const history = useHistory()
     const [error, setError] = useState("")
-  const onFinish = values => {
+
+    const onFinish = values => {
     console.log('Success:', values);
+    console.log(history)
     AuthService.login(values.username, values.password).then(
         () => {
-            this.props.history.push('/library');
+            history.push('/library');
             window.location.reload();
         },
         error => {
