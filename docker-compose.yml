@@ -4,6 +4,8 @@ services:
     build: ./frontend
     container_name: frontend
     restart: unless-stopped
+    volumes:
+      - /frontend:/app
     environment:
       HOST: "0.0.0.0"
     ports: 
