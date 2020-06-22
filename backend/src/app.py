@@ -15,6 +15,7 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 CORS(app, resources=r'*')
 
 app.config['JWT_SECRET_KEY'] = 'super-secret'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 jwt = JWTManager(app)
 
 

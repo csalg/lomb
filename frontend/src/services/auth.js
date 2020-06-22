@@ -3,8 +3,7 @@ import {LOGIN, REGISTER} from "../endpoints";
 
 
 class AuthService {
-
-    login(username, password){
+    static login(username, password){
         return axios
             .post(LOGIN, {
                 username,
@@ -16,19 +15,39 @@ class AuthService {
                 return response.data;
             })
     }
-
-    logout(){
+    static logout(){
         localStorage.removeItem('user')
     }
 
-    register(user){
+    static register(user){
         return axios.post(REGISTER, {...user}
         )
     }
 
-    getCurrentUser(){
+    static getCurrentUser(){
         return JSON.parse(localStorage.getItem('user'))
+    }
+
+    static jwt_post(url, data){
+        return axios
+            .post(url,data, {headers: authHeader()})
+            .then(data => {
+                console.log(data)
+                return data
+            })
     }
 }
 
-export default new AuthService();
+export function authHeader() {
+    const user = JSON.parse(localStorage.getItem('user'))
+    console.log('authHeader', user)
+
+    if (user && user.accessToken)
+        console.log(user)
+        return { Authorization: `Bearer ${user}`}
+
+    return {};
+
+}
+
+export default AuthService;
