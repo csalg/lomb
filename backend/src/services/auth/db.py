@@ -6,10 +6,10 @@ from lib.db import get_db
 class UsersRepository:
 
     def __init__(self,
-                 users_collection_name='users'):
+                 users_collection_name='users',
+                 db=get_db()):
 
-        self.db = get_db()
-        self.users = self.db[users_collection_name]
+        self.users = db[users_collection_name]
         self.users.create_index("_id")
 
     def add_user(self, user):

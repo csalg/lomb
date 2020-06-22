@@ -1,14 +1,15 @@
 from pymongo import MongoClient
 
+from lib.db import get_db
+
 
 class LemmasRepository:
     def __init__(self,
                  lemmas_learning_collection_name='lemmas__learning',
-                 tracking_logs_collection_name='tracking_logs'):
-        self.client = MongoClient('mongodb://localhost:27017')
-        self.db = self.client['lomb']
-        self.lemmas_learning = self.db[lemmas_learning_collection_name]
-        self.tracking_logs = self.db[tracking_logs_collection_name]
+                 tracking_logs_collection_name='tracking_logs',
+                 db=get_db()):
+        self.lemmas_learning = db[lemmas_learning_collection_name]
+        self.tracking_logs = db[tracking_logs_collection_name]
 
     def all_learning_lemmas(self):
         return self.lemmas_learning.find({})

@@ -3,14 +3,15 @@ from itertools import chain
 from bson.objectid import ObjectId
 from pymongo import MongoClient, HASHED, TEXT, IndexModel
 
+from lib.db import get_db
+
 
 class LibraryRepository:
     def __init__(self,
                  texts_books_collection_name='short_texts',
-                 books_collection_name='books'):
-        self.client = MongoClient('mongodb://localhost:27017')
-        self.db = self.client['lomb']
-        self.texts = self.db[texts_books_collection_name]
+                 books_collection_name='books',
+                 db=get_db()):
+        self.texts = db[texts_books_collection_name]
         self.texts.create_indexes([IndexModel([("_id", HASHED)]), IndexModel([("chunks.lemmas_set", TEXT)])])
         self.books = self.db[books_collection_name]
         # self.books.ensure_index("title")

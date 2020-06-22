@@ -1,5 +1,6 @@
 from dataclasses import asdict
 
+from lib.db import get_db
 from lib.regex import matches_punctuation
 from pymongo import MongoClient, ASCENDING
 
@@ -11,14 +12,12 @@ class TrackingRepository:
                  pending_reviews_collection_name='pending_reviews',
                  past_reviews_collection_name='past_reviews',
                  ignore_collection_name='ignore_lemmas',
-                 logs_collection_name='tracking_logs'):
-        self.client = MongoClient('mongodb://localhost:27017')
-        self.db     = self.client['lomb']
-
-        self.pending_reviews    = self.db[pending_reviews_collection_name]
-        self.past_reviews       = self.db[past_reviews_collection_name]
-        self.ignore             = self.db[ignore_collection_name]
-        self.logs               = self.db[logs_collection_name]
+                 logs_collection_name='tracking_logs',
+                 db=get_db()):
+        self.pending_reviews    = db[pending_reviews_collection_name]
+        self.past_reviews       = db[past_reviews_collection_name]
+        self.ignore             = db[ignore_collection_name]
+        self.logs               = db[logs_collection_name]
 
         self.pending_reviews.create_index("lemma")
         self.past_reviews.create_index([("lemma", ASCENDING), ("timestamp_previous_review", ASCENDING)])
