@@ -1,5 +1,7 @@
 from operator import itemgetter
 
+from flask_jwt_extended import jwt_required
+
 from config import DEBUG
 from flask import Blueprint, request
 from jsonschema import validate
@@ -13,6 +15,7 @@ domain = TrackingDomain()
 
 
 @tracking.route('/', methods=['POST'])
+@jwt_required
 def rest_handler():
     content = request.get_json()
     print(content)

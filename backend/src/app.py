@@ -1,15 +1,15 @@
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, jwt_required
 
 from flask import Flask, render_template, jsonify
 from flask_cors import CORS
-# from services.library.http_controllers import library
+from services.library.api import library_blueprint
 from services.tracking.rest_controllers import tracking
 from services.auth.http_controllers import auth_blueprint
 from services.vocabulary.http_controllers import vocabulary
 
 app = Flask(__name__)
 app.register_blueprint(tracking, url_prefix='/tracking')
-# app.register_blueprint(library, url_prefix='/library')
+app.register_blueprint(library_blueprint, url_prefix='/library')
 app.register_blueprint(vocabulary, url_prefix='/vocabulary')
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 CORS(app, resources=r'*')
@@ -26,3 +26,8 @@ def resource_not_found(e):
 @app.route('/')
 def index():
     return render_template('index.html.j2')
+
+@app.route('/yo')
+@jwt_required
+def yo():
+    return 'yo'

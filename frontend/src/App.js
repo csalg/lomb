@@ -10,7 +10,6 @@ import {PrivateRoute} from "./services/auth-routes.lib";
 
 function App() {
   return (
-      <Fragment>
           <BrowserRouter>
               <Switch>
                   <Route path='/login'>
@@ -20,11 +19,10 @@ function App() {
                       <RegisterTab/>
                   </Route>
                   <PrivateRoute path='/user' component={UserAreaContainer}/>
-                  <PrivateRoute component={UserAreaContainer}/>
+                  <Route><DecideWhereToGo/></Route>
 
               </Switch>
           </BrowserRouter>
-      </Fragment>
   )
 }
 

@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from flask_jwt_extended import jwt_required
 
 from services.vocabulary.infrastructure.signals import lemma_examples_were_found_handler
 from .domain import VocabularyDomain
@@ -10,6 +11,7 @@ lemma_examples_were_found.connect(lemma_examples_were_found_handler)
 
 
 @vocabulary.route('/learning')
+@jwt_required
 def learning():
 
     all_learning_lemmas = domain.learning_lemmas_with_probability()
@@ -17,6 +19,7 @@ def learning():
                            lemmas=all_learning_lemmas)
 
 @vocabulary.route('/update_all')
+@jwt_required
 def update_all():
     domain.request_update_all_examples()
     return 'examples were updated'
