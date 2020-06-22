@@ -6,6 +6,7 @@ import UserAreaContainer from "./scenes/UserArea/UserAreaContainer";
 import {LoginTab, RegisterTab} from "./scenes/Auth/AuthContainer";
 import {BrowserRouter, Link, Route, Switch, useHistory} from "react-router-dom";
 import AuthService from './services/auth'
+import {PrivateRoute} from "./services/auth-routes.lib";
 
 function App() {
   return (
@@ -18,10 +19,10 @@ function App() {
                   <Route path='/register'>
                       <RegisterTab/>
                   </Route>
-                  <Route path='/user' component={UserAreaContainer}/>
-                  <Route>
-                      <DecideWhereToGo/>
-                  </Route>
+                  <PrivateRoute path='/user' component={UserAreaContainer}/>
+                  <PrivateRoute>
+                      <UserAreaContainer/>
+                  </PrivateRoute>
 
               </Switch>
           </BrowserRouter>

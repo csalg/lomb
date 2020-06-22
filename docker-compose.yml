@@ -4,8 +4,9 @@ services:
     build: ./frontend
     container_name: frontend
     restart: unless-stopped
+    stdin_open: true
     volumes:
-      - /frontend:/app
+      - ./frontend:/app
     environment:
       HOST: "0.0.0.0"
     ports: 
