@@ -2,6 +2,8 @@ import json
 from dataclasses import dataclass
 from .db import ChunksRepository, TextfileMetadataRepository
 import bson
+from bs4 import BeautifulSoup
+from flask import current_app
 
 from .infrastructure import FileManager
 
@@ -13,11 +15,18 @@ class Library:
 
     @classmethod
     def add(cls, file):
-        textfile = _Textfile._from_file(file)
-        chunks = _Chunks._from_file(file)
-        cls.textfiles_repository.add(textfile)
-        cls.chunks_repository.add(chunks)
-        cls.file_manager.save_textfile(textfile, file)
+        filename = cls.file_manager.save_file(file)
+        try:
+            textfile = _Textfile._from_file(file, filename)
+            # chunks = _Chunks._from_file(file)
+            cls.textfiles_repository.add(textfile)
+            # cls.chunks_repository.add(chunks)
+        except:
+            # delete from dbs
+            # cls.file_manager.delete_file()
+            pass
+        return filename
+
 
     @classmethod
     def delete(cls, id):
@@ -42,15 +51,27 @@ class Library:
 
 @dataclass
 class _Textfile:
-    filename: str
     id : bson.ObjectId
+    title: str
     source_language: str
-    support_language: str = ""
-    filetype: str = "html"
+    support_language: str
+    filename: str
+    type: str = "html"
     tags: list = None
 
     @staticmethod
-    def _from_file(file):
+    def _from_file(file, filename):
+        file.seek(0)
+        id = bson.ObjectId()
+        soup = BeautifulSoup(file.stream, 'html.parser')
+        get_meta_attribute = lambda attribute : soup.select(f'meta[name="{attribute}"]')[0]['value']
+        title = get_meta_attribute('title')
+        support_language = get_meta_attribute('support-language')
+        source_language = get_meta_attribute('source-language')
+        return _Textfile(id, title, source_language, support_language, filename, 'html', [])
+
+
+
         pass
 
     @staticmethod
