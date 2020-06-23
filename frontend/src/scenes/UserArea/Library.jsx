@@ -2,28 +2,48 @@
 import React from "react";
 import { Table } from 'antd';
 import reqwest from 'reqwest';
+import AuthService from "../../services/auth";
+import {ALL_TEXTS} from "../../endpoints";
 
 const columns = [
     {
-        title: 'Name',
-        dataIndex: 'name',
+        title: 'Title',
+        dataIndex: 'title',
         sorter: true,
-        render: name => `${name.first} ${name.last}`,
         width: '20%',
     },
     {
-        title: 'Gender',
-        dataIndex: 'gender',
+        title: 'Language',
+        dataIndex: 'source_language',
         filters: [
-            { text: 'Male', value: 'male' },
-            { text: 'Female', value: 'female' },
+            { text: 'German', value: 'de' },
+            { text: 'English', value: 'en' },
         ],
         width: '20%',
     },
     {
-        title: 'Email',
-        dataIndex: 'email',
+        title: 'Support language',
+        dataIndex: 'support_language',
+        filters: [
+            { text: 'German', value: 'de' },
+            { text: 'English', value: 'en' },
+        ],
+        width: '20%',
     },
+    {
+        title: 'Type',
+        dataIndex: 'type',
+    },
+      {
+    title: 'Action',
+    key: 'action',
+    render: (text, record) => (
+      <span>
+        <a href={record.filename} style={{ marginRight: 16 }}>Read</a>
+        <a>Delete</a>
+      </span>
+    ),
+  },
 ];
 
 const getRandomuserParams = params => {
@@ -47,6 +67,7 @@ class Library extends React.Component {
     componentDidMount() {
         const { pagination } = this.state;
         this.fetch({ pagination });
+        this.fetchTexts()
     }
 
     handleTableChange = (pagination, filters, sorter) => {
@@ -66,19 +87,33 @@ class Library extends React.Component {
             type: 'json',
             data: getRandomuserParams(params),
         }).then(data => {
-            console.log(data);
-            this.setState({
-                loading: false,
-                data: data.results,
-                pagination: {
-                    ...params.pagination,
-                    total: 200,
-                    // 200 is mock data, you should read it from server
-                    // total: data.totalCount,
-                },
-            });
+            console.log(data.results);
+            // this.setState({
+            //     loading: false,
+            //     data: data.results,
+            //     pagination: {
+            //         ...params.pagination,
+            //         total: 200,
+            //         // 200 is mock data, you should read it from server
+            //         // total: data.totalCount,
+            //     },
+            // });
         });
     };
+
+    fetchTexts(){
+        AuthService
+            .jwt_get(ALL_TEXTS)
+            .then(data => {
+                console.log('data', data)
+                console.log('data.data', data.data)
+                this.setState({
+                    loading:false,
+                    data:data.data
+                })
+            })
+            .catch(err => console.log('Error fetching texts: ', err))
+    }
 
 
     render() {
@@ -86,7 +121,7 @@ class Library extends React.Component {
         return (
             <Table
                 columns={columns}
-                rowKey={record => record.login.uuid}
+                rowKey={record => record._id}
                 dataSource={data}
                 pagination={pagination}
                 loading={loading}
@@ -95,5 +130,7 @@ class Library extends React.Component {
         );
     }
 }
+
+
 
 export default Library;

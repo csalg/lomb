@@ -36,6 +36,16 @@ class AuthService {
                 return data
             })
     }
+
+    static jwt_get(url,data){
+        return axios
+            .get(url,{headers: authHeader()})
+            .then(data => {
+                console.log(data)
+                return data
+            })
+
+    }
 }
 
 export function authHeader() {

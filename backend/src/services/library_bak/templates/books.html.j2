@@ -1,6 +1,0 @@
-{% extends 'base_user_area.html.j2' %}
-{% block content %}
-{% for book in books %}
-    <p><a href="book/{{ book['_id'] }}/">{{ book['metadata']['title'] }}</a></p>
-{% endfor %}
-{% endblock %}

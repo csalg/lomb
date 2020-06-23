@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from .db import ChunksRepository, TextfileMetadataRepository
 import bson
 from bs4 import BeautifulSoup
@@ -19,7 +19,7 @@ class Library:
         try:
             textfile = _Textfile._from_file(file, filename)
             # chunks = _Chunks._from_file(file)
-            cls.textfiles_repository.add(textfile)
+            cls.textfiles_repository.add(textfile.to_dict())
             # cls.chunks_repository.add(chunks)
         except:
             # delete from dbs
@@ -51,7 +51,7 @@ class Library:
 
 @dataclass
 class _Textfile:
-    id : bson.ObjectId
+    _id : bson.ObjectId
     title: str
     source_language: str
     support_language: str
@@ -62,21 +62,22 @@ class _Textfile:
     @staticmethod
     def _from_file(file, filename):
         file.seek(0)
-        id = bson.ObjectId()
+        _id = bson.ObjectId()
         soup = BeautifulSoup(file.stream, 'html.parser')
         get_meta_attribute = lambda attribute : soup.select(f'meta[name="{attribute}"]')[0]['value']
         title = get_meta_attribute('title')
         support_language = get_meta_attribute('support-language')
         source_language = get_meta_attribute('source-language')
-        return _Textfile(id, title, source_language, support_language, filename, 'html', [])
-
-
-
-        pass
+        return _Textfile(_id, title, source_language, support_language, filename, 'html', [])
 
     @staticmethod
     def __from_html(file):
         pass
+
+    def to_dict(self):
+        current_app.logger.info(self)
+        current_app.logger.info(asdict(self))
+        return asdict(self)
 
 
 @dataclass

@@ -1,10 +1,11 @@
 import json
 
-from flask import Blueprint, request, send_from_directory
+from flask import Blueprint, request, send_from_directory, current_app
 from flask_jwt_extended import jwt_required
 
 from services.library.domain import Library
 from config import UPLOADS_FOLDER
+from lib.json import JSONEncoder
 
 library_blueprint = Blueprint('library', __name__, template_folder='templates')
 library = Library()
@@ -31,4 +32,6 @@ def uploaded_text(filename):
 @library_blueprint.route('/')
 @jwt_required
 def all():
-    return json.dumps(list(library.all()))
+    all = JSONEncoder().encode(list(library.all()))
+    current_app.logger.info('all texts', all)
+    return all

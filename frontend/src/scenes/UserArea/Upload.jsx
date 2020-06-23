@@ -1,7 +1,6 @@
 import React from "react";
 import {UPLOAD} from "../../endpoints";
-import AuthService, {authHeader} from "../../services/auth";
-import axios from 'axios';
+import {authHeader} from "../../services/auth";
 
 // import {  Upload, message, Button  } from 'antd';
 // import {  UploadOutlined  } from '@ant-design/icons'

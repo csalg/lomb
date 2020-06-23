@@ -1,4 +1,5 @@
 from bson import ObjectId
+from flask import current_app
 from pymongo import IndexModel, TEXT, HASHED, MongoClient
 
 from config import LIBRARY_CHUNKS_COLLECTION_NAME, LIBRARY_METADATA_COLLECTION_NAME
@@ -29,6 +30,7 @@ class TextfileMetadataRepository:
 
     @classmethod
     def add(cls, text):
+        current_app.logger.info('will insert', text)
         return cls.metadata.insert(text)
 
     @classmethod
