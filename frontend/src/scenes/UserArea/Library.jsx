@@ -4,6 +4,7 @@ import { Table } from 'antd';
 import reqwest from 'reqwest';
 import AuthService from "../../services/auth";
 import {ALL_TEXTS} from "../../endpoints";
+import {Link} from "react-router-dom";
 
 const columns = [
     {
@@ -11,10 +12,13 @@ const columns = [
         dataIndex: 'title',
         sorter: true,
         width: '20%',
+        render: (text, record) => (
+        <Link to={`reader/${record.type}/${record.filename}`} style={{ marginRight: 16 }}>{record.title}</Link>
+        ),
     },
     {
         title: 'Language',
-        dataIndex: 'source_language',
+        ndataIndex: 'source_language',
         filters: [
             { text: 'German', value: 'de' },
             { text: 'English', value: 'en' },
@@ -34,16 +38,6 @@ const columns = [
         title: 'Type',
         dataIndex: 'type',
     },
-      {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
-      <span>
-        <a href={record.filename} style={{ marginRight: 16 }}>Read</a>
-        <a>Delete</a>
-      </span>
-    ),
-  },
 ];
 
 const getRandomuserParams = params => {

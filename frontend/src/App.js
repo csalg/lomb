@@ -7,6 +7,7 @@ import {LoginTab, RegisterTab} from "./scenes/Auth/AuthContainer";
 import {BrowserRouter, Link, Route, Switch, useHistory} from "react-router-dom";
 import AuthService from './services/auth'
 import {PrivateRoute} from "./services/auth-routes.lib";
+import Reader from "./scenes/UserArea/Reader";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
                   <Route path='/register'>
                       <RegisterTab/>
                   </Route>
+                  <PrivateRoute path='/user/reader/:type/:file' component={Reader}/>
                   <PrivateRoute path='/user' component={UserAreaContainer}/>
                   <Route><DecideWhereToGo/></Route>
 
