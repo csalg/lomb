@@ -7,7 +7,7 @@ import {LoginTab, RegisterTab} from "./scenes/Auth/AuthContainer";
 import {BrowserRouter, Link, Route, Switch, useHistory} from "react-router-dom";
 import AuthService from './services/auth'
 import {PrivateRoute} from "./services/auth-routes.lib";
-import Reader from "./scenes/UserArea/Reader";
+import Reader from "./scenes/UserArea/Reader/Reader";
 
 function App() {
   return (

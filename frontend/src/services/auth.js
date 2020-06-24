@@ -50,12 +50,8 @@ class AuthService {
 
 export function authHeader() {
     const user = JSON.parse(localStorage.getItem('user'))
-    console.log('authHeader', user)
-
     if (user && user.accessToken)
-        console.log(user)
         return { Authorization: `Bearer ${user}`}
-
     return {};
 
 }
