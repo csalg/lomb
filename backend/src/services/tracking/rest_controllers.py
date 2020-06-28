@@ -1,9 +1,8 @@
 from operator import itemgetter
 
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from config import DEBUG
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from jsonschema import validate
 
 from .domain import TrackingDomain
@@ -17,30 +16,18 @@ domain = TrackingDomain()
 @tracking.route('/', methods=['POST'])
 @jwt_required
 def rest_handler():
+    user = get_jwt_identity()['username']
+    current_app.logger.info(user)
+
     content = request.get_json()
-    print(content)
+    try:
+        validate(instance=content, schema=tracking_event_schema)
+    except Exception as e:
+        return ""
 
-    # try:
-    #     validate(instance=content, schema=tracking_event_schema)
-    # except Exception as e:
-    #     return str(e) if DEBUG else ""
-    validate(instance=content, schema=tracking_event_schema)
+    message, lemmas = itemgetter('message', 'lemmas')(content)
 
-    type_, payload, context = itemgetter('type', 'payload', 'context')(content)
-
-    print(type_, payload, context)
-
-    if type_ == 'SENTENCE_EXPOSURE':
-        lemmas, was_looked_up = context, payload == 'LOOKUP'
-        domain.add_sentence_exposure(lemmas, was_looked_up)
-    elif type_ == 'WORD_EXPOSURE':
-        domain.add_direct_word_lookup(context)
-    elif type_ == 'REVIEW':
-        word, was_clicked = context[0], payload == 'CLICK'
-        examples = int(content['examples'])
-        domain.add_review(word, was_clicked, examples)
-    else:
-        return 'wrong type'
+    domain.add(user, message, lemmas)
 
     return 'ok'
 

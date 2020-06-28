@@ -246,25 +246,22 @@ class InteractionTracker {
 
     static __lemmaWasSelectedMessage(lemma) {
         return {
-            type: 'WORD_EXPOSURE',
-            context: [lemma],
-            payload: 'LOOKUP'
+            message: 'TEXT__WORD_HIGHLIGHTED',
+            lemmas: [lemma],
         }
     }
 
     static __sentenceWasClickedMessage(lemmas) {
         return {
-            type: 'SENTENCE_EXPOSURE',
-            context: lemmas,
-            payload: 'LOOKUP'
+            message: 'TEXT__SENTENCE_CLICK',
+            lemmas: lemmas,
         }
     }
 
     static __sentenceWasExposedMessage(lemmas) {
         return {
-            type: 'SENTENCE_EXPOSURE',
-            context: lemmas,
-            payload: 'NO_LOOKUP'
+            message: 'TEXT__SENTENCE_READ',
+            lemmas: lemmas,
         }
     }
 }
