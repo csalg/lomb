@@ -1,0 +1,30 @@
+@font-face {
+    font-family: Bembo;
+    src: url('fonts/BemboStd.otf');
+}
+:root {
+    --looked-up-bg: hsla(17, 86%, 69%, 0.11);
+    --not-looked-up-bg: hsla(209, 86%, 69%, 0.22);
+}
+body {
+    font-family: Bembo, serif;
+}
+
+.dual-language-chunk {
+    white-space: pre-line;
+}
+.space-under {
+    height: 110vh;
+}
+
+.looked-up {
+    background-color: var(--looked-up-bg)
+}
+
+.exposed {
+    background-color: var(--not-looked-up-bg);
+}
+.readable-width {
+    max-width: 30rem;
+    margin: 0 auto;
+}

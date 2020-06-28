@@ -32,7 +32,6 @@ class AuthService {
         return axios
             .post(url,data, {headers: authHeader()})
             .then(data => {
-                console.log(data)
                 return data
             })
     }
@@ -41,16 +40,34 @@ class AuthService {
         return axios
             .get(url,{headers: authHeader()})
             .then(data => {
-                console.log(data)
                 return data
             })
 
+    }
+
+    static jwt_fetch_document_as_blob = (url) => {
+        const xhr = new XMLHttpRequest();
+        return new Promise((resolve,reject) => {
+            xhr.responseType = 'blob';
+            xhr.onreadystatechange = function () {
+                if (this.readyState === this.DONE) {
+                    if (this.status === 200) {
+                        resolve(URL.createObjectURL(this.response))
+                    } else {
+                        reject(xhr);
+                    }
+                }
+            }
+            xhr.open('GET', url);
+            xhr.setRequestHeader('Authorization', authHeader().Authorization );
+            xhr.send();
+        });
     }
 }
 
 export function authHeader() {
     const user = JSON.parse(localStorage.getItem('user'))
-    if (user && user.accessToken)
+    if (user)
         return { Authorization: `Bearer ${user}`}
     return {};
 

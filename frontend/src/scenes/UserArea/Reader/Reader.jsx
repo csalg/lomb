@@ -7,9 +7,7 @@ import HTMLDocument from "./components/HTMLDocument";
 class HTMLReader extends React.Component {
     render() {
         return (
-            <ReaderWrapper>
-                <HTMLDocument {...this.props} />
-            </ReaderWrapper>
+            <ReaderWrapper component={HTMLDocument} {...this.props}/>
         )
     }
 }

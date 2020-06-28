@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components'
 
-const SupportTextArea = () => {
+const SupportTextArea = (props) => {
 
     const Wrapper = styled.div`
         display: flex;
@@ -19,7 +19,7 @@ const SupportTextArea = () => {
     return (
         <Wrapper>
         <ReadableWidthContainer className="readable-width" id="support">
-            <span style={{width:'30rem'}} >Some sentence</span>
+            <span style={{width:'30rem'}} >{props.support_sentence}</span>
         </ReadableWidthContainer>
         </Wrapper>
     )
@@ -27,6 +27,9 @@ const SupportTextArea = () => {
 
 
 export default function(props) {
+    const [support_sentence, setSupportSentence] = useState('First support sentence')
+
+    const Child = props.component
     const Container = styled.div`
             display: flex;
     `
@@ -49,9 +52,10 @@ export default function(props) {
         return (
             <Container className="container_">
                 <DocumentAndSupportText>
-                    <SupportTextArea/>
-                    <Document className="text-area">
-                        {props.children}
+                    <SupportTextArea support_sentence={support_sentence}/>
+                    <Document>
+                        <Child setSupportSentence={setSupportSentence} {...props}/>
+                        {/*{React.cloneElement(props.children[0], { setSupportSentence:setSupportSentence })}*/}
                     </Document>
                 </DocumentAndSupportText>
                 <Definition className="definition">Definition</Definition>

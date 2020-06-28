@@ -6,4 +6,5 @@ export const REGISTER = AUTH_URL + "/register"
 
 export const LIBRARY_URL = API_URL + "/library"
 export const UPLOAD = LIBRARY_URL + "/upload"
+export const LIBRARY_UPLOADS = LIBRARY_URL + "/uploads"
 export const ALL_TEXTS = LIBRARY_URL + "/"

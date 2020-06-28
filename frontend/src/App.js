@@ -31,7 +31,7 @@ function App() {
 function DecideWhereToGo(){
     const history = useHistory()
     if (AuthService.getCurrentUser())
-        history.push('/user')
+        history.push('/user/')
     else
         history.push('/login')
 

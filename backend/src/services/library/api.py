@@ -26,6 +26,7 @@ def upload():
 @library_blueprint.route('/uploads/<filename>')
 @jwt_required
 def uploaded_text(filename):
+    current_app.logger.info(request.headers)
     return send_from_directory(UPLOADS_FOLDER, filename)
 
 
