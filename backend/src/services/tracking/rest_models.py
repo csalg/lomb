@@ -1,4 +1,3 @@
-
 tracking_event_schema = {
     "type": "object",
     "properties": {
