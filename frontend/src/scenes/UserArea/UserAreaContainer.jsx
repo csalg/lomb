@@ -3,7 +3,7 @@ import { Layout, Menu, Dropdown } from 'antd';
 import Library from './Library'
 import Upload from "./Upload";
 import { DownOutlined } from '@ant-design/icons';
-import {Link, Switch, Route } from "react-router-dom";
+import {Link, Switch, Route, Redirect} from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 
 const menu = (
@@ -28,7 +28,7 @@ const VocabularyDropdown = () =>
         </a>
     </Dropdown>
 
-export default ({match}) => (
+const UserAreaContainer = ({match}) => (
     <Layout className="layout" style={{minHeight: '100vh'}}>
         <Header>
             <div className="logo" />
@@ -50,11 +50,11 @@ export default ({match}) => (
                     <Route path={`${match.url}/upload`}>
                         <Upload/>
                     </Route>
-                    <Route path='/library'>
+                    <Route path={`${match.url}/library`}>
                         <Library/>
                     </Route>
                     <Route>
-                        <Library/>
+                       <Redirect to={`${match.url}/library`}/>
                     </Route>
                 </Switch>
 
@@ -63,3 +63,5 @@ export default ({match}) => (
         <Footer style={{ textAlign: 'center' }}>GPL License. You may do whatever you want with this software except make money off it.</Footer>
     </Layout>
 );
+
+export default UserAreaContainer;
