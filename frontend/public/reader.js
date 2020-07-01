@@ -1,14 +1,17 @@
 class ReadingDocumentController {
 
     constructor(documentElement) {
+        // First, let's keep the iframe pointer
+        this.frame = documentElement
 
+        // We will use the following as state:
         this.lookedUpWord = ""
         this.currentSentence = {
             supportText: "",
             tokensToLemmas: {}
         }
 
-        this.frame = documentElement
+        // Custom events which are emitted by the frame.
         this.wordWasSelected =
             new CustomEvent('wordWasSelected', {
                 bubbles: true,
@@ -25,6 +28,7 @@ class ReadingDocumentController {
                 detail: () => this.currentSentence
             })
 
+        // The rest is just binding class methods to this state.
         this.load = this.load.bind(this)
         this.__addStyles = this.__addStyles.bind(this)
         this.__frameWasLoaded = this.__frameWasLoaded.bind(this)
@@ -32,7 +36,8 @@ class ReadingDocumentController {
         this.__addSentenceClickListeners = this.__addSentenceClickListeners.bind(this)
         this.__addIntersectionObserver = this.__addIntersectionObserver.bind(this)
         this.__outOfViewCallback = this.__outOfViewCallback.bind(this)
-        this.__getSpans = this.__getSpans.bind(this)
+        this.__getDualLanguageChunks = this.__getDualLanguageChunks.bind(this)
+        this.__parseLanguages = this.__parseLanguages.bind(this)
     }
 
     getFrame() {
@@ -45,20 +50,32 @@ class ReadingDocumentController {
             this.__fetch_document_as_blob(url)
                 .then(blob => {
                     this.frame.src = blob
-                    this.frame.onload = this.__frameWasLoaded
-                    console.log('returning')
+                    this.frame.onload = _ => {
+                        this.__frameWasLoaded();
+                        resolve()
+                    }
                 })
-                .catch(e => reject(e))
         })
     }
 
-    __frameWasLoaded(event) {
+    async __frameWasLoaded(_) {
+        this.__parseLanguages()
         this.__addStyles()
         this.__addSpaceAtBottom()
         this.__addSentenceClickListeners()
         this.__addWordSelectionListeners()
         this.__addIntersectionObserver()
     }
+
+    __parseLanguages() {
+        const head = this.frame.contentDocument.head
+        this.languages = {
+            sourceLanguage: head.querySelector('meta[name=source-language]').getAttribute('value'),
+            supportLanguage: head.querySelector('meta[name=support-language]').getAttribute('value')
+        }
+    }
+
+    getLanguages(){return this.languages;}
 
     __addStyles() {
         const doc = this.frame.contentDocument;
@@ -87,7 +104,7 @@ class ReadingDocumentController {
     }
 
     __addSentenceClickListeners() {
-        const spans = this.__getSpans()
+        const spans = this.__getDualLanguageChunks()
         spans.forEach(span => {
             span.addEventListener('click', e => {
                 this.currentSentence = {...this.__parseSpanDataset(span)}
@@ -98,7 +115,7 @@ class ReadingDocumentController {
         })
     }
 
-    __getSpans() {
+    __getDualLanguageChunks() {
         return this.frame.contentDocument.querySelectorAll('span.dual-language-chunk')
     }
 
@@ -125,7 +142,7 @@ class ReadingDocumentController {
             threshold: 0
         }
         const observer = new IntersectionObserver(this.__outOfViewCallback, options);
-        const spans = this.__getSpans()
+        const spans = this.__getDualLanguageChunks()
         spans.forEach(element => observer.observe(element));
     }
 
@@ -189,13 +206,27 @@ class ReadingDocumentController {
 
 
 class DefinitionController {
-    constructor(view) {
+    constructor(sourceLanguageCode, supportLanguageCode, view) {
         this.view = view
         this.changeDefinition = this.changeDefinition.bind(this)
+        this.sourceLanguage = this.__intlCodeToWord(sourceLanguageCode)
+        this.supportLanguage = this.__intlCodeToWord(supportLanguageCode)
     }
 
     changeDefinition(newWord) {
-        this.view.src = `http://www.linguee.com/english-german/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
+        const uri= `http://www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
+        console.log(uri)
+        this.view.src = uri
+    }
+
+    __intlCodeToWord(code){
+        const dict = {
+            es:'Spanish',
+            en:'English',
+            zh:'Chinese',
+            de:'German',
+        }
+        return dict[code]
     }
 }
 
@@ -217,7 +248,7 @@ class InteractionTracker {
     constructor(url) {
         this.url = url
 
-        this.lemmaWasSelected    = this.lemmaWasSelected.bind(this)
+        this.lemmaWasSelected = this.lemmaWasSelected.bind(this)
         this.sentenceWasClicked = this.sentenceWasClicked.bind(this)
         this.sentenceWasExposed = this.sentenceWasExposed.bind(this)
         this.__dispatch = this.__dispatch.bind(this)
@@ -229,9 +260,7 @@ class InteractionTracker {
     }
 
     sentenceWasClicked(lemmas) {
-        console.log(lemmas)
         const data = InteractionTracker.__sentenceWasClickedMessage(lemmas)
-        console.log(data)
         return this.__dispatch(data)
     }
 
@@ -240,7 +269,7 @@ class InteractionTracker {
         return this.__dispatch(data)
     }
 
-    __dispatch(data){
+    __dispatch(data) {
         return AuthService.jwtPost(this.url, data)
     }
 
@@ -276,7 +305,6 @@ class AuthService {
     }
 
     static async jwtPost(url, data) {
-        console.log(JSON.stringify(data))
         const response = await fetch(url,
             {
                 method: "POST",

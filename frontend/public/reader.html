@@ -88,7 +88,7 @@
             </div>
         </div>
         <div class="text-area">
-            <iframe src="" frameborder="0" id="readingDocument">
+            <iframe src="" id="readingDocument">
             </iframe>
         </div>
     </div>
@@ -105,10 +105,12 @@
         const supportTextView       = document.querySelector('div#support-text')
 
         const readingDocumentController = new ReadingDocumentController(readingDocumentView)
-        readingDocumentController.load()
+        await readingDocumentController.load()
+
+        const {sourceLanguage, supportLanguage} = readingDocumentController.getLanguages()
 
         const supportTextController = new SupportTextController(supportTextView)
-        const definitionController = new DefinitionController(definitionView)
+        const definitionController = new DefinitionController(sourceLanguage, supportLanguage, definitionView)
         const tracker = new InteractionTracker('http://localhost:5000/tracking/')
 
         readingDocumentView.addEventListener('wordWasSelected', e => {
@@ -118,16 +120,15 @@
         })
 
         readingDocumentView.addEventListener('sentenceWasClicked', e => {
-            const newSupportText = e.detail().supportText;
-            const tokensToLemmas = e.detail().tokensToLemmas;
+            const {supportText, tokensToLemmas} = e.detail();
             const tokensSet = new Set(Object.values(tokensToLemmas))
             const tokens = Array.from(tokensSet)
-            supportTextController.changeSupportText(newSupportText)
+            supportTextController.changeSupportText(supportText)
             tracker.sentenceWasClicked(tokens)
         })
 
         readingDocumentView.addEventListener('sentenceWasExposed', e => {
-            const tokensToLemmas = e.detail().tokensToLemmas;
+            const { tokensToLemmas } = e.detail();
             const tokensSet = new Set(Object.values(tokensToLemmas))
             const tokens = Array.from(tokensSet)
             tracker.sentenceWasExposed(tokens)
