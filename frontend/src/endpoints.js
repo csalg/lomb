@@ -8,3 +8,6 @@ export const LIBRARY_URL = API_URL + "/library"
 export const UPLOAD = LIBRARY_URL + "/upload"
 export const LIBRARY_UPLOADS = LIBRARY_URL + "/uploads"
 export const ALL_TEXTS = LIBRARY_URL + "/"
+
+export const VOCABULARY = API_URL + "/vocabulary"
+export const REVISE_URL = VOCABULARY + '/revise'

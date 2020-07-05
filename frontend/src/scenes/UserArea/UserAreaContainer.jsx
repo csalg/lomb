@@ -4,6 +4,7 @@ import Library from './Library'
 import Upload from "./Upload";
 import { DownOutlined } from '@ant-design/icons';
 import {Link, Switch, Route, Redirect} from "react-router-dom";
+import Revise from "./Revise/ReviseContainer";
 const { Header, Content, Footer } = Layout;
 
 const menu = (
@@ -40,7 +41,8 @@ const UserAreaContainer = ({match}) => (
             >
                 <Menu.Item key="library"><Link to={`${match.url}/library`}>Library</Link></Menu.Item>
                 <Menu.Item key="upload"><Link to={`${match.url}/upload`}>Upload</Link></Menu.Item>
-                <Menu.Item key="vocabulary"><VocabularyDropdown/></Menu.Item>
+                <Menu.Item key="revise"><Link to={`/revise`}>Revise</Link></Menu.Item>
+                {/*<Menu.Item key="vocabulary"><VocabularyDropdown/></Menu.Item>*/}
             </Menu>
         </Header>
         <Content style={{ padding: '0 50px' }}>

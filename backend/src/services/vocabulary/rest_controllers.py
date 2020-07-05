@@ -1,5 +1,7 @@
+
 from flask import Blueprint, render_template
-from flask_jwt_extended import jwt_required
+from flask.json import JSONEncoder
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from services.vocabulary.infrastructure.signals import lemma_examples_were_found_handler
 from .domain import VocabularyDomain
@@ -10,13 +12,14 @@ domain = VocabularyDomain()
 lemma_examples_were_found.connect(lemma_examples_were_found_handler)
 
 
-@vocabulary.route('/learning')
+@vocabulary.route('/revise')
 @jwt_required
-def learning():
+def revise():
+    username = get_jwt_identity()['username']
+    all_learning_lemmas = domain.learning_lemmas(username)
+    payload = JSONEncoder().encode(list(all_learning_lemmas))
+    return payload, 200
 
-    all_learning_lemmas = domain.learning_lemmas_with_probability()
-    return render_template('lemmas_learning.html.j2',
-                           lemmas=all_learning_lemmas)
 
 @vocabulary.route('/update_all')
 @jwt_required
@@ -24,10 +27,3 @@ def update_all():
     domain.request_update_all_examples()
     return 'examples were updated'
 
-# @vocabulary.route('/book/<id>')
-# def book(id):
-#     book = repository.get_book(id)
-#     # print(len(book['chunks']))
-#     if book:
-#         return render_template('text.html.j2', **book)
-#     return f'Id {id} not found!'

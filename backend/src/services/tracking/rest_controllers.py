@@ -21,10 +21,18 @@ def rest_handler():
     try:
         validate(instance=content, schema=tracking_event_schema)
     except Exception as e:
-        return ""
+        current_app.logger.error(str(e))
+        return str(e), 422
 
-    message, lemmas = itemgetter('message', 'lemmas')(content)
-    tracker.add(user, message, lemmas)
+    message, lemmas, source_language, support_language = itemgetter('message', 'lemmas', 'source_language', 'support_language')(content)
+    current_app.logger.info(f"Adding lemma: {content}")
+    # tracker.add(user, message, lemmas, source_language, support_language)
 
-    return 'ok'
+    try:
+        tracker.add(user, message, lemmas, source_language, support_language)
+    except Exception as e:
+        current_app.logger.error(str(e))
+        return str(e), 500
+
+    return 'ok',200
 

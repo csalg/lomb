@@ -11,8 +11,11 @@ class LogRepository:
                  db=get_db()):
         self.logs               = db[logs_collection_name]
 
-    def log(self, user, message, lemmas):
-        data = [{'user':user, 'message': message, 'lemma': lemma} for lemma in lemmas]
+    def log(self, user, message, lemmas, source_language):
+        data = [{'user':user,
+                 'message': message,
+                 'lemma': lemma,
+                 'source_language': source_language} for lemma in lemmas]
         self.logs.insert_many(data)
 
 class SetRepository(ABC):
@@ -25,18 +28,24 @@ class SetRepository(ABC):
             raise Exception('Provide a collection name and db')
         self.collection = db[collection_name]
 
-    def add(self,user,key):
-        self.collection.update_one({"key": key, 'user':user},
-                                   {'$set':{"key": key, 'user':user}},
+    def add(self,user,key, source_language):
+        current_app.logger.info('Adding to collection:')
+        current_app.logger.info(self.collection)
+        current_app.logger.info(self.collection.update_one({"key": key, 'user':user},
+                                   {'$set':{
+                                       "key": key,
+                                       'user':user,
+                                       'source_language': source_language}},
                                    upsert=True
-                                   )
-        current_app.logger.info(list(self.collection.find({})))
+                                   ).raw_result)
 
-    def delete(self,user,key):
-        self.collection.delete_many({"key":key, 'user':user})
 
-    def find(self,user,key):
-        return self.collection.find({'key':key, 'user':user})
+    def delete(self,user,key, source_language):
+        current_app.logger.info('Deleting from collection')
+        self.collection.delete_many({"key":key, 'user':user, 'source_language': source_language})
+
+    def find(self,user,key, source_language):
+        return self.collection.find({'key':key, 'user':user, 'source_language': source_language})
 
 
 class IgnoreRepository(SetRepository):

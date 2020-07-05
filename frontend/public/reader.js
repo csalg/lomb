@@ -245,8 +245,11 @@ class SupportTextController {
 
 class InteractionTracker {
 
-    constructor(url) {
-        this.url = url
+    constructor(url, sourceLanguage,supportLanguage) {
+        this.url                = url
+        this.sourceLanguage     = sourceLanguage
+        this.supportLanguage    = supportLanguage
+
 
         this.lemmaWasSelected = this.lemmaWasSelected.bind(this)
         this.sentenceWasClicked = this.sentenceWasClicked.bind(this)
@@ -255,17 +258,17 @@ class InteractionTracker {
     }
 
     lemmaWasSelected(lemma) {
-        const data = InteractionTracker.__lemmaWasSelectedMessage(lemma)
+        const data = InteractionTracker.__lemmaWasSelectedMessage(lemma,this.sourceLanguage, this.supportLanguage)
         return this.__dispatch(data)
     }
 
     sentenceWasClicked(lemmas) {
-        const data = InteractionTracker.__sentenceWasClickedMessage(lemmas)
+        const data = InteractionTracker.__sentenceWasClickedMessage(lemmas, this.sourceLanguage, this.supportLanguage)
         return this.__dispatch(data)
     }
 
     sentenceWasExposed(lemmas) {
-        const data = InteractionTracker.__sentenceWasExposedMessage(lemmas)
+        const data = InteractionTracker.__sentenceWasExposedMessage(lemmas, this.sourceLanguage, this.supportLanguage)
         return this.__dispatch(data)
     }
 
@@ -273,24 +276,30 @@ class InteractionTracker {
         return AuthService.jwtPost(this.url, data)
     }
 
-    static __lemmaWasSelectedMessage(lemma) {
+    static __lemmaWasSelectedMessage(lemma, sourceLanguage, supportLanguage) {
         return {
             message: 'TEXT__WORD_HIGHLIGHTED',
             lemmas: [lemma],
+            source_language: sourceLanguage,
+            support_language: supportLanguage,
         }
     }
 
-    static __sentenceWasClickedMessage(lemmas) {
+    static __sentenceWasClickedMessage(lemmas,sourceLanguage, supportLanguage) {
         return {
             message: 'TEXT__SENTENCE_CLICK',
             lemmas: lemmas,
+            source_language: sourceLanguage,
+            support_language: supportLanguage,
         }
     }
 
-    static __sentenceWasExposedMessage(lemmas) {
+    static __sentenceWasExposedMessage(lemmas,sourceLanguage, supportLanguage) {
         return {
             message: 'TEXT__SENTENCE_READ',
             lemmas: lemmas,
+            source_language: sourceLanguage,
+            support_language: supportLanguage,
         }
     }
 }

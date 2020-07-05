@@ -1,13 +1,13 @@
 from lib.time import now_timestamp
 
-from .db_repository import LemmasRepository
+from .db_repository import LemmaExamplesRepository
 from .infrastructure.ml import probability_of_recall_leitner
 from mq.signals import new_word_to_learn_was_added
 
 
 class VocabularyDomain:
     def __init__(self,
-                 repository=LemmasRepository):
+                 repository=LemmaExamplesRepository):
         self.repository = repository()
 
     def learning_lemmas_with_probability(self):
@@ -18,8 +18,11 @@ class VocabularyDomain:
         lemmas.sort(key=lambda token: token['probability_of_recall'])
         return lemmas
 
+    def learning_lemmas(self,username):
+        return self.repository.all_learning_lemmas(username)
+
     def probability_of_recall(self, lemma):
-        lemma_log = list(self.repository.get_log_for_lemma(lemma))
+        lemma_log = list(self.repository.get_lemma_logs(lemma))
         if not lemma_log:
             return 0
         lemma_log.sort(key=lambda lemma_: lemma_['timestamp'])
@@ -51,8 +54,8 @@ class VocabularyDomain:
 
         return probability_of_recall_leitner(elapsed, previous_elapsed, successes, failures)
 
-    def update_lemma_examples(self, lemma, examples):
-        self.repository.update_lemma_examples(lemma, examples)
+    def update_lemma_examples(self,*args, **kwargs):
+        self.repository.update_lemma_examples(*args,**kwargs)
 
     def request_update_all_examples(self):
         for lemma in self.repository.all_learning_lemmas():

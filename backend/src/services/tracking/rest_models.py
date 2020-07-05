@@ -12,6 +12,9 @@ tracking_event_schema = {
                      "items": {
                          "type": "string"
                         }
-                     }
-    }
+                     },
+        "source_language": {'type':'string'},
+        "support_language": {'type': 'string'}
+    },
+    "required": ["message", "lemmas", "source_language", "support_language"]
 }

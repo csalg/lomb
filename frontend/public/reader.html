@@ -98,6 +98,8 @@
 
 <script src="reader.js"></script>
 <script>
+    const INTERACTION_TRACKING_URL = 'http://localhost:5000/tracking/'
+    const BOOK_TRACKING_URL = 'http://localhost:5000/users/books'
 
     async function main() {
         const readingDocumentView   = document.querySelector('iframe#readingDocument')
@@ -111,7 +113,7 @@
 
         const supportTextController = new SupportTextController(supportTextView)
         const definitionController = new DefinitionController(sourceLanguage, supportLanguage, definitionView)
-        const tracker = new InteractionTracker('http://localhost:5000/tracking/')
+        const tracker = new InteractionTracker(INTERACTION_TRACKING_URL,sourceLanguage,supportLanguage)
 
         readingDocumentView.addEventListener('wordWasSelected', e => {
             const newLemma = e.detail();
