@@ -25,7 +25,7 @@ class Tracker:
                 self.__learn(user,lemma, source_language, support_language)
         else:
             for lemma in lemmas:
-                if not self.learning_repository.find(user,lemma, source_language):
+                if not self.learning_repository.find(user,lemma,source_language):
                     self.__ignore(user,lemma)
 
     def __learn(self,user, lemma, source_language, support_language):
@@ -39,6 +39,5 @@ class Tracker:
         self.ignore_repository.add(user,lemma, source_language)
 
     def publish_new_learning_word(self,user,lemma,source_language, support_language):
-
         new_word_to_learn_was_added.send({"user":user, "lemma":lemma, "source_language":source_language, "support_language": support_language})
 

@@ -19,3 +19,6 @@ class UsersDomain:
             return
         if user['password'] == password:
             return user
+
+    def get_user(self,*args,**kwargs):
+        return self.repository.get_user(*args,**kwargs)

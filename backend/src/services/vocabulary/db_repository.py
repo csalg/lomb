@@ -18,13 +18,14 @@ class LemmaExamplesRepository:
     def get_lemma_logs(self, user, lemma):
         return self.tracking_logs.find({'user': user, 'lemma': lemma})
 
-    def update_lemma_examples(self, user, lemma, examples):
+    def update_lemma_examples(self, user, lemma, language, examples):
         self.lemmas_learning.update(
             {'_id': user},
             {'$push': {
                 "lemmas": {
-                    '_id': lemma,
+                    'lemma': lemma,
+                    'language': language,
                     'examples': list(examples)}}},
             upsert=True)
         current_app.logger.info('examples updated')
-        current_app.logger.info(list(self.lemmas_learning.find({'_id': user, "lemmas._id": lemma})))
+        current_app.logger.info(list(self.lemmas_learning.find({'_id': user, "lemmas.lemma": lemma})))

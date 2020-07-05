@@ -1,7 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 
 export default (props) => {
+
+    const [supportText, setSupportText] = useState("")
+
     const ExamplesContainer = styled.div`
         overflow-y: scroll;
         padding: 1rem 2rem;
@@ -18,8 +21,14 @@ export default (props) => {
         top:0;
         background-color: ivory;
         `
+    if (props.examples.length > 0) {
     return <ExamplesContainer>
-        <TranslationViewer/>
-        {props.examples.map(example => <Example>{example.text}</Example>)}
+        <TranslationViewer>{supportText}</TranslationViewer>
+        {props.examples.map(example =>
+            <Example onClick={() => setSupportText(JSON.parse(example.support_text))}>
+                {example.text}
+            </Example>)}
     </ExamplesContainer>
+    }
+    return <></>
 }

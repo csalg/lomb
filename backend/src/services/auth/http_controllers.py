@@ -1,7 +1,7 @@
 import re
 
 from flask import Blueprint, render_template, request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from jsonschema import validate
 
 from .domain.domain import UsersDomain
@@ -78,6 +78,15 @@ def register():
             return jsonify({'access_token': access_token})
     else:
         return render_template('register.html.j2')
+
+@auth_blueprint.route('/user')
+@jwt_required
+def user():
+    username = get_jwt_identity()['username']
+    user = domain.get_user(username)
+    del user['password']
+    return user
+
 
 
 email_validation_regex = re.compile("""(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])""")

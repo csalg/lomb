@@ -11,7 +11,7 @@ const columns = [
         title: 'Title',
         dataIndex: 'title',
         sorter: true,
-        width: '20%',
+        // width: '20%',
         render: (text, record) => (
         <a href={`/reader.html?open="${LIBRARY_UPLOADS}/${record.filename}"`} style={{ marginRight: 16 }}>{record.title}</a>
         ),
@@ -22,6 +22,8 @@ const columns = [
         filters: [
             { text: 'German', value: 'de' },
             { text: 'English', value: 'en' },
+            { text: 'Spanish', value: 'es' },
+            { text: 'Chinese', value: 'zh' },
         ],
         width: '20%',
         render: languageCode => (languageCodeToLanguageName(languageCode))
@@ -36,15 +38,17 @@ const columns = [
         width: '20%',
         render: languageCode => (languageCodeToLanguageName(languageCode))
     },
-    {
-        title: 'Type',
-        dataIndex: 'type',
-    },
+    // {
+    //     title: 'Type',
+    //     dataIndex: 'type',
+    // },
 ];
 
 const languageCodeToLanguageName = languageCode => ({
     de: 'German',
-    en: 'English'
+    en: 'English',
+    es: 'Spanish',
+    zh: 'Chinese'
 }[languageCode])
 
 // const getRandomuserParams = params => {

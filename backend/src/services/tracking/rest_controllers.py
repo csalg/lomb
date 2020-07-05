@@ -25,7 +25,7 @@ def rest_handler():
         return str(e), 422
 
     message, lemmas, source_language, support_language = itemgetter('message', 'lemmas', 'source_language', 'support_language')(content)
-    current_app.logger.info(f"Adding lemma: {content}")
+    current_app.logger.info(f"Tracking: {content}")
     # tracker.add(user, message, lemmas, source_language, support_language)
 
     try:

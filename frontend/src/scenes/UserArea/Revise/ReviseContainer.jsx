@@ -3,7 +3,7 @@ import React from "react";
 import { Table } from 'antd';
 import reqwest from 'reqwest';
 import AuthService from "../../../services/auth";
-import {ALL_TEXTS, LIBRARY_UPLOADS, REVISE_URL} from "../../../endpoints";
+import {ALL_TEXTS, LIBRARY_UPLOADS, REVISE_URL, USER, USER_LANGUAGES} from "../../../endpoints";
 import {Link} from "react-router-dom";
 import Lemmas from "./Lemmas";
 import styled from 'styled-components'
@@ -17,8 +17,10 @@ class ReviseContainer extends React.Component {
         this.changeLemma = this.changeLemma.bind(this)
     }
     state = {
-        currentLemma: "a lemma",
+        currentLemma: "",
         currentExamples: [],
+        sourceLanguage: 'en',
+        supportLanguage: 'en',
         lemmas: [],
         lemmasToExamples: {},
         loading: false,
@@ -26,6 +28,7 @@ class ReviseContainer extends React.Component {
 
     componentDidMount() {
         this.fetchTexts()
+        this.fetchLanguages()
     }
 
     fetchTexts(){
@@ -34,15 +37,18 @@ class ReviseContainer extends React.Component {
                 "minimum_frequency": 4,
             })
             .then(data => {
-                console.log(data)
-                const lemmas = data.data.map(record =>{return {_id: record._id}})
+                console.log(data.data)
+                const lemmas = data.data.map(record =>{
+                    return {
+                        _id: record.lemma,
+                        sourceLanguage: record.language,
+                    }})
                 const lemmasToExamples = {}
                 for (let i=0; i<lemmas.length; i++){
                     const lemma = data.data[i]._id
                     const examples =  data.data[i].examples
                     lemmasToExamples[lemma] = examples
                 }
-                console.log(lemmasToExamples)
                 this.setState({
                     loading:false,
                     data: data.data,
@@ -52,9 +58,17 @@ class ReviseContainer extends React.Component {
             })
             .catch(err => console.log('Error fetching texts: ', err))
     }
+    fetchLanguages(){
+        AuthService
+            .jwt_get(USER)
+            .then(data => {
+                this.setState({
+                    'supportLanguage':data.data.known_languages[0],
+                })
+            })
+    }
 
-    changeLemma=(newLemma) => {
-        console.log('changing lemma')
+    changeLemma=(newLemma, newSourceLanguage) => {
         this.setState({
             currentLemma: newLemma,
             currentExamples: this.state.lemmasToExamples[newLemma]
