@@ -6,7 +6,7 @@ import UserAreaContainer from "./scenes/UserArea/UserAreaContainer";
 import {LoginTab, RegisterTab} from "./scenes/Auth/AuthContainer";
 import {BrowserRouter, Link, Route, Switch, useHistory} from "react-router-dom";
 import AuthService from './services/auth'
-import {PrivateRoute} from "./services/auth-routes.lib";
+import {PrivateRoute} from "./services/PrivateRoute";
 import Reader from "./scenes/UserArea/Reader/Reader";
 import ReviseContainer from "./scenes/UserArea/Revise/ReviseContainer";
 

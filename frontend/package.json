@@ -19,6 +19,7 @@
     "react-validation": "^3.0.7",
     "reqwest": "^2.0.5",
     "styled-components": "^5.1.1",
+    "styled-icons": "10.6.0",
     "typescript": "^3.9.5 ",
     "validator": "^13.1.1"
   },

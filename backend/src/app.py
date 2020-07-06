@@ -2,6 +2,8 @@ from flask_jwt_extended import JWTManager, jwt_required
 
 from flask import Flask, render_template, jsonify
 from flask_cors import CORS
+
+from config import LANGUAGE_NAMES
 from services.library.api import library_blueprint
 from services.tracking.rest_controllers import tracking
 from services.auth.http_controllers import auth_blueprint
@@ -28,7 +30,7 @@ def resource_not_found(e):
 def index():
     return render_template('index.html.j2')
 
-@app.route('/yo')
+@app.route('/langs')
 @jwt_required
-def yo():
-    return 'yo'
+def langs():
+    return jsonify(LANGUAGE_NAMES)

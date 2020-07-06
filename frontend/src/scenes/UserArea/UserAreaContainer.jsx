@@ -3,9 +3,29 @@ import { Layout, Menu, Dropdown } from 'antd';
 import Library from './Library'
 import Upload from "./Upload";
 import { DownOutlined } from '@ant-design/icons';
-import {Link, Switch, Route, Redirect} from "react-router-dom";
-import Revise from "./Revise/ReviseContainer";
+import {Link, Switch, Route, Redirect, useHistory, withRouter} from "react-router-dom";
+import styled from 'styled-components';
+import { LogOut } from '@styled-icons/feather/LogOut'
+import AuthService from '../../services/auth'
 const { Header, Content, Footer } = Layout;
+
+const Logo = styled.div`
+  font-family: Fernynda, sans-serif;
+  width: 120px;
+  height: 31px;
+  float:left;
+  color: hsla(209, 50%, 55%, 0.8);
+  font-size: 3em;
+`
+
+const Right = styled.div`  
+  font-family: Fernynda, sans-serif;
+  float:right;
+`
+
+const LogoutIcon = styled(LogOut)`
+    height: 1em;
+`
 
 const menu = (
     <Menu>
@@ -29,10 +49,12 @@ const VocabularyDropdown = () =>
         </a>
     </Dropdown>
 
-const UserAreaContainer = ({match}) => (
+const UserAreaContainer = ({match, history}) => (
     <Layout className="layout" style={{minHeight: '100vh'}}>
         <Header>
-            <div className="logo" />
+           <Logo>
+                Lomb
+           </Logo>
             <Menu
                 theme="dark"
                 mode="horizontal"
@@ -43,6 +65,12 @@ const UserAreaContainer = ({match}) => (
                 <Menu.Item key="upload"><Link to={`${match.url}/upload`}>Upload</Link></Menu.Item>
                 <Menu.Item key="revise"><Link to={`/revise`}>Revise</Link></Menu.Item>
                 {/*<Menu.Item key="vocabulary"><VocabularyDropdown/></Menu.Item>*/}
+                <Right>
+                    <LogoutIcon onClick={_ => {
+                        AuthService.logout();
+                        history.push('/')
+                    }}/>
+                </Right>
             </Menu>
         </Header>
         <Content style={{ padding: '0 50px' }}>
@@ -66,4 +94,4 @@ const UserAreaContainer = ({match}) => (
     </Layout>
 );
 
-export default UserAreaContainer;
+export default withRouter(UserAreaContainer);
