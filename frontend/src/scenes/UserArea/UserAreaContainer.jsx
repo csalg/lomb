@@ -3,7 +3,7 @@ import { Layout, Menu, Dropdown } from 'antd';
 import Library from './Library'
 import Upload from "./Upload";
 import { DownOutlined } from '@ant-design/icons';
-import {Link, Switch, Route, Redirect, useHistory, withRouter} from "react-router-dom";
+import {Link, Switch, Route, Redirect, withRouter} from "react-router-dom";
 import styled from 'styled-components';
 import { LogOut } from '@styled-icons/feather/LogOut'
 import AuthService from '../../services/auth'
