@@ -95,7 +95,7 @@ email_validation_regex = re.compile("""(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0
 def make_user_from_json(username="", password="", learning_languages=[], known_languages=[]):
     if not username or not password or not learning_languages or not known_languages:
         raise Exception("Empty fields found. User was not created")
-    if len(password) > MINIMUM_PASSWORD_LENGTH or len(password)> MAXIMUM_PASSWORD_LENGTH:
+    if len(password) < MINIMUM_PASSWORD_LENGTH or len(password)> MAXIMUM_PASSWORD_LENGTH:
         raise Exception(f"Password must be between {MINIMUM_PASSWORD_LENGTH} and {MAXIMUM_PASSWORD_LENGTH} characters")
     for learning_language in learning_languages:
         if learning_language not in SOURCE_LANGUAGES:
