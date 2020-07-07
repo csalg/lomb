@@ -1,0 +1,10 @@
+:root {
+    --looked-up-bg: hsla(17, 86%, 69%, 0.11);
+    --not-looked-up-bg: hsla(209, 86%, 69%, 0.22);
+}
+.looked-up {
+    background-color: var(--looked-up-bg)
+}
+.exposed {
+    background-color: var(--not-looked-up-bg);
+}

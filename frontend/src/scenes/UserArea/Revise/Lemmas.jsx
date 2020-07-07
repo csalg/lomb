@@ -1,6 +1,7 @@
 import React from "react";
 import AuthService from "../../../services/auth";
 import {INTERACTION_TRACKING_URL} from "../../../endpoints";
+import './Lemmas.css'
 
 export default class Lemmas extends React.Component {
     constructor(props) {
@@ -31,15 +32,18 @@ export default class Lemmas extends React.Component {
         if (entries.length > 20) {
             return
         }
-        console.log()
         entries.forEach(entry => {
-                const lemma = entry.target.innerText
-                const sourceLanguage =  entry.target.dataset.sourceLanguage
-                AuthService
-                    .jwt_post(
-                        INTERACTION_TRACKING_URL,
-                        this.__lemma_was_not_clicked_message(lemma, sourceLanguage)
-                    )
+                if (!this.__is_lemma_seen(entry.target)) {
+                    console.log(entry.target);
+                    entry.target.classList.add('exposed');
+                    const lemma = entry.target.innerText
+                    const sourceLanguage = entry.target.dataset.sourceLanguage
+                    AuthService
+                        .jwt_post(
+                            INTERACTION_TRACKING_URL,
+                            this.__lemma_was_not_clicked_message(lemma, sourceLanguage)
+                        )
+                }
             }
         )
     }
@@ -53,7 +57,9 @@ export default class Lemmas extends React.Component {
         }
     }
 
-    clickCallback(lemma,sourceLanguage){
+    clickCallback(entry, lemma, sourceLanguage) {
+        entry.target.classList.add('looked-up');
+        this.props.changeLemma(lemma,sourceLanguage)
         AuthService
             .jwt_post(
                 INTERACTION_TRACKING_URL,
@@ -75,12 +81,18 @@ export default class Lemmas extends React.Component {
             <>
                 <table>
                     <tbody>
-                    {this.props.rows.map(row => <Lemma clickCallback={this.clickCallback} key={row._id} row={row} observer={this.observer}/>)}
+                    {this.props.rows.map((row, i) => <Lemma clickCallback={this.clickCallback}
+                                                       key={i} row={row}
+                                                       observer={this.observer}/>)}
                     </tbody>
                 </table>
                 <div style={{height: '105vh'}}/>
             </>
         )
+    }
+
+    __is_lemma_seen(target) {
+        return target.classList.contains('exposed') || target.classList.contains('looked-up');
     }
 }
 
@@ -97,7 +109,7 @@ class Lemma extends React.Component {
                 ref={element => (this.element = element)}
                 data-source-language={sourceLanguage}
                 data-something='bar'
-                onClick={() => this.props.clickCallback(lemma, sourceLanguage)}
+                onClick={(e) => this.props.clickCallback(e,lemma, sourceLanguage)}
             >
                 <td>{lemma}</td>
             </tr>

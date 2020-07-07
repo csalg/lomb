@@ -37,7 +37,7 @@ class ReviseContainer extends React.Component {
                 "minimum_frequency": 4,
             })
             .then(data => {
-                console.log(data.data)
+               console.log(data.data)
                 const lemmas = data.data.map(record =>{
                     return {
                         _id: record.lemma,
@@ -45,9 +45,13 @@ class ReviseContainer extends React.Component {
                     }})
                 const lemmasToExamples = {}
                 for (let i=0; i<lemmas.length; i++){
-                    const lemma = data.data[i]._id
+                    const sourceLanguage = data.data[i].language
+                    const lemma = data.data[i].lemma
                     const examples =  data.data[i].examples
-                    lemmasToExamples[lemma] = examples
+                    if (!(sourceLanguage in lemmasToExamples)){
+                        lemmasToExamples[sourceLanguage] = {}
+                    }
+                    lemmasToExamples[sourceLanguage][lemma] = examples
                 }
                 this.setState({
                     loading:false,
@@ -55,6 +59,7 @@ class ReviseContainer extends React.Component {
                     lemmas: lemmas,
                     lemmasToExamples: lemmasToExamples
                 })
+                console.log(this.state.lemmasToExamples)
             })
             .catch(err => console.log('Error fetching texts: ', err))
     }
@@ -71,7 +76,9 @@ class ReviseContainer extends React.Component {
     changeLemma=(newLemma, newSourceLanguage) => {
         this.setState({
             currentLemma: newLemma,
-            currentExamples: this.state.lemmasToExamples[newLemma]
+            sourceLanguage: newSourceLanguage,
+            currentExamples: this.state.lemmasToExamples[newSourceLanguage][newLemma],
+            supportLanguage: this.state.lemmasToExamples[newSourceLanguage][newLemma][0]['support_language']
         })
     }
 
@@ -105,7 +112,7 @@ class ReviseContainer extends React.Component {
                         <Examples examples={this.state.currentExamples}/>
                     </SidebarSection>
                     <SidebarSection>
-                        <Definition lemma={this.state.currentLemma}/>
+                        <Definition lemma={this.state.currentLemma} sourceLanguage={this.state.sourceLanguage} supportLanguage={this.state.supportLanguage}/>
                     </SidebarSection>
                 </Sidebar>
             </Container>
