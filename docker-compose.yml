@@ -6,7 +6,8 @@ services:
     restart: unless-stopped
     stdin_open: true
     volumes:
-      - ./frontend:/app
+      - ./frontend/public:/app/public
+      - ./frontend/src:/app/src
     environment:
       HOST: "0.0.0.0"
     ports: 
