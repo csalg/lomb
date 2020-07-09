@@ -303,28 +303,3 @@ class InteractionTracker {
         }
     }
 }
-
-
-class AuthService {
-    static jwtBearerToken() {
-        const user = JSON.parse(localStorage.getItem('user'))
-        if (user)
-            return `Bearer ${user}`
-        return "";
-    }
-
-    static async jwtPost(url, data) {
-        const response = await fetch(url,
-            {
-                method: "POST",
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': AuthService.jwtBearerToken()
-                },
-                body: JSON.stringify(data)
-            })
-        return response
-    }
-
-}

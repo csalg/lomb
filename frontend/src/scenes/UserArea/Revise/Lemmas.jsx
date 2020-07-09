@@ -34,7 +34,6 @@ export default class Lemmas extends React.Component {
         }
         entries.forEach(entry => {
                 if (!this.__is_lemma_seen(entry.target)) {
-                    console.log(entry.target);
                     entry.target.classList.add('exposed');
                     const lemma = entry.target.innerText
                     const sourceLanguage = entry.target.dataset.sourceLanguage
@@ -58,13 +57,15 @@ export default class Lemmas extends React.Component {
     }
 
     clickCallback(entry, lemma, sourceLanguage) {
-        entry.target.classList.add('looked-up');
-        this.props.changeLemma(lemma,sourceLanguage)
-        AuthService
-            .jwt_post(
-                INTERACTION_TRACKING_URL,
-                this.__lemma_was_clicked_message(lemma, sourceLanguage)
-            )
+        if (!this.__is_lemma_seen(entry.target)) {
+            entry.target.classList.add('looked-up');
+            this.props.changeLemma(lemma, sourceLanguage)
+            AuthService
+                .jwt_post(
+                    INTERACTION_TRACKING_URL,
+                    this.__lemma_was_clicked_message(lemma, sourceLanguage)
+                )
+        }
     }
 
     __lemma_was_clicked_message(lemma, sourceLanguage) {
@@ -75,6 +76,17 @@ export default class Lemmas extends React.Component {
             support_language: "",
         }
     }
+
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     console.log('shouldComponentUpdate Lemmas')
+    //     console.log(nextProps)
+    //     console.log(nextState)
+    //     // if (nextProps.rows.length === this.props.rows.length){
+    //     //     return false
+    //     // }
+    //
+    //     return false
+    // }
 
     render() {
         return (
@@ -92,6 +104,8 @@ export default class Lemmas extends React.Component {
     }
 
     __is_lemma_seen(target) {
+        console.log(target.classList)
+       console.log(target.classList.contains('exposed') || target.classList.contains('looked-up'))
         return target.classList.contains('exposed') || target.classList.contains('looked-up');
     }
 }
@@ -99,6 +113,9 @@ export default class Lemmas extends React.Component {
 class Lemma extends React.Component {
     componentDidMount() {
         this.props.observer.observe(this.element)
+    }
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        console.log('shouldComponentUpdate Lemma')
     }
 
     render() {
