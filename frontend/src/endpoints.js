@@ -1,4 +1,4 @@
-export const API_URL = process.env.API_URL || 'http://localhost:5000'
+import API_URL from './api_endpoint'
 
 export const LANGS_URL = API_URL + "/langs"
 
