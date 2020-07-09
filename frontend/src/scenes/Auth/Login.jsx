@@ -11,15 +11,15 @@ const Login = () => {
     const [error, setError] = useState("")
 
     const onFinish = values => {
-    console.log('Success:', values);
-    console.log(history)
     AuthService.login(values.username, values.password).then(
         () => {
             history.push('/library');
             window.location.reload();
         },
         error => {
-            setError(error.response.data.error);
+            if (error.response)
+                setError(error.response.data.error);
+            setError('Could not connect to backend')
         }
     )
   };
