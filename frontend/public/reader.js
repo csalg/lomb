@@ -184,7 +184,7 @@ class ReadingDocumentController {
         return JSON.parse(urlParams.get('open'))
     }
 
-    __fetch_document_as_blob = (url) => {
+    __fetch_document_as_blob(url){
         const xhr = new XMLHttpRequest();
         return new Promise((resolve, reject) => {
             xhr.responseType = 'blob';
