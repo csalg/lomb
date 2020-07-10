@@ -1,6 +1,6 @@
 FROM node:14
 
-RUN apt install make
+RUN apt install make -y
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
