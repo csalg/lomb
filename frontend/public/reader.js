@@ -91,7 +91,7 @@ class ReadingDocumentController {
 
     __appendStylesheet(doc) {
         const cssLink = document.createElement("link");
-        cssLink.href = 'http://localhost:3000/reader.css';
+        cssLink.href = '/reader.css';
         cssLink.rel = "stylesheet";
         cssLink.type = "text/css";
         doc.head.appendChild(cssLink);
