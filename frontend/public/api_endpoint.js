@@ -1,1 +1,1 @@
-API_URL="localhost:5000"
+API_URL="PI_URL"

@@ -1,8 +1,9 @@
 FROM node:14
 
+RUN apt install make
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
-RUN npm install
+RUN make build
 #CMD /bin/bash
-CMD /app/run.sh
+CMD make run
