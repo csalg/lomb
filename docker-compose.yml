@@ -17,14 +17,8 @@ services:
     build: ./backend
     container_name: backend
     restart: unless-stopped
-    environment:
-      APP_ENV: "dev"
-      APP_DEBUG: "False"
-      APP_PORT: 5000
-      MONGODB_DATABASE: lomb
-      MONGODB_USERNAME: lomb
-      MONGODB_PASSWORD: secret
-      MONGODB_HOSTNAME: mongodb
+    env_file:
+      - env
     ports:
       - 5000:5000
     volumes:
