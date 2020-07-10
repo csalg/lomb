@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Revise</title>
+    <link rel="stylesheet" href="./revise.css">
+</head>
+<body>
+<div class="container">
+    <div class="lemmasContainer">
+        <table>
+            <thead>
+            <th>Word</th>
+            <th>Language</th>
+            <th>Frequency</th>
+            </thead>
+            <tbody>
+            <template id="lemma">
+                <tr>
+                    <td class="lemma-name"></td>
+                    <td class="lemma-language"></td>
+                    <td class="lemma-frequency"></td>
+                </tr>
+            </template>
+            </tbody>
+        </table>
+    </div>
+    <div class="sidebar">
+        <div class="examples">
+
+        </div>
+        <div class="definition">
+
+        </div>
+
+    </div>
+</div>
+
+<script src="endpoints.js"></script>
+<script src="api_endpoint.js"></script>
+<script src="auth.js"></script>
+<script src="revise.js"></script>
+<script>
+    const main = () => {
+        const lemmasController = new LemmasController(REVISE_URL)
+        document.body.addEventListener('lemmaWasClicked', e => console.log(e.detail()))
+        document.body.addEventListener('lemmaWasExposed', e => console.log(e.detail()))
+    }
+    main()
+</script>
+</body>
+</html>

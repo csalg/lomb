@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        @font-face {
+            font-family: SourceSansPro;
+            src: url('fonts/SourceSansPro-Light.ttf');
+        }
+        body {
+            font-family: SourceSansPro,sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            border: 0;
+            padding: 0
+        }
+
+        :root {
+            --looked-up-bg: hsla(17, 86%, 69%, 0.11);
+            --not-looked-up-bg: hsla(209, 86%, 69%, 0.22);
+        }
+
+
+        .container_ {
+            display: flex;
+        }
+
+        .text-and-support-area {
+            width: 60vw;
+            height: 100vh;
+        }
+
+        .support-area {
+            display: flex;
+            justify-content: center;
+            height: 20vh;
+            padding: 1rem 0;
+            border-bottom: thin solid black;
+            overflow-y: scroll;
+        }
+
+        #support-text {
+            width: 30rem;
+        }
+
+        #definition {
+            width: 40vw;
+            height: 100vh;
+            border-left: thin solid black;
+        }
+
+        .text-area {
+            display: flex;
+            justify-content: center;
+            width: 60vw;
+            height: 80vh;
+        }
+
+        #readingDocument {
+            overflow-y: scroll;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .readable-width {
+            max-width: 30rem;
+            padding: 0 auto;
+        }
+
+        #definition {
+            overflow-y: scroll;
+            width: 40%;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container_">
+    <div class="text-and-support-area">
+        <div class="support-area">
+            <div class="readable-width" id="support">
+                <div id="support-text"></div>
+            </div>
+        </div>
+        <div class="text-area">
+            <iframe src="" id="readingDocument">
+            </iframe>
+        </div>
+    </div>
+    <iframe id="definition"></iframe>
+</div>
+</body>
+
+
+<script type="application/javascript" src="api_endpoint.js"></script>
+<script type="application/javascript"  src="endpoints.js"></script>
+<script type="application/javascript" src="auth.js"></script>
+<script type="application/javascript" src="reader.js"></script>
+
+<script>
+
+    async function main() {
+        const readingDocumentView   = document.querySelector('iframe#readingDocument')
+        const definitionView        = document.querySelector('iframe#definition')
+        const supportTextView       = document.querySelector('div#support-text')
+
+        const readingDocumentController = new ReadingDocumentController(readingDocumentView)
+        await readingDocumentController.load()
+
+        const {sourceLanguage, supportLanguage} = readingDocumentController.getLanguages()
+
+        const supportTextController = new SupportTextController(supportTextView)
+        const definitionController = new DefinitionController(sourceLanguage, supportLanguage, definitionView)
+        const tracker = new InteractionTracker(INTERACTION_TRACKING_URL,sourceLanguage,supportLanguage)
+
+        readingDocumentView.addEventListener('wordWasSelected', e => {
+            const newLemma = e.detail();
+            definitionController.changeDefinition(newLemma)
+            tracker.lemmaWasSelected(newLemma)
+        })
+
+        readingDocumentView.addEventListener('sentenceWasClicked', e => {
+            const {supportText, tokensToLemmas} = e.detail();
+            const tokensSet = new Set(Object.values(tokensToLemmas))
+            const tokens = Array.from(tokensSet)
+            supportTextController.changeSupportText(supportText)
+            tracker.sentenceWasClicked(tokens)
+        })
+
+        readingDocumentView.addEventListener('sentenceWasExposed', e => {
+            const { tokensToLemmas } = e.detail();
+            const tokensSet = new Set(Object.values(tokensToLemmas))
+            const tokens = Array.from(tokensSet)
+            tracker.sentenceWasExposed(tokens)
+        })
+
+    }
+
+    main()
+
+
+</script>
+
+</html>
