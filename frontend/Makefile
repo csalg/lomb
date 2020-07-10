@@ -2,7 +2,7 @@
 
 build:
 	npm install
-	npm run build
+	# npm run build
 
 run:
 	echo 'const API_URL="${API_URL}"' > 'public/api_endpoint.js'
