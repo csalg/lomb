@@ -15,7 +15,7 @@ services:
     networks:
       - internal 
     depends_on:
-      -frontend
+      - frontend
 
 
   frontend:
