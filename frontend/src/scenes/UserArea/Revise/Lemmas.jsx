@@ -33,7 +33,7 @@ export default class Lemmas extends React.Component {
             return
         }
         entries.forEach(entry => {
-                if (!this.__is_lemma_seen(entry.target)) {
+                if (!this.__isLemmaSeen(entry.target)) {
                     entry.target.classList.add('exposed');
                     const lemma = entry.target.innerText
                     const sourceLanguage = entry.target.dataset.sourceLanguage
@@ -56,9 +56,9 @@ export default class Lemmas extends React.Component {
         }
     }
 
-    clickCallback(entry, lemma, sourceLanguage) {
-        if (!this.__is_lemma_seen(entry.target)) {
-            entry.target.classList.add('looked-up');
+    clickCallback(target, lemma, sourceLanguage) {
+        if (!this.__isLemmaSeen(target)) {
+            target.classList.add('looked-up');
             this.props.changeLemma(lemma, sourceLanguage)
             AuthService
                 .jwt_post(
@@ -103,9 +103,7 @@ export default class Lemmas extends React.Component {
         )
     }
 
-    __is_lemma_seen(target) {
-        console.log(target.classList)
-       console.log(target.classList.contains('exposed') || target.classList.contains('looked-up'))
+    __isLemmaSeen(target) {
         return target.classList.contains('exposed') || target.classList.contains('looked-up');
     }
 }
@@ -123,7 +121,7 @@ class Lemma extends React.Component {
                 ref={element => (this.element = element)}
                 data-source-language={sourceLanguage}
                 data-something='bar'
-                onClick={(e) => this.props.clickCallback(e,lemma, sourceLanguage)}
+                onClick={(e) => this.props.clickCallback(this.element,lemma, sourceLanguage)}
             >
                 <td>{lemma}</td>
             </tr>
