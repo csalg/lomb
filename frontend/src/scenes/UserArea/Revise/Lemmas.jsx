@@ -114,9 +114,6 @@ class Lemma extends React.Component {
     componentDidMount() {
         this.props.observer.observe(this.element)
     }
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        console.log('shouldComponentUpdate Lemma')
-    }
 
     render() {
         const lemma = this.props.row._id

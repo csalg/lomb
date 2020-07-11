@@ -45,7 +45,7 @@ class Examples extends React.Component {
     constructor(props) {
         super(props);
         this.state = {examples:[]}
-        console.log('Examples constructor called')
+        // console.log('Examples constructor called')
         this.exampleWasClickedEvent = new CustomEvent('exampleWasClicked', {
             bubbles: true,
             detail: () => this.state.clickedExample
@@ -67,8 +67,8 @@ class Examples extends React.Component {
     }
 
     render() {
-        console.log('Render examples')
-        console.log(this.state)
+        // console.log('Render examples')
+        // console.log(this.state)
         return (
             <>
                 {this.state.examples.map((example, i) =>

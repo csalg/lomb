@@ -41,8 +41,8 @@ class ReviseContainer extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        console.log('shouldComponentUpdate ReviseContainer')
-        console.log(nextState)
+        // console.log('shouldComponentUpdate ReviseContainer')
+        // console.log(nextState)
         return (this.state.currentLemma === "")
     }
 

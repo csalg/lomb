@@ -1,1 +1,1 @@
-export const USE_LINGUEE_SERVICES = process.env['USE_LINGUEE_SERVICES']
+export const USE_LINGUEE_SERVICES = process.env['REACT_APP_USE_LINGUEE_SERVICES']

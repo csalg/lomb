@@ -15,18 +15,18 @@ export default class extends React.Component {
 
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        console.log('shouldComponentUpdate Definition')
-        console.log(nextProps)
+        // console.log('shouldComponentUpdate Definition')
+        // console.log(nextProps)
         return this.state.currentLemma != nextState.currentLemma
     }
 
     componentDidMount() {
         document.body.addEventListener('wordWasClicked', e => {
-                console.log('Component did mount')
+                // console.log('Component did mount')
                 this.setState({...e.detail()})
-                console.log('state was updated')
-                console.log(e.detail())
-                console.log(this.state)
+                // console.log('state was updated')
+                // console.log(e.detail())
+                // console.log(this.state)
             }
         )
     }
@@ -35,6 +35,7 @@ export default class extends React.Component {
         let {currentLemma, sourceLanguage, supportLanguage} = this.state
         sourceLanguage  = LANGUAGE_NAMES[sourceLanguage].toLowerCase()
         supportLanguage = LANGUAGE_NAMES[supportLanguage].toLowerCase()
+        console.log(currentLemma, USE_LINGUEE_SERVICES)
         const dictionary_url = `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`
         const Frame = (props) => (<iframe
             {...props}
