@@ -29,6 +29,7 @@ class AuthService {
     }
 
     static jwt_post(url, data){
+        console.log(`Posting to: ${url}`)
         return axios
             .post(url,data, {headers: authHeader()})
             .then(data => {
