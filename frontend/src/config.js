@@ -1,0 +1,1 @@
+export const USE_LINGUEE_SERVICES = process.env['USE_LINGUEE_SERVICES']

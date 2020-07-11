@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import getLanguages from "../../../services/getLanguages";
 import {LANGUAGE_NAMES} from "../../../services/languages";
+import {USE_LINGUEE_SERVICES} from "../../../config";
 
 export default class extends React.Component {
     constructor(props) {
@@ -40,9 +41,9 @@ export default class extends React.Component {
             title='definition'
             key={`${currentLemma}_${sourceLanguage}`}
             style={{width: '100%', height: '100%'}}/>)
-        // if (currentLemma) {
-        //     return  <Frame src={dictionary_url}/>
-        // }
+        if (currentLemma && USE_LINGUEE_SERVICES) {
+            return  <Frame src={dictionary_url}/>
+        }
         return <Frame/>
     }
 }

@@ -14,4 +14,4 @@ export const ALL_TEXTS = LIBRARY_URL + "/"
 
 export const VOCABULARY = API_URL + "/vocabulary"
 export const REVISE_URL = VOCABULARY + '/revise'
-export const INTERACTION_TRACKING_URL = 'http://localhost:5000/tracking/'
+export const INTERACTION_TRACKING_URL = API_URL+ '/tracking/'
