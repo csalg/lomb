@@ -214,7 +214,7 @@ class DefinitionController {
     }
 
     changeDefinition(newWord) {
-        const uri= `www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
+        const uri= `https://www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
         console.log(uri)
         this.view.src = uri
     }
