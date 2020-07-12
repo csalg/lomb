@@ -28,7 +28,7 @@ class ReadingDocumentController {
                 detail: () => this.currentSentence
             })
 
-        // The rest is just binding class methods to this state.
+        // The rest is just binding class methods to this.
         this.load = this.load.bind(this)
         this.__addStyles = this.__addStyles.bind(this)
         this.__frameWasLoaded = this.__frameWasLoaded.bind(this)
@@ -49,7 +49,7 @@ class ReadingDocumentController {
         return new Promise((resolve, reject) => {
             this.__fetch_document_as_blob(url)
                 .then(blob => {
-                    this.frame.src = blob
+                    this.frame = changeFrameSrcWithoutAffectingBrowserHistory(this.frame, blob)
                     this.frame.onload = _ => {
                         this.__frameWasLoaded();
                         resolve()
@@ -108,7 +108,7 @@ class ReadingDocumentController {
         spans.forEach(span => {
             span.addEventListener('click', e => {
                 this.currentSentence = {...this.__parseSpanDataset(span)}
-                this.frame.dispatchEvent(this.sentenceWasClicked)
+                document.body.dispatchEvent(this.sentenceWasClicked)
                 span.classList.add('looked-up')
             })
 
@@ -129,7 +129,7 @@ class ReadingDocumentController {
             if (selection in this.currentSentence.tokensToLemmas) {
                 const lemma = this.currentSentence.tokensToLemmas[selection]
                 this.lookedUpWord = lemma
-                this.frame.dispatchEvent(this.wordWasSelected)
+                document.body.dispatchEvent(this.wordWasSelected)
             }
         }
         this.frame.contentDocument.body.addEventListener('mouseup', lookup_word)
@@ -152,7 +152,7 @@ class ReadingDocumentController {
         else entries.forEach((entry) => {
             if (this.__notSeen(entry.target)) {
                 this.currentSentence = {...this.__parseSpanDataset(entry.target)}
-                this.frame.dispatchEvent(this.sentenceWasExposed)
+                document.body.dispatchEvent(this.sentenceWasExposed)
                 entry.target.classList.add('exposed')
             }
         })
@@ -215,8 +215,7 @@ class DefinitionController {
 
     changeDefinition(newWord) {
         const uri= `https://www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
-        console.log(uri)
-        this.view.src = uri
+        this.view = changeFrameSrcWithoutAffectingBrowserHistory(this.view, uri)
     }
 
     __intlCodeToWord(code){
@@ -302,4 +301,15 @@ class InteractionTracker {
             support_language: supportLanguage,
         }
     }
+}
+
+
+function changeFrameSrcWithoutAffectingBrowserHistory(iframe,uri){
+
+    console.log(iframe)
+    const clonedFrame = iframe.cloneNode(true)
+    const parentNode = iframe.parentNode
+    clonedFrame.src = uri
+    iframe.remove()
+    return parentNode.appendChild(clonedFrame)
 }
