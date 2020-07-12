@@ -18,7 +18,8 @@ export default class extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         if (this.state.currentLemma !== nextState.currentLemma) {
-            this.__updateDefinition(nextState.currentLemma)
+            const {sourceLanguage, supportLanguage, currentLemma } = nextState
+            this.__updateDefinition(sourceLanguage, supportLanguage, currentLemma)
             return true
         }
         return false
@@ -30,8 +31,7 @@ export default class extends React.Component {
         changeFrameSrcWithoutAffectingBrowserHistory(el,url)
     }
 
-    __makeDictionaryUrl(currentLemma) {
-        let {sourceLanguage, supportLanguage} = this.state
+    __makeDictionaryUrl(sourceLanguage, supportLanguage, currentLemma) {
         sourceLanguage = LANGUAGE_NAMES[sourceLanguage].toLowerCase()
         supportLanguage = LANGUAGE_NAMES[supportLanguage].toLowerCase()
         return `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`

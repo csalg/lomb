@@ -59,6 +59,7 @@ class Examples extends React.Component {
         document.body.addEventListener('wordWasClicked', e => {
             this.setState({examples: e.detail().currentExamples})
         })
+        this.__changeExample("\"Example\"")
     }
 
     render() {
