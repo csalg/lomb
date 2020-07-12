@@ -18,23 +18,32 @@ export default class extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         if (this.state.currentLemma !== nextState.currentLemma) {
+            console.log(nextState)
             const {sourceLanguage, supportLanguage, currentLemma } = nextState
-            this.__updateDefinition(sourceLanguage, supportLanguage, currentLemma)
-            return true
+            if (sourceLanguage && supportLanguage && currentLemma) {
+                console.log(sourceLanguage,supportLanguage,currentLemma)
+                this.__updateDefinition(sourceLanguage, supportLanguage, currentLemma)
+                return true
+            }
         }
         return false
     }
 
-    __updateDefinition(newLemma){
+    __updateDefinition(sourceLanguage, supportLanguage, newLemma){
         let el  = document.body.querySelector('#revisionDefinition')
-        let url = this.__makeDictionaryUrl(newLemma)
+        let url = this.__makeDictionaryUrl(sourceLanguage, supportLanguage, newLemma)
         changeFrameSrcWithoutAffectingBrowserHistory(el,url)
     }
 
-    __makeDictionaryUrl(sourceLanguage, supportLanguage, currentLemma) {
-        sourceLanguage = LANGUAGE_NAMES[sourceLanguage].toLowerCase()
-        supportLanguage = LANGUAGE_NAMES[supportLanguage].toLowerCase()
-        return `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`
+    __makeDictionaryUrl(sourceLanguage_, supportLanguage_, currentLemma) {
+        try {
+            const sourceLanguage = LANGUAGE_NAMES[sourceLanguage_].toLowerCase()
+            const supportLanguage = LANGUAGE_NAMES[supportLanguage_].toLowerCase()
+            return `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`
+        } catch {
+            console.log(`Exception: ${sourceLanguage_}, ${supportLanguage_} don't seem to be valid language codes.`)
+            return ""
+        }
     }
 
     componentDidMount() {

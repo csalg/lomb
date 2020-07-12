@@ -59,13 +59,13 @@ export default class Lemmas extends React.Component {
     clickCallback(target, lemma, sourceLanguage) {
         if (!this.__isLemmaSeen(target)) {
             target.classList.add('looked-up');
-            this.props.changeLemma(lemma, sourceLanguage)
             AuthService
                 .jwt_post(
                     INTERACTION_TRACKING_URL,
                     this.__lemma_was_clicked_message(lemma, sourceLanguage)
                 )
         }
+        this.props.changeLemma(lemma, sourceLanguage)
     }
 
     __lemma_was_clicked_message(lemma, sourceLanguage) {
