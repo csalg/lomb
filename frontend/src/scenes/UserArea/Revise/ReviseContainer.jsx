@@ -35,15 +35,12 @@ class ReviseContainer extends React.Component {
     componentDidMount() {
         if (this.state.lemmas.length === 0) {
             this.fetchTexts()
-            this.fetchLanguages()
         }
 
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        // console.log('shouldComponentUpdate ReviseContainer')
-        // console.log(nextState)
-        return (this.state.currentLemma === "")
+        return this.state.currentLemma === ""
     }
 
 
@@ -53,11 +50,11 @@ class ReviseContainer extends React.Component {
                 "minimum_frequency": 4,
             })
             .then(data => {
-                console.log(data.data)
                 const lemmas = data.data.map(record => {
                     return {
                         _id: record.lemma,
                         sourceLanguage: record.language,
+                        frequency: record.examples.length,
                     }
                 })
                 const lemmasToExamples = {}
@@ -79,16 +76,6 @@ class ReviseContainer extends React.Component {
                 console.log(this.state.lemmasToExamples)
             })
             .catch(err => console.log('Error fetching texts: ', err))
-    }
-
-    fetchLanguages() {
-        AuthService
-            .jwt_get(USER)
-            .then(data => {
-                this.setState({
-                    'supportLanguage': data.data.known_languages[0],
-                })
-            })
     }
 
     changeLemma = (newLemma, newSourceLanguage) => {
@@ -134,18 +121,10 @@ class ReviseContainer extends React.Component {
                 </LemmasContainer>
                 <Sidebar>
                     <SidebarSection>
-                        <Examples
-                            key={"examples"}
-                            examples={this.state.currentExamples}
-                            parentRef={this.lemmasRef}
-                        />
+                        <Examples key={"examples"}/>
                     </SidebarSection>
                     <SidebarSection>
-                        <Definition key={"definition"} lemma={this.state.currentLemma}
-                                    sourceLanguage={this.state.sourceLanguage}
-                                    supportLanguage={this.state.supportLanguage}
-                                    parentRef={this.lemmasRef}
-                        />
+                        <Definition key={"definition"}/>
                     </SidebarSection>
                 </Sidebar>
             </Container>

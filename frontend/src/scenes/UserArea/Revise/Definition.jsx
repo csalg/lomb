@@ -1,39 +1,52 @@
-import React, {useState} from 'react'
-import getLanguages from "../../../services/getLanguages";
+import React from 'react'
 import {LANGUAGE_NAMES} from "../../../services/languages";
 import {USE_LINGUEE_SERVICES} from "../../../config";
+import './Definition.css';
 
 export default class extends React.Component {
     constructor(props) {
         super(props);
+        this.frame = React.createRef()
         this.state = {
             currentLemma: "",
             sourceLanguage: "en",
             supportLanguage: "en"
         }
+
+        this.__makeDictionaryUrl = this.__makeDictionaryUrl.bind(this)
     }
 
-
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        // console.log('shouldComponentUpdate Definition')
-        // console.log(nextProps)
-        return this.state.currentLemma != nextState.currentLemma
+        if (this.state.currentLemma !== nextState.currentLemma) {
+            this.__updateDefinition(nextState.currentLemma)
+            return true
+        }
+        return false
+    }
+
+    __updateDefinition(newLemma){
+        let el  = document.body.querySelector('#revisionDefinition')
+        let url = this.__makeDictionaryUrl(newLemma)
+        changeFrameSrcWithoutAffectingBrowserHistory(el,url)
+    }
+
+    __makeDictionaryUrl(currentLemma) {
+        let {sourceLanguage, supportLanguage} = this.state
+        sourceLanguage = LANGUAGE_NAMES[sourceLanguage].toLowerCase()
+        supportLanguage = LANGUAGE_NAMES[supportLanguage].toLowerCase()
+        return `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`
     }
 
     componentDidMount() {
         document.body.addEventListener('wordWasClicked', e => {
-                // console.log('Component did mount')
                 this.setState({...e.detail()})
-                // console.log('state was updated')
-                // console.log(e.detail())
-                // console.log(this.state)
             }
         )
     }
 
     render() {
         let {currentLemma, sourceLanguage, supportLanguage} = this.state
-        sourceLanguage  = LANGUAGE_NAMES[sourceLanguage].toLowerCase()
+        sourceLanguage = LANGUAGE_NAMES[sourceLanguage].toLowerCase()
         supportLanguage = LANGUAGE_NAMES[supportLanguage].toLowerCase()
         console.log(currentLemma, USE_LINGUEE_SERVICES)
         const dictionary_url = `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`
@@ -42,9 +55,20 @@ export default class extends React.Component {
             title='definition'
             key={`${currentLemma}_${sourceLanguage}`}
             style={{width: '100%', height: '100%'}}/>)
-        if (currentLemma && USE_LINGUEE_SERVICES) {
-            return  <Frame src={dictionary_url}/>
-        }
-        return <Frame/>
+        // if (currentLemma && USE_LINGUEE_SERVICES) {
+        //     return  <Frame src={dictionary_url}/>
+        // }
+        // return <Frame ref={this.frame}/>
+        return <iframe id='revisionDefinition'/>
     }
+}
+
+function changeFrameSrcWithoutAffectingBrowserHistory(iframe, uri) {
+
+    console.log(iframe)
+    const clonedFrame = iframe.cloneNode(true)
+    const parentNode = iframe.parentNode
+    clonedFrame.src = uri
+    iframe.remove()
+    return parentNode.appendChild(clonedFrame)
 }

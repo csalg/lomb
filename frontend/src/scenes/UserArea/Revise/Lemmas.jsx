@@ -77,21 +77,18 @@ export default class Lemmas extends React.Component {
         }
     }
 
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
-    //     console.log('shouldComponentUpdate Lemmas')
-    //     console.log(nextProps)
-    //     console.log(nextState)
-    //     // if (nextProps.rows.length === this.props.rows.length){
-    //     //     return false
-    //     // }
-    //
-    //     return false
-    // }
+    __isLemmaSeen(target) {
+        return target.classList.contains('exposed') || target.classList.contains('looked-up');
+    }
 
     render() {
         return (
             <>
                 <table>
+                    <thead>
+                    <th>Word</th>
+                    <th>Frequency</th>
+                    </thead>
                     <tbody>
                     {this.props.rows.map((row, i) => <Lemma clickCallback={this.clickCallback}
                                                        key={i} row={row}
@@ -102,10 +99,6 @@ export default class Lemmas extends React.Component {
             </>
         )
     }
-
-    __isLemmaSeen(target) {
-        return target.classList.contains('exposed') || target.classList.contains('looked-up');
-    }
 }
 
 class Lemma extends React.Component {
@@ -114,8 +107,9 @@ class Lemma extends React.Component {
     }
 
     render() {
-        const lemma = this.props.row._id
-        const sourceLanguage = this.props.row.sourceLanguage
+        const lemma             = this.props.row._id
+        const sourceLanguage    = this.props.row.sourceLanguage
+        const frequency         = this.props.row.frequency
         return (
             <tr
                 ref={element => (this.element = element)}
@@ -124,6 +118,7 @@ class Lemma extends React.Component {
                 onClick={(e) => this.props.clickCallback(this.element,lemma, sourceLanguage)}
             >
                 <td>{lemma}</td>
+                <td>{frequency}</td>
             </tr>
         )
     }
