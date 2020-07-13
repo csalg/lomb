@@ -8,7 +8,7 @@ from .domain.domain import UsersDomain
 from .domain.models import User
 from config import MINIMUM_PASSWORD_LENGTH, MAXIMUM_PASSWORD_LENGTH, SUPPORT_LANGUAGES, SOURCE_LANGUAGES
 
-auth_blueprint = Blueprint('users', __name__, template_folder='templates')
+user_blueprint = Blueprint('users', __name__, template_folder='templates')
 domain = UsersDomain()
 
 login_schema = {
@@ -32,17 +32,15 @@ registration_schema = {
 }
 
 
-@auth_blueprint.route('/login', methods=['GET', 'POST'])
+@user_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        print(request.json)
         try:
             validate(instance=request.json, schema=login_schema)
         except Exception as e:
             return jsonify({'error':str(e)}), 400
         username, password = request.json['username'], request.json['password']
         user = domain.authenticate_user(username, password)
-        print(user)
         if user:
             access_token = user_to_access_token(user)
             return jsonify({'access_token': access_token})
@@ -59,7 +57,7 @@ def user_to_access_token(user):
     }
     return create_access_token(identity=username_and_role)
 
-@auth_blueprint.route('/register', methods=['GET', 'POST'])
+@user_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         try:
@@ -79,7 +77,7 @@ def register():
     else:
         return render_template('register.html.j2')
 
-@auth_blueprint.route('/user')
+@user_blueprint.route('/user')
 @jwt_required
 def user():
     username = get_jwt_identity()['username']

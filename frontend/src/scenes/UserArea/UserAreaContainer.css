@@ -1,0 +1,9 @@
+.rightMenuButton {
+    background-color: unset;
+    color: inherit;
+   border: none;
+}
+
+.rightMenuButton:hover{
+    background-color: unset;
+}

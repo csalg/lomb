@@ -1,4 +1,4 @@
-from services.auth.db import UsersRepository
+from services.user.db import UsersRepository
 
 
 class UsersDomain:
