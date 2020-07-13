@@ -20,7 +20,7 @@ export default class extends React.Component {
         if (this.state.currentLemma !== nextState.currentLemma) {
             console.log(nextState)
             const {sourceLanguage, supportLanguage, currentLemma } = nextState
-            if (sourceLanguage && supportLanguage && currentLemma) {
+            if (USE_LINGUEE_SERVICES && sourceLanguage && supportLanguage && currentLemma) {
                 console.log(sourceLanguage,supportLanguage,currentLemma)
                 this.__updateDefinition(sourceLanguage, supportLanguage, currentLemma)
                 return true
@@ -54,21 +54,7 @@ export default class extends React.Component {
     }
 
     render() {
-        let {currentLemma, sourceLanguage, supportLanguage} = this.state
-        sourceLanguage = LANGUAGE_NAMES[sourceLanguage].toLowerCase()
-        supportLanguage = LANGUAGE_NAMES[supportLanguage].toLowerCase()
-        console.log(currentLemma, USE_LINGUEE_SERVICES)
-        const dictionary_url = `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`
-        const Frame = (props) => (<iframe
-            {...props}
-            title='definition'
-            key={`${currentLemma}_${sourceLanguage}`}
-            style={{width: '100%', height: '100%'}}/>)
-        // if (currentLemma && USE_LINGUEE_SERVICES) {
-        //     return  <Frame src={dictionary_url}/>
-        // }
-        // return <Frame ref={this.frame}/>
-        return <iframe id='revisionDefinition'/>
+        return <iframe title='revisionDefinition' id='revisionDefinition'/>
     }
 }
 

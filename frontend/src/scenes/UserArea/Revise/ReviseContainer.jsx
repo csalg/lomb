@@ -8,7 +8,23 @@ import Lemmas from "./Lemmas";
 import styled from 'styled-components'
 import Examples from "./Examples";
 import Definition from "./Definition";
+import Filter from "./Filter";
+import {neutral2, neutral3, neutral4} from "../../../PALETTE";
 
+
+const PaddedContainer = styled.div`
+        padding: 1rem 2rem;
+        `
+
+const Header = styled(PaddedContainer)`
+          background-color: ${neutral3};
+          margin-bottom: .5em;
+            color: rgba(0,0,0,.85);
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 1.4;
+            border-bottom: thin solid ${neutral4};
+            `
 
 class ReviseContainer extends React.Component {
     constructor(props) {
@@ -99,7 +115,6 @@ class ReviseContainer extends React.Component {
         const LemmasContainer = styled.div`
             overflow-y: scroll;
             width: 40%;
-            padding: 1rem 2rem;
 `
         const Sidebar = styled.div`
             width: 60%;
@@ -109,9 +124,15 @@ class ReviseContainer extends React.Component {
             height: 50%;
 `
 
+
         return (
             <Container>
                 <LemmasContainer>
+
+                    <Header>
+                        Revision Items
+                    </Header>
+                    <Filter style={{marginBottom: '16px'}}/>
                     <Lemmas
                         key="lemmas"
                         rows={this.state.lemmas}
@@ -131,5 +152,37 @@ class ReviseContainer extends React.Component {
         );
     }
 }
+
+const Info = () => (
+    <>
+        <Header>How to Revise</Header>
+        <PaddedContainer>
+            <p>The following words are collected from your reading sessions and ordered with the ones that
+                the
+                program predicts you will forget earliest first. It is recommended that you revise until
+                the <i>probability
+                    of recall (PoR) </i>
+                is 50% or higher. </p>
+            <p>If there are too many words to revise, feel free to filter out the least frequent ones using
+                the minimum frequency slider below.
+            </p>
+            <p>The way to revise is very simple:</p>
+            <ul>
+                <li>Read through the list and click on any words you don't know.
+                    A dictionary entry and lots of examples will appear.
+                </li>
+                <li>Work through the definition and the examples (possibly copying some of them if the word
+                    is
+                    very new and unfamiliar).
+                </li>
+                <li>Words which are not clicked are assumed to be known (they will turn blue once they are
+                    no
+                    longer in view).
+                </li>
+            </ul>
+        </PaddedContainer>
+    </>
+)
+
 
 export default ReviseContainer;

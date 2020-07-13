@@ -2,6 +2,8 @@ import React from "react";
 import AuthService from "../../../services/auth";
 import {INTERACTION_TRACKING_URL} from "../../../endpoints";
 import './Lemmas.css'
+import {neutral1, neutral3, neutral9} from "../../../PALETTE";
+import styled from 'styled-components'
 
 export default class Lemmas extends React.Component {
     constructor(props) {
@@ -82,10 +84,19 @@ export default class Lemmas extends React.Component {
     }
 
     render() {
+        const Wrapper = styled.div`
+        margin: 0rem;
+`
         return (
-            <>
-                <table>
-                    <thead>
+            <Wrapper>
+
+                <table
+                    style={{
+                        width: '100%',
+                        border: `thin solid ${neutral3}`
+                    }}
+                >
+                    <thead style={{background: neutral1, padding: '1rem'}}>
                     <th>Word</th>
                     <th>Frequency</th>
                     </thead>
@@ -96,7 +107,7 @@ export default class Lemmas extends React.Component {
                     </tbody>
                 </table>
                 <div style={{height: '105vh'}}/>
-            </>
+            </Wrapper>
         )
     }
 }

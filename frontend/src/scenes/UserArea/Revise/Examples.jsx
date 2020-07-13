@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
 import styled from 'styled-components'
+import {neutral2} from "../../../PALETTE";
 
 export default () => {
     return (
@@ -7,7 +8,7 @@ export default () => {
             key='container'
             style={{
                 overflowY: 'scroll',
-                margin: '1rem 2rem',
+                margin: '0rem',
                 height: '100%',
             }}
         >
@@ -23,7 +24,7 @@ class TranslationView extends React.Component {
     }
 
     componentDidMount() {
-        document.body.addEventListener('exampleWasClicked', e =>{
+        document.body.addEventListener('exampleWasClicked', e => {
             this.setState({supportText: JSON.parse(e.detail())})
         })
     }
@@ -32,10 +33,13 @@ class TranslationView extends React.Component {
         return (
             <div style={{
                 minHeight: '5rem',
-                padding: '1rem 0',
+                padding: '1rem',
                 position: 'sticky',
                 top: 0,
-                backgroundColor: 'ivory'
+                fontStyle: 'italic',
+                backgroundColor: neutral2,
+                borderBottom: '1px solid #f0f0f0',
+                color: 'hsla(0,0%,0%,0.8)'
             }}>{this.state.supportText}</div>
         )
     }
@@ -44,7 +48,7 @@ class TranslationView extends React.Component {
 class Examples extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {examples:[]}
+        this.state = {examples: []}
     }
 
     __changeExample(clickedExample) {
@@ -59,22 +63,30 @@ class Examples extends React.Component {
         document.body.addEventListener('wordWasClicked', e => {
             this.setState({examples: e.detail().currentExamples})
         })
-        this.__changeExample("\"Example\"")
+        this.__changeExample("\"\"")
+    }
+
+    componentWillUpdate(nextProps, nextState, nextContext) {
+        this.__changeExample("\"\"")
     }
 
     render() {
         return (
-            <>
+            <div>
                 {this.state.examples.map((example, i) =>
                     <div
                         key={i}
-                        style={{paddingBottom: '1rem'}}
+                        style={{
+                            padding: '1rem',
+                            marginBottom: '1rem',
+                            borderBottom: '1px solid #f0f0f0',
+                        }}
                         onClick={(e) => {
                             this.__changeExample(example.support_text)
                         }}>
                         {example.text}
                     </div>)}
-            </>
+            </div>
         )
     }
 }
