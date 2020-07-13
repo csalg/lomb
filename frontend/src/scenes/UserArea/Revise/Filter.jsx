@@ -5,10 +5,11 @@ import styled from 'styled-components'
 import {neutral1, neutral2, neutral3} from "../../../PALETTE";
 import {Weight} from "@styled-icons/fa-solid/Weight";
 import ReloadOutlined from "@ant-design/icons/lib/icons/ReloadOutlined";
+import UserPreferences from "../../../services/userPreferences";
 
 class IntegerStep extends React.Component {
     state = {
-        inputValue: 5,
+        inputValue: UserPreferences.get('revision__minimum_frequency') || 5,
     };
 
     onChange = value => {
@@ -16,7 +17,6 @@ class IntegerStep extends React.Component {
             inputValue: value,
         });
     };
-
 
     render() {
         const Container = styled.div`
@@ -67,6 +67,7 @@ width:16px;
                             icon={<ReloadOutlined />}
                             size={'small'}
                             style={{marginTop:'1rem'}}
+                            onClick={e => UserPreferences.set('revision__minimum_frequency', this.state.inputValue)}
                         >
                             Reload
                         </Button>

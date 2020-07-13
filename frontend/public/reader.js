@@ -62,9 +62,15 @@ class ReadingDocumentController {
         this.__parseLanguages()
         this.__addStyles()
         this.__addSpaceAtBottom()
-        this.__addSentenceClickListeners()
-        this.__addWordSelectionListeners()
-        this.__addIntersectionObserver()
+        this.__emitEventOnStylesApplied()
+        document.body.addEventListener('cssLoaded', () => {
+            this.__recoverReadingLocation()
+            setTimeout(() => {
+                this.__addSentenceClickListeners()
+                this.__addWordSelectionListeners()
+                this.__addIntersectionObserver()
+            }, 50)
+        })
     }
 
     __parseLanguages() {
@@ -75,7 +81,9 @@ class ReadingDocumentController {
         }
     }
 
-    getLanguages(){return this.languages;}
+    getLanguages() {
+        return this.languages;
+    }
 
     __addStyles() {
         const doc = this.frame.contentDocument;
@@ -91,10 +99,33 @@ class ReadingDocumentController {
 
     __appendStylesheet(doc) {
         const cssLink = document.createElement("link");
-        cssLink.href = HOSTNAME+'/reader.css';
+        cssLink.href = HOSTNAME + '/reader.css';
         cssLink.rel = "stylesheet";
         cssLink.type = "text/css";
+        cssLink.id = "textStyle"
         doc.head.appendChild(cssLink);
+        doc.getElementById('textStyle').onload = () => console.log('css loaded')
+    }
+
+    __emitEventOnStylesApplied(x_init, y_init) {
+        // Grab last child position
+        if (!x_init || !y_init) {
+            let {x, y} = this.frame.contentDocument.querySelector('span:last-child').getBoundingClientRect();
+            x_init = x
+            y_init = y
+        }
+        setTimeout(() => {
+            const {x, y} = this.frame.contentDocument.querySelector('span:last-child').getBoundingClientRect();
+            console.log(x, y)
+            console.log(x_init, y_init)
+            if (x !== x_init || y !== y_init) {
+                const event = new Event('cssLoaded')
+                console.log('CSS Loaded')
+                document.body.dispatchEvent(event)
+            } else {
+                this.__emitEventOnStylesApplied(x_init, y_init)
+            }
+        }, 1000)
     }
 
     __addSpaceAtBottom() {
@@ -150,6 +181,7 @@ class ReadingDocumentController {
     __outOfViewCallback(entries) {
         if (!this.__outOfViewCallbackWasRun) this.__outOfViewCallbackWasRun = true;
         else entries.forEach((entry) => {
+            this.__updateReadingPosition(entry.target.id)
             if (this.__notSeen(entry.target)) {
                 this.currentSentence = {...this.__parseSpanDataset(entry.target)}
                 document.body.dispatchEvent(this.sentenceWasExposed)
@@ -177,6 +209,15 @@ class ReadingDocumentController {
         return element.classList.contains('looked-up')
     }
 
+    __updateReadingPosition(id) {
+        if (id) {
+            const locations = JSON.parse(window.localStorage.getItem('reader__locations')) || {}
+            const url = this.__getAddress()
+            locations[url] = id
+            window.localStorage.setItem('reader__locations', JSON.stringify(locations))
+        }
+    }
+
 
     __getAddress() {
         const queryString = window.location.search;
@@ -184,7 +225,7 @@ class ReadingDocumentController {
         return JSON.parse(urlParams.get('open'))
     }
 
-    __fetch_document_as_blob(url){
+    __fetch_document_as_blob(url) {
         const xhr = new XMLHttpRequest();
         return new Promise((resolve, reject) => {
             xhr.responseType = 'blob';
@@ -202,6 +243,20 @@ class ReadingDocumentController {
             xhr.send();
         });
     }
+
+    __recoverReadingLocation() {
+        if (window.localStorage.getItem('reader__locations')) {
+            const locations = JSON.parse(window.localStorage.getItem('reader__locations'))
+            if (this.__getAddress() in locations) {
+                const location_id = locations[this.__getAddress()]
+                console.log(location_id)
+                const {x: location_x, y: location_y} = this.frame.contentDocument.getElementById(location_id).getBoundingClientRect()
+                const {x: body_x, y: body_y} = this.frame.contentDocument.querySelector('.readable-width').getBoundingClientRect()
+                console.log(location_x, location_y, body_x, body_y)
+                this.frame.contentWindow.scrollTo(location_x - body_x, location_y - body_y)
+            }
+        }
+    }
 }
 
 
@@ -214,16 +269,16 @@ class DefinitionController {
     }
 
     changeDefinition(newWord) {
-        const uri= `https://www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
+        const uri = `https://www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
         this.view = changeFrameSrcWithoutAffectingBrowserHistory(this.view, uri)
     }
 
-    __intlCodeToWord(code){
+    __intlCodeToWord(code) {
         const dict = {
-            es:'Spanish',
-            en:'English',
-            zh:'Chinese',
-            de:'German',
+            es: 'Spanish',
+            en: 'English',
+            zh: 'Chinese',
+            de: 'German',
         }
         return dict[code]
     }
@@ -244,10 +299,10 @@ class SupportTextController {
 
 class InteractionTracker {
 
-    constructor(url, sourceLanguage,supportLanguage) {
-        this.url                = url
-        this.sourceLanguage     = sourceLanguage
-        this.supportLanguage    = supportLanguage
+    constructor(url, sourceLanguage, supportLanguage) {
+        this.url = url
+        this.sourceLanguage = sourceLanguage
+        this.supportLanguage = supportLanguage
 
 
         this.lemmaWasSelected = this.lemmaWasSelected.bind(this)
@@ -257,7 +312,7 @@ class InteractionTracker {
     }
 
     lemmaWasSelected(lemma) {
-        const data = InteractionTracker.__lemmaWasSelectedMessage(lemma,this.sourceLanguage, this.supportLanguage)
+        const data = InteractionTracker.__lemmaWasSelectedMessage(lemma, this.sourceLanguage, this.supportLanguage)
         return this.__dispatch(data)
     }
 
@@ -284,7 +339,7 @@ class InteractionTracker {
         }
     }
 
-    static __sentenceWasClickedMessage(lemmas,sourceLanguage, supportLanguage) {
+    static __sentenceWasClickedMessage(lemmas, sourceLanguage, supportLanguage) {
         return {
             message: 'TEXT__SENTENCE_CLICK',
             lemmas: lemmas,
@@ -293,7 +348,7 @@ class InteractionTracker {
         }
     }
 
-    static __sentenceWasExposedMessage(lemmas,sourceLanguage, supportLanguage) {
+    static __sentenceWasExposedMessage(lemmas, sourceLanguage, supportLanguage) {
         return {
             message: 'TEXT__SENTENCE_READ',
             lemmas: lemmas,
@@ -304,7 +359,7 @@ class InteractionTracker {
 }
 
 
-function changeFrameSrcWithoutAffectingBrowserHistory(iframe,uri){
+function changeFrameSrcWithoutAffectingBrowserHistory(iframe, uri) {
 
     console.log(iframe)
     const clonedFrame = iframe.cloneNode(true)

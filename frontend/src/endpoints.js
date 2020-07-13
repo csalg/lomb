@@ -2,10 +2,10 @@ import API_URL from './api_endpoint'
 
 export const LANGS_URL = API_URL + "/langs"
 
-export const AUTH_URL = API_URL + "/auth"
+export const AUTH_URL = API_URL + "/user"
 export const LOGIN = AUTH_URL + "/login"
 export const REGISTER = AUTH_URL + "/register"
-export const USER = AUTH_URL + "/user"
+export const USER = AUTH_URL + "/"
 
 export const LIBRARY_URL = API_URL + "/library"
 export const UPLOAD = LIBRARY_URL + "/upload"

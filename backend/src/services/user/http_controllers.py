@@ -77,7 +77,7 @@ def register():
     else:
         return render_template('register.html.j2')
 
-@user_blueprint.route('/user')
+@user_blueprint.route('/')
 @jwt_required
 def user():
     username = get_jwt_identity()['username']
