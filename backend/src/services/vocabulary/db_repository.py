@@ -12,7 +12,7 @@ class LemmaExamplesRepository:
         self.lemmas_learning.create_index([('user',1), ('lemma', 1)])
 
     def all_learning_lemmas(self, user):
-        return self.lemmas_learning.find({'user': user})
+        return self.lemmas_learning.find({'user': user}, {'_id':0, 'lemma':1, 'examples':1, 'language':1})
 
     def get_lemma_logs(self, user, lemma):
         return self.tracking_logs.find({'user': user, 'lemma': lemma})
