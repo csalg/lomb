@@ -37,7 +37,7 @@ export default class Lemmas extends React.Component {
         entries.forEach(entry => {
                 if (!this.__isLemmaSeen(entry.target)) {
                     entry.target.classList.add('exposed');
-                    const lemma = entry.target.innerText
+                    const lemma = entry.target.childNodes[0].innerText
                     const sourceLanguage = entry.target.dataset.sourceLanguage
                     AuthService
                         .jwt_post(
@@ -50,15 +50,17 @@ export default class Lemmas extends React.Component {
     }
 
     __lemma_was_not_clicked_message(lemma, sourceLanguage) {
+        console.log(lemma)
         return {
             message: 'REVISION__NOT_CLICKED',
-            lemmas: [lemma],
+            lemmas: new Array(lemma,),
             source_language: sourceLanguage,
             support_language: "",
         }
     }
 
     clickCallback(target, lemma, sourceLanguage) {
+        console.log(`clickCallback: ${target}, ${lemma}, ${sourceLanguage}`)
         if (!this.__isLemmaSeen(target)) {
             target.classList.add('looked-up');
             AuthService
@@ -71,9 +73,10 @@ export default class Lemmas extends React.Component {
     }
 
     __lemma_was_clicked_message(lemma, sourceLanguage) {
+        console.log(lemma)
         return {
             message: 'REVISION__CLICKED',
-            lemmas: [lemma],
+            lemmas: new Array(lemma,),
             source_language: sourceLanguage,
             support_language: "",
         }
@@ -124,16 +127,16 @@ class Lemma extends React.Component {
     }
 
     render() {
-        const {_id:lemma, sourceLanguage, frequency, probability}    = this.props.row
-
+        const {_id:lemma_, sourceLanguage, frequency, probability}    = this.props.row
+        console.log(`rendering lemma: ${lemma_}`)
         return (
             <tr
                 ref={element => (this.element = element)}
                 data-source-language={sourceLanguage}
                 data-something='bar'
-                onClick={(e) => this.props.clickCallback(this.element,lemma, sourceLanguage)}
+                onClick={(e) => this.props.clickCallback(this.element,lemma_, sourceLanguage)}
             >
-                <td>{lemma}</td>
+                <td>{lemma_}</td>
                 <td>{frequency}</td>
                 <td>{probability}</td>
             </tr>

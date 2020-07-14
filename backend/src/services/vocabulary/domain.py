@@ -27,6 +27,7 @@ class VocabularyDomain:
     def probability_of_recall(self, user,lemma):
         lemma_log = list(self.repository.get_lemma_logs(user,lemma))
         current_app.logger.info(f'Lemma log for {lemma}: {lemma_log}')
+
         if not lemma_log:
             return 0
         lemma_log.sort(key=lambda lemma_: lemma_['timestamp'])
