@@ -32,6 +32,7 @@ class ReviseContainer extends React.Component {
         super(props);
         this.lemmasRef = React.createRef();
         this.changeLemma = this.changeLemma.bind(this)
+        this.fetchTexts = this.fetchTexts.bind(this)
 
         this.wordWasClickedEvent = new CustomEvent('wordWasClicked', {
             bubbles: true,
