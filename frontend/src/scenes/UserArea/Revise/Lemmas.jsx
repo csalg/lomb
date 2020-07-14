@@ -138,7 +138,7 @@ class Lemma extends React.Component {
             >
                 <td>{lemma_}</td>
                 <td>{frequency}</td>
-                <td>{probability}</td>
+                <td>{probability.toFixed(3)}</td>
             </tr>
         )
     }
