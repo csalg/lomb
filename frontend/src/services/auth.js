@@ -32,17 +32,11 @@ class AuthService {
         console.log(`Posting to: ${url}`)
         return axios
             .post(url,data, {headers: authHeader()})
-            .then(data => {
-                return data
-            })
     }
 
     static jwt_get(url,data){
         return axios
             .get(url,{headers: authHeader()})
-            .then(data => {
-                return data
-            })
 
     }
 

@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from flask.json import JSONEncoder
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -16,6 +16,7 @@ lemma_examples_were_found.connect(lemma_examples_were_found_handler)
 @jwt_required
 def revise():
     username = get_jwt_identity()['username']
+    reques
     all_learning_lemmas = domain.learning_lemmas(username)
     payload = JSONEncoder().encode(list(all_learning_lemmas))
     return payload, 200

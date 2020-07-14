@@ -4,6 +4,8 @@ import { Table } from 'antd';
 import AuthService from "../../services/auth";
 import {ALL_TEXTS, LIBRARY_UPLOADS} from "../../endpoints";
 import getLanguages from "../../services/getLanguages";
+import UserPreferences from "../../services/userPreferences";
+import {LANGUAGE_NAMES} from "../../services/languages";
 
 
 
@@ -29,28 +31,35 @@ class Library extends React.Component {
             title: 'Language',
             dataIndex: 'source_language',
             width: '20%',
-            render: languageCode => (this.languageCodeToLanguageName(languageCode))
+            render: this.languageCodeToLanguageName
         },
         {
             title: 'Support language',
             dataIndex: 'support_language',
             width: '20%',
-            render: languageCode => (this.languageCodeToLanguageName(languageCode))
+            render: this.languageCodeToLanguageName
         },
     ];
 
     languageCodeToLanguageName(languageCode){
-        return this.state.languageCodes[languageCode]
+        return LANGUAGE_NAMES[languageCode]
     }
 
     componentDidMount() {
         this.fetchTexts()
-        getLanguages().then(languageCodes => this.setState({languageCodes: languageCodes}))
+        // getLanguages().then(languageCodes => this.setState({languageCodes: languageCodes}))
     }
 
-    fetchTexts(){
+    async fetchTexts(){
+        const learning_languages = await UserPreferences.get('learning_languages')
+        const known_languages = await UserPreferences.get('known_languages')
+
+        console.log(learning_languages, known_languages)
         AuthService
-            .jwt_get(ALL_TEXTS)
+            .jwt_post(ALL_TEXTS, {
+                learning_languages: learning_languages,
+                known_languages: known_languages
+            })
             .then(data => {
                 this.setState({
                     loading:false,

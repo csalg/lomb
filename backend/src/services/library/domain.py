@@ -54,6 +54,10 @@ class Library:
     def all(cls):
         return cls.textfiles_repository.all()
 
+    @classmethod
+    def all_filtered_by_language(cls, *args, **kwargs):
+        return cls.textfiles_repository.all_filtered_by_language(*args, **kwargs)
+
 
 @dataclass
 class _Textfile:

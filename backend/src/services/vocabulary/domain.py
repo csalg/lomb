@@ -18,8 +18,9 @@ class VocabularyDomain:
         lemmas.sort(key=lambda token: token['probability_of_recall'])
         return lemmas
 
-    def learning_lemmas(self,username):
-        return self.repository.all_learning_lemmas(username)
+    def learning_lemmas(self,username, minimum_frequency):
+        all = self.repository.all_learning_lemmas(username)
+        return filter(lambda record:len(record['examples'])>minimum_frequency, all)
 
     def probability_of_recall(self, lemma):
         lemma_log = list(self.repository.get_lemma_logs(lemma))
