@@ -56,10 +56,10 @@ class ReviseContainer extends React.Component {
         }
 
     }
-    //
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
-    //     return this.state.lemmas === ""
-    // }
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return this.state.currentExamples.length === nextState.currentExamples.length
+    }
 
 
     fetchTexts() {
