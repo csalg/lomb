@@ -70,6 +70,10 @@ class TextfileMetadataRepository:
         return cls.metadata.find({})
 
     @classmethod
+    def all_filtered_by_language(cls, source_languages, support_languages):
+        return cls.metadata.find({'source_language': {'$in': source_languages}, 'support_language': {'$in': support_languages} })
+
+    @classmethod
     def get(cls, id):
         return cls.metadata.find_one({'_id': ObjectId(id)})
 

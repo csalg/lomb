@@ -17,17 +17,6 @@ class LemmaExamplesRepository:
     def get_lemma_logs(self, user, lemma):
         return self.tracking_logs.find({'user': user, 'lemma': lemma})
 
-    # def update_lemma_examples(self, user, lemma, language, examples):
-    #     # self.lemmas_learning.delete_many({})
-    #     self.lemmas_learning.update(
-    #         {'_id': user},
-    #         {'$push': {
-    #             "lemmas": {
-    #                 'lemma': lemma,
-    #                 'language': language,
-    #                 'examples': list(examples)}}},
-    #         upsert=True)
-
     def update_lemma_examples(self,user,lemma,language,examples):
         self.lemmas_learning.update(
             {'user': user, 'lemma': lemma, 'language':language},
