@@ -71,10 +71,12 @@ class ReviseContainer extends React.Component {
                     }))
             .then(data => {
                 const lemmas = data.data.map(record => {
+                    console.log(record)
                     return {
                         _id: record.lemma,
                         sourceLanguage: record.language,
                         frequency: record.examples.length,
+                        probability: record.probability_of_recall,
                     }
                 })
                 const lemmasToExamples = {}

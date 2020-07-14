@@ -1,3 +1,5 @@
+from flask import current_app
+
 from lib.time import now_timestamp
 
 from .db_repository import LemmaExamplesRepository
@@ -10,20 +12,21 @@ class VocabularyDomain:
                  repository=LemmaExamplesRepository):
         self.repository = repository()
 
-    def learning_lemmas_with_probability(self):
-        lemmas = self.repository.all_learning_lemmas()
-        lemmas = list(filter(lambda lemma_: len(lemma_['examples']) > 2, lemmas))
+    def learning_lemmas_with_probability(self,username,minimum_frequency):
+        lemmas = list(self.learning_lemmas(username,minimum_frequency))
         for lemma in lemmas:
-            lemma['probability_of_recall'] = self.probability_of_recall(lemma['lemma'])
+            lemma['probability_of_recall'] = self.probability_of_recall(username, lemma['lemma'])
         lemmas.sort(key=lambda token: token['probability_of_recall'])
+        current_app.logger.info('No issue sortings')
         return lemmas
 
     def learning_lemmas(self,username, minimum_frequency):
         all = self.repository.all_learning_lemmas(username)
         return filter(lambda record:len(record['examples'])>minimum_frequency, all)
 
-    def probability_of_recall(self, lemma):
-        lemma_log = list(self.repository.get_lemma_logs(lemma))
+    def probability_of_recall(self, user,lemma):
+        lemma_log = list(self.repository.get_lemma_logs(user,lemma))
+        current_app.logger.info(f'Lemma log for {lemma}: {lemma_log}')
         if not lemma_log:
             return 0
         lemma_log.sort(key=lambda lemma_: lemma_['timestamp'])
@@ -36,9 +39,9 @@ class VocabularyDomain:
         failures = 0
 
         for event in lemma_log:
-            if event['message'] in ['REVIEW_CLICKED', 'DEFINITION_LOOKUP']:
+            if event['message'] in ['REVISION__CLICKED', 'TEXT__WORD_HIGHLIGHTED']:
                 failures += 1
-            elif event['message'] in ['REVIEW_NOT_CLICKED', 'EXPOSURE_NO_LOOKUP']:
+            elif event['message'] in ['REVISION__NOT_CLICKED', 'TEXT__SENTENCE_READ']:
                 successes += 1
             else:
                 continue

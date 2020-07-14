@@ -17,7 +17,8 @@ lemma_examples_were_found.connect(lemma_examples_were_found_handler)
 def revise():
     username = get_jwt_identity()['username']
     minimum_frequency = request.json['minimum_frequency']
-    all_learning_lemmas = domain.learning_lemmas(username, minimum_frequency)
+    all_learning_lemmas = domain.learning_lemmas_with_probability(username, minimum_frequency)
+    current_app.logger.info('Whats the fucking problem now')
     payload = JSONEncoder().encode(list(all_learning_lemmas))
     return payload, 200
 

@@ -1,3 +1,4 @@
+import time
 from abc import abstractmethod, ABC
 
 from flask import current_app
@@ -13,6 +14,7 @@ class LogRepository:
 
     def log(self, user, message, lemmas, source_language):
         data = [{'user':user,
+                 'timestamp': int(time.time()),
                  'message': message,
                  'lemma': lemma,
                  'source_language': source_language} for lemma in lemmas]

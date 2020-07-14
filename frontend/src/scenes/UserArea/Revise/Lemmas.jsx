@@ -2,7 +2,7 @@ import React from "react";
 import AuthService from "../../../services/auth";
 import {INTERACTION_TRACKING_URL} from "../../../endpoints";
 import './Lemmas.css'
-import {neutral1, neutral3, neutral9} from "../../../PALETTE";
+import {neutral1, neutral2, neutral3, neutral9} from "../../../PALETTE";
 import styled from 'styled-components'
 
 export default class Lemmas extends React.Component {
@@ -96,9 +96,15 @@ export default class Lemmas extends React.Component {
                         border: `thin solid ${neutral3}`
                     }}
                 >
-                    <thead style={{background: neutral1, padding: '1rem'}}>
+                    <thead style={{
+                        background: neutral2,
+                        padding: '1rem',
+                        position: 'sticky',
+                        top: 0
+                    }}>
                     <th>Word</th>
-                    <th>Frequency</th>
+                    <th>Freq.</th>
+                    <th>PoR</th>
                     </thead>
                     <tbody>
                     {this.props.rows.map((row, i) => <Lemma clickCallback={this.clickCallback}
@@ -118,9 +124,8 @@ class Lemma extends React.Component {
     }
 
     render() {
-        const lemma             = this.props.row._id
-        const sourceLanguage    = this.props.row.sourceLanguage
-        const frequency         = this.props.row.frequency
+        const {_id:lemma, sourceLanguage, frequency, probability}    = this.props.row
+
         return (
             <tr
                 ref={element => (this.element = element)}
@@ -130,6 +135,7 @@ class Lemma extends React.Component {
             >
                 <td>{lemma}</td>
                 <td>{frequency}</td>
+                <td>{probability}</td>
             </tr>
         )
     }
