@@ -10,6 +10,7 @@ import Examples from "./Examples";
 import Definition from "./Definition";
 import Filter from "./Filter";
 import {neutral2, neutral3, neutral4} from "../../../PALETTE";
+import UserPreferences from "../../../services/userPreferences";
 
 
 const PaddedContainer = styled.div`
@@ -61,10 +62,12 @@ class ReviseContainer extends React.Component {
 
 
     fetchTexts() {
-        AuthService
-            .jwt_get(REVISE_URL, {
-                "minimum_frequency": 4,
-            })
+        UserPreferences.get('revision__minimum_frequency')
+            .then(minimum_frequency =>
+                AuthService
+                    .jwt_post(REVISE_URL, {
+                        "minimum_frequency": minimum_frequency,
+                    }))
             .then(data => {
                 const lemmas = data.data.map(record => {
                     return {
@@ -132,7 +135,7 @@ class ReviseContainer extends React.Component {
                     <Header>
                         Revision Items
                     </Header>
-                    <Filter style={{marginBottom: '16px'}}/>
+                    <Filter style={{marginBottom: '16px'}} fetchTexts={this.fetchTexts}/>
                     <Lemmas
                         key="lemmas"
                         rows={this.state.lemmas}

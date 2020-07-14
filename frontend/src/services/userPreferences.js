@@ -17,7 +17,7 @@ export default class UserPreferences {
                 const serverPreferences = await AuthService.jwt_get(USER_PREFERENCES_URL).then(data => data.data)
                 console.log('server preferences are', serverPreferences)
                 if (key in serverPreferences) {
-                    UserPreferences.set(key, serverPreferences[key])
+                            UserPreferences.set(key, serverPreferences[key])
                     return UserPreferences.get(key)
                 } else {
                     // Well if we can't find the key anywhere then something is wrong, so let's notify that...

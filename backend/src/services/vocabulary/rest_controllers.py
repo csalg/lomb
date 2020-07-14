@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, current_app
 from flask.json import JSONEncoder
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -12,12 +12,12 @@ domain = VocabularyDomain()
 lemma_examples_were_found.connect(lemma_examples_were_found_handler)
 
 
-@vocabulary.route('/revise')
+@vocabulary.route('/revise', methods=['POST'])
 @jwt_required
 def revise():
     username = get_jwt_identity()['username']
-    reques
-    all_learning_lemmas = domain.learning_lemmas(username)
+    minimum_frequency = request.json['minimum_frequency']
+    all_learning_lemmas = domain.learning_lemmas(username, minimum_frequency)
     payload = JSONEncoder().encode(list(all_learning_lemmas))
     return payload, 200
 

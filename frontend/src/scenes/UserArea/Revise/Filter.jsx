@@ -9,8 +9,15 @@ import UserPreferences from "../../../services/userPreferences";
 
 class IntegerStep extends React.Component {
     state = {
-        inputValue: UserPreferences.get('revision__minimum_frequency') || 5,
+        inputValue: 5,
     };
+
+    componentDidMount() {
+        UserPreferences.get('revision__minimum_frequency')
+            .then(inputValue =>
+                this.setState({inputValue: inputValue})
+            )
+    }
 
     onChange = value => {
         this.setState({
@@ -37,7 +44,7 @@ width:16px;
                 <Row>
                     <Col span={24}>
                         <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
-                        Minimum frequency:</b></Col>
+                            Minimum frequency:</b></Col>
                 </Row>
                 <Row>
                     <Col span={16}>
@@ -64,10 +71,14 @@ width:16px;
                         <Button
                             primary
                             shape="round"
-                            icon={<ReloadOutlined />}
+                            icon={<ReloadOutlined/>}
                             size={'small'}
-                            style={{marginTop:'1rem'}}
-                            onClick={e => UserPreferences.set('revision__minimum_frequency', this.state.inputValue)}
+                            style={{marginTop: '1rem'}}
+                            onClick={e => {
+                                UserPreferences.set('revision__minimum_frequency', this.state.inputValue)
+                                this.props.fetchTexts()
+                            }
+                            }
                         >
                             Reload
                         </Button>
@@ -80,6 +91,6 @@ width:16px;
 
 export default class extends React.Component {
     render() {
-        return <div><IntegerStep/></div>
+        return <div><IntegerStep {...this.props}/></div>
     }
 }
