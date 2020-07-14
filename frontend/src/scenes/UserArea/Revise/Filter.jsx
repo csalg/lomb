@@ -13,14 +13,12 @@ class IntegerStep extends React.Component {
     };
 
     componentDidMount() {
-        try {
-            UserPreferences.get('revision__minimum_frequency')
-                .then(inputValue =>
-                    this.setState({inputValue: inputValue})
-                )
-        } catch {
-            console.log('No previous frequency')
-        }
+        UserPreferences.get('revision__minimum_frequency')
+            .then(inputValue =>
+                this.setState({inputValue: inputValue})
+            )
+            .catch(e => console.log(e))
+
     }
 
     onChange = value => {
