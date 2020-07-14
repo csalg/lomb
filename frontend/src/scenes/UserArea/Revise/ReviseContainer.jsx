@@ -55,10 +55,10 @@ class ReviseContainer extends React.Component {
         }
 
     }
-
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return this.state.currentLemma === ""
-    }
+    //
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     return this.state.lemmas === ""
+    // }
 
 
     fetchTexts() {
