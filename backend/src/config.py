@@ -12,8 +12,8 @@ LANGUAGE_NAMES = {
     'jp': 'Japanese',
     'zh': 'Chinese'
 }
-SOURCE_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru']
-SUPPORT_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru', 'jp', 'zh']
+LEARNING_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru']
+KNOWN_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru', 'jp', 'zh']
 
 MINIMUM_PASSWORD_LENGTH = 8
 MAXIMUM_PASSWORD_LENGTH = 40
@@ -29,3 +29,6 @@ VOCABULARY_LOGS_COLLECTION_NAME     = 'vocabulary_logs'
 IGNORE_LEMMAS_COLLECTION_NAME       = 'vocabulary_ignore'
 LEARNING_LEMMAS_COLLECTION_NAME     = 'learning_lemmas'
 
+USERS_COLLECTION_NAME = 'users'
+USER_CREDENTIALS_COLLECTION_NAME = 'user_credentials'
+USER_PREFERENCES_COLLECTION_NAME = 'user_preferences'

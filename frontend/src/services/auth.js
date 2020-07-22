@@ -3,46 +3,50 @@ import {LOGIN, REGISTER} from "../endpoints";
 
 
 class AuthService {
-    static login(username, password){
+    static login(username, password) {
         return axios
             .post(LOGIN, {
                 username,
                 password
             })
-            .then(response => {
-                if (response.data.access_token)
-                    localStorage.setItem('user', JSON.stringify(response.data.access_token))
-                return response.data;
-            })
+            .then(AuthService.__saveAccessTokenInLocalStorage)
     }
-    static logout(){
+
+    static logout() {
         localStorage.removeItem('user')
     }
 
-    static register(user){
-        return axios.post(REGISTER, {...user}
-        )
+    static register(user) {
+        return axios
+            .post(REGISTER, {...user})
+            .then(AuthService.__saveAccessTokenInLocalStorage)
     }
 
-    static getCurrentUser(){
+    static __saveAccessTokenInLocalStorage = response => {
+        if (response.data.access_token)
+            localStorage.setItem('user', JSON.stringify(response.data.access_token))
+        return response.data;
+    }
+
+    static getCurrentUser() {
         return JSON.parse(localStorage.getItem('user'))
     }
 
-    static jwt_post(url, data){
+    static jwt_post(url, data) {
         console.log(`Posting to: ${url}`)
         return axios
-            .post(url,data, {headers: authHeader()})
+            .post(url, data, {headers: authHeader()})
     }
 
-    static jwt_get(url,data){
+    static jwt_get(url, data) {
         return axios
-            .get(url,{headers: authHeader()})
+            .get(url, {headers: authHeader()})
 
     }
 
     static jwt_fetch_document_as_blob = (url) => {
         const xhr = new XMLHttpRequest();
-        return new Promise((resolve,reject) => {
+        return new Promise((resolve, reject) => {
             xhr.responseType = 'blob';
             xhr.onreadystatechange = function () {
                 if (this.readyState === this.DONE) {
@@ -54,7 +58,7 @@ class AuthService {
                 }
             }
             xhr.open('GET', url);
-            xhr.setRequestHeader('Authorization', authHeader().Authorization );
+            xhr.setRequestHeader('Authorization', authHeader().Authorization);
             xhr.send();
         });
     }
@@ -63,7 +67,7 @@ class AuthService {
 export function authHeader() {
     const user = JSON.parse(localStorage.getItem('user'))
     if (user)
-        return { Authorization: `Bearer ${user}`}
+        return {Authorization: `Bearer ${user}`}
     return {};
 
 }

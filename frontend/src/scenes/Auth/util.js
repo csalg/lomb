@@ -1,3 +1,5 @@
+import {Alert, Form} from "antd";
+import React from "react";
 
 export const layout = {
     labelCol: {
@@ -13,4 +15,19 @@ export const tailLayout = {
         span: 16,
     },
 };
+
+export const ServerErrorMessage = ({error}) => {
+    if (error) {
+        return (
+            <Form.Item {...tailLayout}>
+                <Alert
+                    description={error}
+                    type="error"
+                    showIcon
+                />
+            </Form.Item>)
+    }
+    return <div/>
+}
+
 

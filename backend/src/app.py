@@ -6,7 +6,7 @@ from flask_cors import CORS
 from config import LANGUAGE_NAMES
 from services.library.api import library_blueprint
 from services.tracking.rest_controllers import tracking
-from services.user.http_controllers import user_blueprint
+from services.user.rest_controllers import user_blueprint
 from services.vocabulary.rest_controllers import vocabulary
 
 app = Flask(__name__)
