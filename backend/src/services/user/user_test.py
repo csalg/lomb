@@ -43,8 +43,6 @@ def test_UserPreferences():
         UserPreferences.from_username_and_languages('username', [LEARNING_LANGUAGES[0]], ['yrer'])
 
 
-
-
 def test_UserCredentialsRepository():
     mock_db = {
         USER_CREDENTIALS_COLLECTION_NAME: MockMongoCollection(),
@@ -76,3 +74,7 @@ def test_UserCredentialsRepository():
 
     with pytest.raises(Exception, match='.*registered.*'):
         repository.find(credentials_dto)
+
+
+def test_user_preferences_rest_controller():
+    pass
