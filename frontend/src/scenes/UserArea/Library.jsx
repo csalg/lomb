@@ -1,10 +1,10 @@
 import React from "react";
-import {Alert, Form, Table} from 'antd';
+import {Alert, Table} from 'antd';
 import AuthService from "../../services/auth";
 import {ALL_TEXTS, LIBRARY_UPLOADS} from "../../endpoints";
-import getLanguages from "../../services/getLanguages";
 import UserPreferences from "../../services/userPreferences";
 import {LANGUAGE_NAMES} from "../../services/languages";
+import parseErrorMessage from "../../services/parseErrorMessage";
 
 
 class Library extends React.Component {
@@ -63,12 +63,11 @@ class Library extends React.Component {
                     })
                 })
                 .catch(err => {
-                    console.log('Error fetching texts: ', err)
-                    this.setState({error: err})
+                    this.setState({error: parseErrorMessage(err)})
                 })
         } catch (err) {
             console.log(err)
-            this.setState({error: err.response.data.error})
+            this.setState({error: parseErrorMessage(err)})
         }
     }
 

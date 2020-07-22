@@ -5,6 +5,7 @@ import AuthService from '../../services/auth.js'
 import {layout, ServerErrorMessage, tailLayout} from "./util";
 import {useHistory} from 'react-router-dom'
 import isBoolean from "validator/es/lib/isBoolean";
+import parseErrorMessage from "../../services/parseErrorMessage";
 
 const Login = () => {
 
@@ -18,13 +19,7 @@ const Login = () => {
                 window.location.reload();
             }).catch(
             error => {
-                console.log(error)
-                console.log(error.response)
-                console.log(Boolean(error.response))
-                if (error.response)
-                    setError(error.response.data.error);
-                else
-                    setError('Could not connect to backend')
+                setError(parseErrorMessage(error));
             }
         )
     };

@@ -9,6 +9,7 @@ import AuthService from "../../services/auth";
 import User from "./models/User";
 import {layout, ServerErrorMessage, tailLayout} from "./util";
 import {useHistory} from "react-router-dom";
+import parseErrorMessage from "../../services/parseErrorMessage";
 
 const Register = () => {
     const history = useHistory()
@@ -27,17 +28,8 @@ const Register = () => {
                 window.location.reload();
             })
             .catch(error => {
-                    console.log(error)
-                    if (error.response) {
-                        console.log(error.response)
-                        if (error.response.data) {
-                            console.log(error.response.data)
-                            if (error.response.data.error)
-                                setError(error.response.data.error)
-                        }
-                    } else
-                        setError(`Error connecting to backend:${JSON.stringify(error)}`)
-                }
+                    setError(parseErrorMessage(error))
+                    }
             )
     };
 
