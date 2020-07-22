@@ -1,16 +1,13 @@
 import React from "react";
-import {Table} from 'antd';
-import reqwest from 'reqwest';
 import AuthService from "../../../services/auth";
-import {ALL_TEXTS, LIBRARY_UPLOADS, REVISE_URL, USER, USER_LANGUAGES} from "../../../endpoints";
-import {Link} from "react-router-dom";
 import Lemmas from "./Lemmas";
 import styled from 'styled-components'
 import Examples from "./Examples";
 import Definition from "./Definition";
 import Filter from "./Filter";
-import {neutral2, neutral3, neutral4} from "../../../PALETTE";
+import {neutral3, neutral4} from "../../../PALETTE";
 import UserPreferences from "../../../services/userPreferences";
+import {REVISE_URL} from "../../../endpoints";
 
 
 const PaddedContainer = styled.div`
@@ -54,13 +51,11 @@ class ReviseContainer extends React.Component {
         if (this.state.lemmas.length === 0) {
             this.fetchTexts()
         }
-
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         return this.state.currentExamples.length === nextState.currentExamples.length
     }
-
 
     async fetchTexts() {
         try {
@@ -103,14 +98,25 @@ class ReviseContainer extends React.Component {
     }
 
     changeLemma = (newLemma, newSourceLanguage) => {
-        this.setState({
-                currentLemma: newLemma,
-                sourceLanguage: newSourceLanguage,
-                currentExamples: this.state.lemmasToExamples[newSourceLanguage][newLemma],
-                supportLanguage: this.state.lemmasToExamples[newSourceLanguage][newLemma][0]['support_language']
-            },
-            () => document.body.dispatchEvent(this.wordWasClickedEvent)
+
+        document.body.dispatchEvent(new CustomEvent('wordWasClicked', {
+                bubbles: true,
+                detail: () => ({
+                    currentLemma: newLemma,
+                    sourceLanguage: newSourceLanguage,
+                    currentExamples: this.state.lemmasToExamples[newSourceLanguage][newLemma],
+                    supportLanguage: this.state.lemmasToExamples[newSourceLanguage][newLemma][0]['support_language']
+                })
+            })
         )
+        // this.setState({
+        //         currentLemma:    newLemma,
+        //         sourceLanguage:  newSourceLanguage,
+        //         currentExamples: this.state.lemmasToExamples[newSourceLanguage][newLemma],
+        //         supportLanguage: this.state.lemmasToExamples[newSourceLanguage][newLemma][0]['support_language']
+        //     },
+        //     () => document.body.dispatchEvent(this.wordWasClickedEvent)
+        // )
     }
 
     render() {
@@ -136,7 +142,6 @@ class ReviseContainer extends React.Component {
         return (
             <Container>
                 <LemmasContainer>
-
                     <Header>
                         Revision Items
                     </Header>
