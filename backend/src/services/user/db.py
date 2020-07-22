@@ -70,8 +70,10 @@ class CredentialsRepository(MongoEntityPersistenceCRUD, ICredentialsRepository):
 
 
 class UserPreferencesRepository(MongoEntityPersistenceCRUD):
-    def __init__(self, collection_name=USER_PREFERENCES_COLLECTION_NAME,*args,**kwargs):
-        super(UserPreferencesRepository, self).__init__(collection_name, key_field_name='username',*args,**kwargs)
+    def __init__(self,collection_name=USER_PREFERENCES_COLLECTION_NAME,db=None, *args,**kwargs):
+        if not db:
+            db=get_db()
+        super(UserPreferencesRepository, self).__init__(collection_name, db, key_field_name='username',*args,**kwargs)
 
     def find(self,username):
         return self._find(username, lambda key: f'No user preferences found for {username}')

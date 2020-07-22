@@ -13,11 +13,14 @@ const Login = () => {
     const [error, setError] = useState("")
 
     const onFinish = values => {
-        AuthService.login(values.username, values.password).then(
+        AuthService
+            .login(values.username, values.password)
+            .then(
             () => {
                 history.push('/user');
                 window.location.reload();
-            }).catch(
+            })
+            .catch(
             error => {
                 setError(parseErrorMessage(error));
             }
