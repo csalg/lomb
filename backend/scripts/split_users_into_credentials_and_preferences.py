@@ -13,7 +13,8 @@ credentials_repo = CredentialsRepository()
 preferences_repo = UserPreferencesRepository()
 
 for user in users:
-    credentials = CredentialsWriteModel(user['_id'], user['role'], user['groups'], user['password'])
+    groups = user['groups'] if 'groups' in user else []
+    credentials = CredentialsWriteModel(user['_id'], user['role'], groups, user['password'])
     credentials_repo.add(credentials.to_dict())
 
     preferences = UserPreferences.from_username_and_languages(user['_id'], user['learning_languages'], user['known_languages'])
