@@ -77,4 +77,5 @@ def test_UserCredentialsRepository():
 
 
 def test_user_preferences_rest_controller():
+    # Need to figure out how to mock a request
     pass
