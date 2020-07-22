@@ -62,42 +62,44 @@ class ReviseContainer extends React.Component {
     }
 
 
-    fetchTexts() {
-        UserPreferences.get('revision__minimum_frequency')
-            .then(minimum_frequency =>
-                AuthService
-                    .jwt_post(REVISE_URL, {
-                        "minimum_frequency": minimum_frequency,
-                    }))
-            .then(data => {
-                const lemmas = data.data.map(record => {
-                    console.log(record)
-                    return {
-                        _id: record.lemma,
-                        sourceLanguage: record.language,
-                        frequency: record.examples.length,
-                        probability: record.probability_of_recall,
-                    }
-                })
-                const lemmasToExamples = {}
-                for (let i = 0; i < lemmas.length; i++) {
-                    const sourceLanguage = data.data[i].language
-                    const lemma = data.data[i].lemma
-                    const examples = data.data[i].examples
-                    if (!(sourceLanguage in lemmasToExamples)) {
-                        lemmasToExamples[sourceLanguage] = {}
-                    }
-                    lemmasToExamples[sourceLanguage][lemma] = examples
-                }
-                this.setState({
-                    loading: false,
-                    data: data.data,
-                    lemmas: lemmas,
-                    lemmasToExamples: lemmasToExamples
-                })
-                console.log(this.state.lemmasToExamples)
+    async fetchTexts() {
+        try {
+            const minimum_frequency = await UserPreferences.get('revision__minimum_frequency')
+            const maximum_por = await UserPreferences.get('revision__maximum_por')
+            const data = await AuthService.jwt_post(REVISE_URL, {
+                "minimum_frequency": minimum_frequency,
+                "maximum_por": maximum_por,
             })
-            .catch(err => console.log('Error fetching texts: ', err))
+            const lemmas = data.data.map(record => {
+                console.log(record)
+                return {
+                    _id: record.lemma,
+                    sourceLanguage: record.language,
+                    frequency: record.examples.length,
+                    probability: record.probability_of_recall,
+                }
+            })
+            const lemmasToExamples = {}
+            for (let i = 0; i < lemmas.length; i++) {
+                const sourceLanguage = data.data[i].language
+                const lemma = data.data[i].lemma
+                const examples = data.data[i].examples
+                if (!(sourceLanguage in lemmasToExamples)) {
+                    lemmasToExamples[sourceLanguage] = {}
+                }
+                lemmasToExamples[sourceLanguage][lemma] = examples
+            }
+            this.setState({
+                loading: false,
+                data: data.data,
+                lemmas: lemmas,
+                lemmasToExamples: lemmasToExamples
+            })
+            console.log(this.state.lemmasToExamples)
+        } catch
+            (error) {
+            console.log('Error fetching texts: ', error)
+        }
     }
 
     changeLemma = (newLemma, newSourceLanguage) => {

@@ -12,12 +12,15 @@ class VocabularyDomain:
                  repository=LemmaExamplesRepository):
         self.repository = repository()
 
-    def learning_lemmas_with_probability(self,username,minimum_frequency):
-        lemmas = list(self.learning_lemmas(username,minimum_frequency))
-        for lemma in lemmas:
+    def learning_lemmas_with_probability(self,username,minimum_frequency,maximum_por):
+        all_lemmas = self.learning_lemmas(username,minimum_frequency)
+        lemmas = []
+        for lemma in all_lemmas:
             lemma['probability_of_recall'] = self.probability_of_recall(username, lemma['lemma'])
-        lemmas.sort(key=lambda token: token['probability_of_recall'])
-        current_app.logger.info('No issue sortings')
+            if lemma['probability_of_recall'] < maximum_por:
+                lemmas.append(lemma)
+        lemmas.sort(key=lambda lemma: lemma['probability_of_recall'])
+        current_app.logger.info('No issue sorting')
         return lemmas
 
     def learning_lemmas(self,username, minimum_frequency):
@@ -26,7 +29,6 @@ class VocabularyDomain:
 
     def probability_of_recall(self, user,lemma):
         lemma_log = list(self.repository.get_lemma_logs(user,lemma))
-        current_app.logger.info(f'Lemma log for {lemma}: {lemma_log}')
 
         if not lemma_log:
             return 0

@@ -9,38 +9,27 @@ import UserPreferences from "../../../services/userPreferences";
 
 class IntegerStep extends React.Component {
     state = {
-        inputValue: 5,
+        minimum_frequency: 5,
+        maximum_por: 0.6,
     };
 
     componentDidMount() {
         UserPreferences.get('revision__minimum_frequency')
-            .then(inputValue =>
-                this.setState({inputValue: inputValue})
+            .then(val =>
+                this.setState({minimum_frequency: val})
             )
             .catch(e => console.log(e))
-
     }
-
-    onChange = value => {
-        this.setState({
-            inputValue: value,
-        });
-    };
 
     render() {
         const Container = styled.div`
-          background: ${neutral1};
-          border: thin solid ${neutral3};
-        padding: 1rem;
-        margin: 1rem;
-`
+                background: ${neutral1};
+                border: thin solid ${neutral3};
+                padding: 1rem;
+                margin: 1rem;
+            `
 
-        const ScaleIcon = styled(Weight)`
-height: 16px;
-width:16px;
-        
-`
-        const {inputValue} = this.state;
+        const {minimum_frequency, maximum_por} = this.state;
         return (
             <Container style={this.props.style}>
                 <Row>
@@ -53,8 +42,8 @@ width:16px;
                         <Slider
                             min={3}
                             max={50}
-                            onChange={this.onChange}
-                            value={typeof inputValue === 'number' ? inputValue : 0}
+                            onChange={val => this.setState({minimum_frequency:val})}
+                            value={typeof minimum_frequency === 'number' ? minimum_frequency : 0}
                         />
                     </Col>
                     <Col span={8}>
@@ -62,8 +51,33 @@ width:16px;
                             min={3}
                             max={50}
                             style={{margin: '0'}}
-                            value={inputValue}
-                            onChange={this.onChange}
+                            value={minimum_frequency}
+                            onChange={val => this.setState({minimum_frequency:val})}
+                        />
+                    </Col>
+                </Row><Row>
+                <Col span={24}>
+                    <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
+                        Maximum probability of recall:</b></Col>
+            </Row>
+                <Row>
+                    <Col span={16}>
+                        <Slider
+                            min={0}
+                            max={1.0}
+                            step={0.05}
+                            onChange={val => this.setState({maximum_por:val})}
+                            value={typeof maximum_por === 'number' ? maximum_por : 0}
+                        />
+                    </Col>
+                    <Col span={8}>
+                        <InputNumber
+                            min={0}
+                            max={1.0}
+                            step={0.05}
+                            style={{margin: '0'}}
+                            value={maximum_por}
+                            onChange={val => this.setState({maximum_por:val})}
                         />
                     </Col>
                 </Row>
@@ -77,7 +91,8 @@ width:16px;
                             size={'small'}
                             style={{marginTop: '1rem'}}
                             onClick={e => {
-                                UserPreferences.set('revision__minimum_frequency', this.state.inputValue)
+                                UserPreferences.set('revision__minimum_frequency', this.state.minimum_frequency)
+                                UserPreferences.set('revision__maximum_por', this.state.maximum_por)
                                 this.props.fetchTexts()
                             }
                             }
