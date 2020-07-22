@@ -37,3 +37,6 @@ class LemmaExamplesRepository:
             },
             upsert=True
         )
+
+    def delete(self, user, lemma):
+        self.lemmas_learning.remove({'user':user,'lemma':lemma})

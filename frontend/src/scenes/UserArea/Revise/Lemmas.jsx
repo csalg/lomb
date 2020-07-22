@@ -1,9 +1,11 @@
 import React from "react";
 import AuthService from "../../../services/auth";
-import {INTERACTION_TRACKING_URL} from "../../../endpoints";
+import {DELETE_URL, INTERACTION_TRACKING_URL} from "../../../endpoints";
 import './Lemmas.css'
 import {neutral1, neutral2, neutral3, neutral9} from "../../../PALETTE";
 import styled from 'styled-components'
+import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
+import {Tooltip} from "antd";
 
 export default class Lemmas extends React.Component {
     constructor(props) {
@@ -108,11 +110,12 @@ export default class Lemmas extends React.Component {
                     <th>Word</th>
                     <th>Freq.</th>
                     <th>PoR</th>
+                    <th>Actions</th>
                     </thead>
                     <tbody>
                     {this.props.rows.map((row, i) => <Lemma clickCallback={this.clickCallback}
-                                                       key={i} row={row}
-                                                       observer={this.observer}/>)}
+                                                            key={i} row={row}
+                                                            observer={this.observer}/>)}
                     </tbody>
                 </table>
                 <div style={{height: '105vh'}}/>
@@ -126,20 +129,38 @@ class Lemma extends React.Component {
         this.props.observer.observe(this.element)
     }
 
+    state = {
+        isVisible: true
+    }
+
     render() {
-        const {_id:lemma_, sourceLanguage, frequency, probability}    = this.props.row
+        const {_id: lemma_, sourceLanguage, frequency, probability} = this.props.row
         console.log(`rendering lemma: ${lemma_}`)
-        return (
-            <tr
-                ref={element => (this.element = element)}
-                data-source-language={sourceLanguage}
-                data-something='bar'
-                onClick={(e) => this.props.clickCallback(this.element,lemma_, sourceLanguage)}
-            >
-                <td>{lemma_}</td>
-                <td>{frequency}</td>
-                <td>{probability.toFixed(3)}</td>
-            </tr>
-        )
+        if (this.state.isVisible) {
+            return (
+                <tr
+                    ref={element => (this.element = element)}
+                    data-source-language={sourceLanguage}
+                    data-something='bar'
+                    onClick={(e) => this.props.clickCallback(this.element, lemma_, sourceLanguage)}
+                >
+                    <td>{lemma_}</td>
+                    <td>{frequency}</td>
+                    <td>{probability.toFixed(3)}</td>
+                    <td>
+                        <Tooltip title={`Remove ${lemma_} from my revision items`}>
+                            <a onClick={_ => {
+                                this.setState({isVisible:false})
+                                AuthService.jwt_delete(DELETE_URL + lemma_)}
+                            }>
+                                <DeleteOutlined/>
+                            </a>
+                        </Tooltip>
+                    </td>
+                </tr>
+            )
+        } else {
+            return <tr/>
+        }
     }
 }

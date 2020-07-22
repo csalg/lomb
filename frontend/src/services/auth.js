@@ -33,7 +33,6 @@ class AuthService {
     }
 
     static jwt_post(url, data) {
-        console.log(`Posting to: ${url}`)
         return axios
             .post(url, data, {headers: authHeader()})
     }
@@ -41,7 +40,11 @@ class AuthService {
     static jwt_get(url, data) {
         return axios
             .get(url, {headers: authHeader()})
+    }
 
+    static jwt_delete(url, data) {
+        return axios
+            .delete(url, {headers: authHeader()})
     }
 
     static jwt_fetch_document_as_blob = (url) => {

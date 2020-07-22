@@ -19,6 +19,11 @@ class IntegerStep extends React.Component {
                 this.setState({minimum_frequency: val})
             )
             .catch(e => console.log(e))
+        UserPreferences.get('revision__maximum_por')
+            .then(val =>
+                this.setState({maximum_por: val})
+            )
+            .catch(e => console.log(e))
     }
 
     render() {

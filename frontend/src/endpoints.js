@@ -14,4 +14,5 @@ export const ALL_TEXTS = LIBRARY_URL + "/"
 
 export const VOCABULARY = API_URL + "/vocabulary"
 export const REVISE_URL = VOCABULARY + '/revise'
+export const DELETE_URL = VOCABULARY + '/word/'
 export const INTERACTION_TRACKING_URL = API_URL+ '/tracking/'
