@@ -14,6 +14,8 @@ LANGUAGE_NAMES = {
 }
 LEARNING_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru']
 KNOWN_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru', 'jp', 'zh']
+MAXIMUM_EXAMPLES_PER_TEXT = 50
+MAXIMUM_LEMMA_RANK = 20000
 
 MINIMUM_PASSWORD_LENGTH = 8
 MAXIMUM_PASSWORD_LENGTH = 40

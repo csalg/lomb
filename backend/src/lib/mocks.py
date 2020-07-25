@@ -29,3 +29,19 @@ class MockMongoCollection:
         for item in self.items:
             if MockMongoCollection.match_item(item,query):
                 self.items.remove(item)
+
+class MockRepository:
+    def __init__(self):
+        self.items = []
+
+    def add(self, item):
+        self.items.append(item)
+
+    def _find(self, id):
+        for item in self.items:
+            if item['id'] == id:
+                return copy(item)
+        raise Exception(f'There are no items with id {id}')
+
+    def add_many(self,new_items):
+        self.items += new_items

@@ -9,6 +9,7 @@ certifi==2020.4.5.1
 chardet==3.0.4
 click==7.1.2
 cymem==2.0.3
+enforce-typing==1.0.0.post1
 Flask==1.1.2
 Flask-Cors==3.0.8
 Flask-JWT-Extended==3.24.1
