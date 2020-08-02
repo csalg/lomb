@@ -13,6 +13,12 @@ def test_LemmaRankService__calculate_lemma_ranks():
     lemma_rank_service.calculate_lemma_ranks('en')
     assert len(lemma_rank_service.lemma_rank_repository.items) == 3
 
+    # Invariant more frequency => less rank
+    el1 = lemma_rank_service.lemma_rank_repository.items[0]
+    el2 = lemma_rank_service.lemma_rank_repository.items[1]
+
+    assert (el1['rank'] > el2['rank']) != (el1['frequency'] > el2['frequency'])
+
 
 class LemmaRankMockRepository(MockRepository):
     def find(self, id, language):
@@ -22,7 +28,7 @@ class LemmaRankMockRepository(MockRepository):
         self.items = []
 
     def add_many(self,new_items):
-        self.items += new_items
+        self.items += [item.to_dict() for item in new_items]
 
     def all(self):
         return self.items

@@ -2,10 +2,9 @@ import React, {useState} from 'react';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import {Form, Input, Button, Checkbox, Alert} from 'antd';
 import AuthService from '../../services/auth.js'
-import {layout, ServerErrorMessage, tailLayout} from "./util";
 import {useHistory} from 'react-router-dom'
-import isBoolean from "validator/es/lib/isBoolean";
 import parseErrorMessage from "../../services/parseErrorMessage";
+import {AuthServerErrorMessage, layout, tailLayout} from "./util";
 
 const Login = () => {
 
@@ -28,7 +27,7 @@ const Login = () => {
     };
 
     const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
+        setError(errorInfo)
     };
 
     return (
@@ -41,7 +40,7 @@ const Login = () => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
         >
-            <ServerErrorMessage error={error}/>
+            <AuthServerErrorMessage error={error}/>
 
             <Form.Item
                 label="Username"

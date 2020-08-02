@@ -51,27 +51,6 @@ def test_IndexEntry():
         params['frequency'] = 0
         entry = IndexEntry(*params.values())
 
-    #
-    # # Chunks array must be non-empty
-    # with pytest.raises(ValueError, match=r".*chunks array is empty.*"):
-    #     params['chunks'] = []
-    #     entry = IndexEntry(*params.values())
-    #
-    # # Frequency cannot be less than the length of the chunks array
-    # with pytest.raises(ValueError, match=r".*Frequency.*"):
-    #     params['chunks'] = [bson.ObjectId(), bson.ObjectId()]
-    #     params['frequency'] = 1
-    #     entry = IndexEntry(*params.values())
-    #
-    # params['chunks'] = [bson.ObjectId()]
-    # params['frequency'] = 10
-    # entry = IndexEntry(*params.values())
-    #
-    # # A chunks array with more than MAXIMUM_EXAMPLES_PER_TEXT chunks will be truncated.
-    # params['chunks'] = [bson.ObjectId() for i in range(2*MAXIMUM_EXAMPLES_PER_TEXT)]
-    # params['frequency'] = len(params['chunks'])
-    # entry = IndexEntry(*params.values())
-    # assert len(entry.chunks) == MAXIMUM_EXAMPLES_PER_TEXT
 
 def test_LemmaRank():
 

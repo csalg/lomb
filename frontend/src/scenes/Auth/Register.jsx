@@ -7,9 +7,10 @@ import {
 } from 'antd';
 import AuthService from "../../services/auth";
 import User from "./models/User";
-import {layout, ServerErrorMessage, tailLayout} from "./util";
 import {useHistory} from "react-router-dom";
 import parseErrorMessage from "../../services/parseErrorMessage";
+import {AuthServerErrorMessage, layout, tailLayout} from "./util";
+import {KNOWN_LANGUAGES, LANGUAGE_NAMES, LEARNING_LANGUAGES} from "../../services/languages";
 
 const Register = () => {
     const history = useHistory()
@@ -34,7 +35,7 @@ const Register = () => {
     };
 
     const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
+       setError(errorInfo)
     };
 
     return (
@@ -50,7 +51,7 @@ const Register = () => {
                 onFinishFailed={onFinishFailed}
                 size={componentSize}
             >
-                <ServerErrorMessage error={error}/>
+                <AuthServerErrorMessage error={error}/>
                 <Form.Item label="Username" name='username' rules={[
                     {required: true, message: 'Username is required'}
                 ]}>
@@ -107,28 +108,7 @@ const Register = () => {
     );
 };
 
-const sourceLanguages = [
-    {label: 'Spanish', value: 'es'},
-    {label: 'English', value: 'en'},
-    {label: 'German', value: 'de'},
-];
-
-const supportLanguages = [
-    {label: 'Spanish', value: 'es'},
-    {label: 'English', value: 'en'},
-    {label: 'German', value: 'de'},
-    {label: 'Chinese', value: 'zh'},
-];
-
-// const SelectLanguages = () => <div>
-//     <p>I am learning:</p>
-//
-//         <Checkbox.Group options={sourceLanguages} onChange={onChange} />
-//         <br />
-//         <br />
-//         <p>I can speak:</p>
-//         <Checkbox.Group options={supportLanguages} onChange={onChange} />
-//         <br />
-//     </div>
+const sourceLanguages = LEARNING_LANGUAGES.map(language => ({label: LANGUAGE_NAMES[language], value: language}))
+const supportLanguages = KNOWN_LANGUAGES.map(language => ({label: LANGUAGE_NAMES[language], value: language}))
 
 export default Register

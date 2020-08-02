@@ -1,127 +1,87 @@
-import json
-import os
 from dataclasses import dataclass, asdict
 
-from config import UPLOADS_FOLDER
-from .db import ChunksRepository, TextfileMetadataRepository
-import bson
-from bs4 import BeautifulSoup
+from bson import ObjectId
+from enforce_typing import enforce_types
+
+from config import UPLOADS_FOLDER, LEARNING_LANGUAGES, KNOWN_LANGUAGES
 from flask import current_app
 
-from .infrastructure import FileManager
+from .domain.entities import Textfile
+from .domain.services import TextManagerService, LemmaRankService
+from .infrastructure import FileManager, TextfileFactory, ChunkFactory, TranslationDispatcher
+from .repositories import TextfileRepository, ChunksRepository, FrequencyListRepository, LemmaRankRepository
 
 
-class Library:
-    chunks_repository = ChunksRepository
-    textfiles_repository = TextfileMetadataRepository
-    file_manager = FileManager
-
-    @classmethod
-    def add(cls, file):
-        filename = cls.file_manager.save_file(file)
-        textfile = _Textfile._from_file(file, filename)
-        cls.textfiles_repository.add(textfile.to_dict())
-        chunks = _Chunks._from_file(filename, textfile)
-        # current_app.logger.info('Adding chunks')
-        # current_app.logger.info(chunks[0:20])
-        cls.chunks_repository.add(chunks)
-        # delete from dbs
-        # cls.file_manager.delete_file()
-        return filename
-
-
-    @classmethod
-    def delete(cls, id):
-        try:
-            cls.chunks_repository.delete_text(id)
-        finally:
-            cls.textfiles_repository.delete(id)
-    @classmethod
-    def delete_all(cls):
-        cls.textfiles_repository.delete_all()
-        cls.chunks_repository.delete_all()
-
-    @classmethod
-    def get_url(cls, id):
-        textfile = cls.textfiles_repository.get(id)
-        return cls.file_manager.get_url(textfile)
-
-    @classmethod
-    def get_examples(cls, *args, **kwargs):
-        return cls.chunks_repository.get_chunks_with_lemma(*args,**kwargs)
-
-    @classmethod
-    def all(cls):
-        return cls.textfiles_repository.all()
-
-    @classmethod
-    def all_filtered_by_language(cls, *args, **kwargs):
-        return cls.textfiles_repository.all_filtered_by_language(*args, **kwargs)
-
-
+@enforce_types
 @dataclass
-class _Textfile:
-    _id : bson.ObjectId
+class AddTextMetadataDTO:
+    username: str
     title: str
     source_language: str
     support_language: str
-    filename: str
-    type: str = "html"
-    tags: list = None
-
-    @staticmethod
-    def _from_file(file, filename):
-        file.seek(0)
-        _id = bson.ObjectId()
-        soup = BeautifulSoup(file.stream, 'html.parser')
-        get_meta_attribute = lambda attribute : soup.select(f'meta[name="{attribute}"]')[0]['value']
-        title = get_meta_attribute('title')
-        support_language = get_meta_attribute('support-language')
-        source_language = get_meta_attribute('source-language')
-        return _Textfile(_id, title, source_language, support_language, filename, 'html', [])
-
-    @staticmethod
-    def __from_html(file):
-        pass
-
-    def to_dict(self):
-        current_app.logger.info(self)
-        current_app.logger.info(asdict(self))
-        return asdict(self)
+    tags: list
+    permission: str
 
 
-@dataclass
-class _Chunk:
-    text : str
-    support_text : str
-    lemmas : list
-    source_language: str
-    support_language: str
-    textfile_id : bson.ObjectId
+class Controllers:
+    def __init__(self, text_manager: TextManagerService, lemma_rank_service: LemmaRankService):
+        self.text_manager = text_manager
+        self.lemma_rank_service = lemma_rank_service
 
-    def to_dict(self):
-        return asdict(self)
+    def add_text(self, add_text_dto, file, extension):
 
+        if FileManager.file_exists(add_text_dto.username, file, extension):
+            raise Exception('Text already exists')
 
-class _Chunks:
-    @staticmethod
-    def _from_file(filename, textfile):
-        _, ext = os.path.splitext(filename)
-        if ext == '.html':
-            return _Chunks.__from_html(filename, textfile)
+        if FileManager.file_has_been_processed(file):
+            self.__add_processed_text(add_text_dto, file, extension)
+            return "File was added successfully and will now appear in your library."
 
-    @staticmethod
-    def __from_html(filename, textfile):
-        chunks = []
-        path =os.path.join(UPLOADS_FOLDER, filename)
-        with open(path, 'r') as file:
-            soup = BeautifulSoup(file)
-        for chunk_tag in soup.select('span', {'class':'dual-language-chunk'}):
-            text = chunk_tag.text
-            if text:
-                support_text = chunk_tag['data-support-text']
-                tokensToLemmas = json.loads(chunk_tag['data-tokens-to-lemmas'])
-                tokens = list(tokensToLemmas.values())
-                chunks.append(_Chunk(text,support_text,tokens,textfile.source_language, textfile.support_language, textfile._id))
-                current_app.logger.info(chunks[-1])
-        return chunks
+        else:
+            TranslationDispatcher.dispatch(add_text_dto,file,extension)
+            return "File needs to be translated. You will have to wait several hours until it appears in your library."
+
+    def delete_text(self, credentials, id):
+        filename = self.text_manager.find(credentials, id)['filename']
+        current_app.logger.info(filename)
+        FileManager.delete_file(filename)
+        return self.text_manager.delete(credentials, id)
+
+    def all_filtered_by_language(self, *args, **kwargs):
+        return self.text_manager.all_filtered_by_language(*args, **kwargs)
+
+    def __add_processed_text(self, add_text_dto: AddTextMetadataDTO, file, extension):
+        id = self.text_manager.get_next_id()
+        filename = FileManager.save_file(add_text_dto.username, file, extension)
+
+        try:
+            textfile = Textfile(id, add_text_dto.title, add_text_dto.source_language, add_text_dto.support_language, filename, tags=add_text_dto.tags, owner=add_text_dto.username, permission=add_text_dto.permission)
+            chunks = ChunkFactory.from_file(file, id, textfile.source_language, textfile.support_language)
+            self.text_manager.add(textfile, chunks)
+            current_app.logger.info('Added')
+
+        except Exception as e:
+            FileManager.delete_file(filename)
+            self.text_manager.delete(id)
+            raise e
+
+    def update_language_lemma_ranks(self):
+        for language in LEARNING_LANGUAGES:
+            self.lemma_rank_service.update_language_lemma_ranks(language)
+
+    def update_text_average_lemma_rank(self):
+        for textfile in self.text_manager.all_filtered_by_language(LEARNING_LANGUAGES,KNOWN_LANGUAGES):
+            id = textfile['_id']
+            id = ObjectId(id)
+            self.lemma_rank_service.update_text_average_lemma_rank(id)
+
+def create_controllers_with_mongo_repositories(db):
+    textfiles_repository = TextfileRepository(db)
+    chunks_repository = ChunksRepository(db)
+    frequency_lists_repository = FrequencyListRepository(db)
+    lemma_rank_repository = LemmaRankRepository(db)
+
+    text_manager = TextManagerService(textfiles_repository,chunks_repository,frequency_lists_repository)
+    lemma_rank_service = LemmaRankService(lemma_rank_repository, frequency_lists_repository, textfiles_repository)
+
+    return Controllers(text_manager, lemma_rank_service)

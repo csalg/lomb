@@ -16,7 +16,7 @@ PERMISSION_ENUM = ['public', 'private', 'protected']
 @enforce_types
 @dataclass
 class Textfile(ReturnsDictionary):
-    _id : bson.ObjectId
+    id : bson.ObjectId
     title: str
     source_language: str
     support_language: str
@@ -57,23 +57,31 @@ class Chunk(ReturnsDictionary):
 class IndexEntry(ReturnsDictionary):
     lemma : str
     frequency : int
-    # chunks : list
 
     def __post_init__(self):
-        # if not self.chunks:
-        #     raise ValueError(f'The chunks array is empty')
-        # if self.frequency < len(self.chunks):
-        #     raise ValueError(f'Received: {self.frequency} Frequency must not be less than the length of the chunks array.')
-        # if len(self.chunks) > MAXIMUM_EXAMPLES_PER_TEXT:
-        #     self.chunks = self.chunks[0:MAXIMUM_EXAMPLES_PER_TEXT]
         if self.frequency <= 0:
             raise ValueError(f'Received: {self.frequency}, but frequency must be a non-zero positive integer.')
 
 @enforce_types
 @dataclass
 class FrequencyList(ReturnsDictionary):
-    id: bson.ObjectId
+    textfile_id: bson.ObjectId
+    language: str
     entries: list
+
+    @classmethod
+    def from_textfile_and_chunks(cls, textfile, chunks):
+        textfile_id = textfile.id
+        language = textfile.source_language
+        entries_dict = {}
+
+        for chunk in chunks:
+            for lemma in chunk.lemmas:
+                entries_dict[lemma] = entries_dict.setdefault(lemma, 0) + 1
+
+        entries = [IndexEntry(lemma,frequency) for lemma,frequency in entries_dict.items()]
+        return cls(textfile_id, language, entries)
+
 
 @enforce_types
 @dataclass
@@ -93,3 +101,10 @@ class LemmaRank(ReturnsDictionary):
 
         if self.rank <= 0:
             raise ValueError(f'Received rank: {self.rank}, but rank must be a non-zero positive integer.')
+
+@enforce_types
+@dataclass
+class UserCredentials(ReturnsDictionary):
+    username: str
+    role: str
+    groups: list

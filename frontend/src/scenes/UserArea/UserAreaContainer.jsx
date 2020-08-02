@@ -11,8 +11,12 @@ import LogoutOutlined from "@ant-design/icons/lib/icons/LogoutOutlined";
 import './UserAreaContainer.css'
 import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
 import LineChartOutlined from "@ant-design/icons/lib/icons/LineChartOutlined";
+import ReconciliationOutlined from '@ant-design/icons/lib/icons/ReconciliationOutlined'
+import UploadOutlined from '@ant-design/icons/lib/icons/UploadOutlined'
 import ReadOutlined from "@ant-design/icons/lib/icons/ReadOutlined";
 import {Brain} from '@styled-icons/boxicons-regular/Brain'
+import Admin from './Admin'
+import {AdminOnlyContainer} from "../../services/Permissions";
 
 const {Header, Content, Footer} = Layout;
 
@@ -59,9 +63,9 @@ const VocabularyDropdown = () =>
 const UserAreaContainer = ({match, history}) => (
     <Layout className="layout" style={{minHeight: '100vh'}}>
         <Header>
-            <Logo>
+            <Link to={'/'}><Logo>
                 Lomb
-            </Logo>
+            </Logo></Link>
             <Menu
                 theme="dark"
                 mode="horizontal"
@@ -81,7 +85,7 @@ const UserAreaContainer = ({match, history}) => (
                         Read
                     </Link>
                 </Menu.Item>
-                {/*<Menu.Item key="upload"><Link to={`${match.url}/upload`}>Upload</Link></Menu.Item>*/}
+
                 <Menu.Item key="revise">
                     <Link to={`/revise`}>
                         <Brain size={'20'}
@@ -92,6 +96,34 @@ const UserAreaContainer = ({match, history}) => (
                                }}/>
                         Revise
                     </Link>
+                </Menu.Item>
+                <Menu.Item key="upload">
+                    <UploadOutlined
+                        style={{
+                            marginRight: '3px',
+                            position: 'relative',
+                            top: '3px',
+                            fontSize: '20px',
+                        }}
+                    />
+                    <AdminOnlyContainer>
+                        <Link to={`${match.url}/upload`}>Upload</Link>
+                    </AdminOnlyContainer>
+                </Menu.Item>
+                <Menu.Item key="admin">
+                    <AdminOnlyContainer>
+                        <Link to={`${match.url}/admin`}>
+                            <ReconciliationOutlined
+                                style={{
+                                    marginRight: '3px',
+                                    position: 'relative',
+                                    top: '3px',
+                                    fontSize: '20px',
+                                }}
+                            />
+                            Admin
+                        </Link>
+                    </AdminOnlyContainer>
                 </Menu.Item>
                 {/*<Menu.Item key="vocabulary"><VocabularyDropdown/></Menu.Item>*/}
                 <Right>
@@ -134,6 +166,9 @@ const UserAreaContainer = ({match, history}) => (
                     </Route>
                     <Route path={`${match.url}/library`}>
                         <Library/>
+                    </Route>
+                    <Route path={`${match.url}/admin`}>
+                        <Admin/>
                     </Route>
                     <Route>
                         <Redirect to={`${match.url}/library`}/>

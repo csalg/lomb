@@ -2,6 +2,7 @@
   <dictionary name="charlie">
     <words>
       <w>textfile</w>
+      <w>textfiles</w>
     </words>
   </dictionary>
 </component>

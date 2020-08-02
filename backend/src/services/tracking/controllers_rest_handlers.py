@@ -6,11 +6,14 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import Blueprint, request, current_app
 from jsonschema import validate
 
-from .domain import Tracker
-from .rest_models import *
+from lib.db import get_db
+from .controllers import create_controllers_with_mongo_repositories
+from .controllers_rest_models  import *
+
 
 tracking = Blueprint('tracking', __name__)
-tracker = Tracker()
+db = get_db()
+controllers = create_controllers_with_mongo_repositories(db)
 
 
 @tracking.route('/', methods=['POST'])
@@ -30,10 +33,10 @@ def rest_handler():
     # tracker.add(user, message, lemmas, source_language, support_language)
 
     try:
-        tracker.add(user, message, lemmas, source_language, support_language)
+        controllers.add(user, message, lemmas, source_language, support_language)
     except Exception as e:
         current_app.logger.error(str(e))
-        return str(e), 500
+        return str(e), 400
 
     return 'ok',200
 

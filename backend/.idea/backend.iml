@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/notebooks" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.8.3 Docker Compose (backend at [/home/charlie/scripts/lomb/docker-compose.yml])" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (lomb)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

@@ -9,15 +9,15 @@ class ITextfileRepository(ABC):
         pass
 
     @abstractmethod
-    def delete(self,id):
+    def delete(self,credentials, id):
         pass
 
     @abstractmethod
-    def find_url(self,id):
+    def find(self, credentials, id):
         pass
 
     @abstractmethod
-    def all(self):
+    def all_filtered_by_language(self, source_languages, support_languages):
         pass
 
     @abstractmethod
@@ -25,11 +25,11 @@ class ITextfileRepository(ABC):
         pass
 
     @abstractmethod
-    def add_tag(self,tag):
+    def add_tag(self,id,tag):
         pass
 
     @abstractmethod
-    def remove_tag(self,tag):
+    def remove_tag(self,id, tag):
         pass
 
     @abstractmethod
@@ -38,6 +38,10 @@ class ITextfileRepository(ABC):
 
     @abstractmethod
     def change_permissions(self, request_user, id, new_permissions):
+        pass
+
+    @abstractmethod
+    def update_average_lemma_rank(self,id, new_difficulty: int):
         pass
 
 
@@ -51,7 +55,7 @@ class IChunksRepository:
         pass
 
     @abstractmethod
-    def get_chunks(self, lemma, source_language, support_language, textfile_ids=None):
+    def find_chunks(self, lemma, source_language, support_language, textfile_ids=None):
         pass
 
 class IFrequencyListRepository:
@@ -64,7 +68,7 @@ class IFrequencyListRepository:
         pass
 
     @abstractmethod
-    def delete(self, id):
+    def delete_text(self, id):
         pass
 
     @abstractmethod
@@ -73,7 +77,7 @@ class IFrequencyListRepository:
 
 class ILemmaRankRepository:
     @abstractmethod
-    def delete_all(self,language):
+    def delete_by_language(self,language):
         pass
 
     @abstractmethod

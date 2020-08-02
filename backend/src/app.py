@@ -4,8 +4,8 @@ from flask import Flask, render_template, jsonify
 from flask_cors import CORS
 
 from config import LANGUAGE_NAMES
-from services.library.api import library_blueprint
-from services.tracking.rest_controllers import tracking
+from services.library.controllers_rest_handlers import library_blueprint
+from services.tracking.controllers_rest_handlers import tracking
 from services.user.rest_controllers import user_blueprint
 from services.vocabulary.rest_controllers import vocabulary
 

@@ -6,13 +6,27 @@ import UserAreaContainer from "./scenes/UserArea/UserAreaContainer";
 import {LoginTab, RegisterTab} from "./scenes/Auth/AuthContainer";
 import {BrowserRouter, Link, Route, Switch, useHistory} from "react-router-dom";
 import AuthService from './services/auth'
-import {PrivateRoute} from "./services/PrivateRoute";
-import Reader from "./scenes/UserArea/Reader/Reader";
+import {PrivateRoute} from "./services/Permissions";
 import ReviseContainer from "./scenes/UserArea/Revise/ReviseContainer";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
           <BrowserRouter>
+              <ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+              />
+              {/* Same as */}
+              <ToastContainer />
               <Switch>
                   <Route path='/login'>
                       <LoginTab/>
