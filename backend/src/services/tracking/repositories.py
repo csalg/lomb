@@ -7,7 +7,9 @@ from config import VOCABULARY_LOGS_COLLECTION_NAME, IGNORE_LEMMAS_COLLECTION_NAM
 
 class LogRepository:
     def __init__(self, db):
-        self.logs               = db[VOCABULARY_LOGS_COLLECTION_NAME]
+        self._collection               = db[VOCABULARY_LOGS_COLLECTION_NAME]
+        self._collection.create_index([('user',1), ('lemma',1)])
+
 
     def log(self, user, message, lemma, source_language):
         if lemma:
@@ -16,7 +18,7 @@ class LogRepository:
                      'message': message,
                      'lemma': lemma,
                      'source_language': source_language}
-            self.logs.insert_many(data)
+            self._collection.insert_many(data)
 
 class SetRepository(ABC):
 
