@@ -73,7 +73,7 @@ class LemmaRankService:
             if rank >= MINIMUM_LEMMA_RANK:
                 rank_times_frequency += (frequency * rank*rank*rank)
 
-        return int(rank_times_frequency/(total_lemmas)) if total_lemmas else 0
+        return int(rank_times_frequency/(total_lemmas*MAXIMUM_LEMMA_RANK*MAXIMUM_LEMMA_RANK)) if total_lemmas else 0
 
 
     def update_language_lemma_ranks(self, language):
