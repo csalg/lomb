@@ -10,7 +10,6 @@ class LogRepository:
         self._collection               = db[VOCABULARY_LOGS_COLLECTION_NAME]
         self._collection.create_index([('user',1), ('lemma',1)])
 
-
     def log(self, user, message, lemma, source_language):
         if lemma:
             data = {'user':user,
@@ -18,7 +17,7 @@ class LogRepository:
                      'message': message,
                      'lemma': lemma,
                      'source_language': source_language}
-            self._collection.insert_many(data)
+            self._collection.insert(data)
 
 class SetRepository(ABC):
 
