@@ -88,3 +88,7 @@ class ILemmaRankRepository:
     def find(self, lemma, language):
         pass
 
+    @abstractmethod
+    def to_dictionary(self, language):
+        pass
+

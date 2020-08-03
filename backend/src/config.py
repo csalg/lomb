@@ -15,6 +15,7 @@ LANGUAGE_NAMES = {
 LEARNING_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru']
 KNOWN_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru', 'jp', 'zh']
 MAXIMUM_EXAMPLES_PER_TEXT = 50
+MINIMUM_LEMMA_RANK = 500 # Minimum rank to count for average lemma rank count
 MAXIMUM_LEMMA_RANK = 20000
 TRANSLATABLE_EXTENSIONS = ['txt','epub']
 

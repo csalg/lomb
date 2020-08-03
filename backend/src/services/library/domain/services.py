@@ -1,7 +1,7 @@
 from bson import ObjectId
 from flask import current_app
 
-from config import MAXIMUM_LEMMA_RANK
+from config import MAXIMUM_LEMMA_RANK, MINIMUM_LEMMA_RANK
 from services.library.domain.entities import LemmaRank, FrequencyList
 from services.library.domain.repositories import IFrequencyListRepository, ILemmaRankRepository, IChunksRepository, \
     ITextfileRepository
@@ -54,30 +54,24 @@ class LemmaRankService:
 
 
     def __calculate_average_lemma_rank(self, textfile_id):
-        current_app.logger.info('Calculating average lemma rank')
         frequency_list = self.frequency_list_repository.find(textfile_id)
-        language = frequency_list['language']
         if not frequency_list:
             raise Exception(f'Frequency list for {textfile_id} not found')
+
+        language = frequency_list['language']
+        lemma_ranks = self.lemma_rank_repository.to_dictionary(language)
 
         total_lemmas = 0
         rank_times_frequency = 0
 
-        current_app.logger.info(f'Entries: {len(frequency_list["entries"])}')
-
         for entry in frequency_list['entries']:
-            frequency = entry['frequency']
-            try:
-                lemma_rank = self.lemma_rank_repository.find(entry['lemma'], language)
-                rank = lemma_rank['rank']
-                total_lemmas += frequency
-                rank_times_frequency += frequency * rank
-            except:
-                pass
+            lemma, frequency = entry['lemma'], entry['frequency']
+            rank = lemma_ranks[lemma] if lemma in lemma_ranks else MAXIMUM_LEMMA_RANK
+            total_lemmas += frequency
+            if rank >= MINIMUM_LEMMA_RANK:
+                rank_times_frequency += (frequency * rank*rank*rank)
 
-        current_app.logger.info('Finished processing difficulty')
-
-        return int(rank_times_frequency/total_lemmas) if total_lemmas else 0
+        return int(rank_times_frequency/(total_lemmas*MAXIMUM_LEMMA_RANK*MAXIMUM_LEMMA_RANK)) if total_lemmas else 0
 
 
     def update_language_lemma_ranks(self, language):

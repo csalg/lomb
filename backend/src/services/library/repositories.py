@@ -117,4 +117,11 @@ class LemmaRankRepository(ILemmaRankRepository):
     def find(self, lemma, language):
         return self._collection.find_one({'language': language, 'lemma': lemma})
 
+    def to_dictionary(self, language):
+        ranks = self._collection.find({'language': language})
+        ranks_dictionary = {}
+        for rank in ranks:
+            ranks_dictionary[rank['lemma']] = rank['rank']
+        return ranks_dictionary
+
 

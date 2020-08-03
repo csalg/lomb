@@ -1,6 +1,9 @@
 version: '3'
 services:
 
+  frontend:
+    entrypoint: "serve -s build"
+
   nginx:
     image: nginx:latest
     container_name: nginx
