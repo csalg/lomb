@@ -11,7 +11,10 @@ class ReturnsDictionary:
     def to_dict(self):
         return asdict(self)
 
-PERMISSION_ENUM = ['public', 'private', 'protected']
+PERMISSION_PUBLIC = 'public'
+PERMISSION_PRIVATE = 'private'
+PERMISSION_PROTECTED = 'protected'
+PERMISSION_ENUM = [PERMISSION_PUBLIC, PERMISSION_PRIVATE, PERMISSION_PROTECTED]
 
 @enforce_types
 @dataclass

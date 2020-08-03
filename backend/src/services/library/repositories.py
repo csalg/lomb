@@ -6,7 +6,7 @@ from pymongo import IndexModel, TEXT, HASHED, MongoClient
 from config import LIBRARY_CHUNKS_COLLECTION_NAME, LIBRARY_TEXTFILE_COLLECTION_NAME, \
     LIBRARY_FREQUENCY_LIST_COLLECTION_NAME, LIBRARY_LEMMA_RANK_COLLECTION_NAME
 from lib.db import get_db, MongoWriteRepository, MongoReadRepository
-from services.library.domain.entities import PERMISSION_ENUM
+from services.library.domain.entities import PERMISSION_ENUM, PERMISSION_PUBLIC
 from services.library.domain.repositories import IChunksRepository, ITextfileRepository, IFrequencyListRepository, \
     ILemmaRankRepository
 
@@ -60,7 +60,7 @@ class TextfileRepository(MongoWriteRepository, ITextfileRepository):
         return list(self._collection.find({
             'source_language': {'$in': source_languages},
             'support_language': {'$in': support_languages},
-            '$or': [{'owner':username}, {'permission':'public'}]
+            '$or': [{'owner':username}, {'permission':PERMISSION_PUBLIC}]
             }
         ))
 
