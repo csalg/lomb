@@ -40,6 +40,9 @@ class TextManagerService:
     def all_filtered_by_language(self,*args,**kwargs):
         return self.textfile_repository.all_filtered_by_language(*args,**kwargs)
 
+    def all(self):
+        return self.textfile_repository.all()
+
 
 class LemmaRankService:
 
@@ -51,7 +54,6 @@ class LemmaRankService:
     def update_text_average_lemma_rank(self,id: ObjectId):
         new_average_lemma_rank = self.__calculate_average_lemma_rank(id)
         self.textfile_repository.update_average_lemma_rank(id, new_average_lemma_rank)
-
 
     def __calculate_average_lemma_rank(self, textfile_id):
         frequency_list = self.frequency_list_repository.find(textfile_id)

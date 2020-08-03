@@ -64,6 +64,9 @@ class TextfileRepository(MongoWriteRepository, ITextfileRepository):
             }
         ))
 
+    def all(self):
+        return list(self._collection.find({}))
+
     def get_next_id(self):
         id = ObjectId()
         while self._collection.find_one({"_id": id}):

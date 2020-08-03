@@ -21,6 +21,10 @@ class ITextfileRepository(ABC):
         pass
 
     @abstractmethod
+    def all(self):
+        pass
+
+    @abstractmethod
     def get_next_id(self):
         pass
 

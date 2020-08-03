@@ -70,7 +70,7 @@ class Controllers:
             self.lemma_rank_service.update_language_lemma_ranks(language)
 
     def update_text_average_lemma_rank(self):
-        for textfile in self.text_manager.all_filtered_by_language(LEARNING_LANGUAGES,KNOWN_LANGUAGES):
+        for textfile in self.text_manager.all():
             id = textfile['_id']
             id = ObjectId(id)
             self.lemma_rank_service.update_text_average_lemma_rank(id)
