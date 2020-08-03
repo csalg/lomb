@@ -8,9 +8,8 @@ from config import UPLOADS_FOLDER
 from lib.json import JSONEncoder
 from services.library.controllers import Controllers, AddTextMetadataDTO, create_controllers_with_mongo_repositories
 from services.library.domain.entities import UserCredentials
-from services.library.domain.services import TextManagerService
 from services.library.event_handlers import new_lemma_was_added_handler
-from services.library.repositories import TextfileRepository, ChunksRepository, FrequencyListRepository
+import services.library.controllers_rest_lib as lib
 
 library_blueprint = Blueprint('library', __name__, template_folder='templates')
 new_word_to_learn_was_added.connect(new_lemma_was_added_handler)
@@ -23,7 +22,7 @@ controllers = create_controllers_with_mongo_repositories(db)
 def upload():
     uploaded_file = request.files['file']
     form = request.form
-    username = get_jwt_identity()['username']
+    username = lib.get_username()
     try:
         tags = parse_tags(form['tags'])
         current_app.logger.info(form)
@@ -65,15 +64,16 @@ def all():
     except Exception as e:
         return str(e), 400
 
+    username = lib.get_username()
     learning_languages, known_languages = request.json['learning_languages'], request.json['known_languages']
-    all = JSONEncoder().encode(controllers.all_filtered_by_language(learning_languages,known_languages))
+    all = JSONEncoder().encode(controllers.all_filtered_by_language(username,learning_languages,known_languages))
     current_app.logger.info(all)
     return all
 
 @library_blueprint.route('/text/<id>', methods=['DELETE'])
 @jwt_required
 def delete(id):
-    credentials = get_credentials()
+    credentials = lib.get_credentials()
     try:
         controllers.delete_text(credentials, id)
         return f'deleted {id}', 200
@@ -99,7 +99,3 @@ def update_text_difficulty():
         return 'Text difficulties were successfully updated'
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-
-def get_credentials():
-    jwt_identity = get_jwt_identity()
-    return UserCredentials(jwt_identity['username'], jwt_identity['role'], jwt_identity['groups'])

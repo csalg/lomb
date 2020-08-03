@@ -17,7 +17,7 @@ class ITextfileRepository(ABC):
         pass
 
     @abstractmethod
-    def all_filtered_by_language(self, source_languages, support_languages):
+    def all_filtered_by_language(self, request_username, source_languages, support_languages):
         pass
 
     @abstractmethod

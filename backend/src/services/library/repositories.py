@@ -13,7 +13,7 @@ from services.library.domain.repositories import IChunksRepository, ITextfileRep
 
 class ChunksRepository(IChunksRepository):
 
-    def __init__(self,db):
+    def __init__(self, db):
         IChunksRepository.__init__(self)
         self._collection = db[LIBRARY_CHUNKS_COLLECTION_NAME]
 
@@ -40,7 +40,7 @@ class ChunksRepository(IChunksRepository):
 
 class TextfileRepository(MongoWriteRepository, ITextfileRepository):
 
-    def __init__(self,db):
+    def __init__(self, db):
         MongoWriteRepository.__init__(self, LIBRARY_TEXTFILE_COLLECTION_NAME, db, key_field_name='id')
         ITextfileRepository.__init__(self)
 
@@ -52,16 +52,21 @@ class TextfileRepository(MongoWriteRepository, ITextfileRepository):
             return textfile
         raise Exception(f'Incorrect permissions when attempting to retrieve textfile with id {id}')
 
-    def __find(self,id):
+    def __find(self, id):
         return self._find(id, lambda key: f'Textfile with key {key} not found')
 
-    def all_filtered_by_language(self, source_languages, support_languages):
+    def all_filtered_by_language(self, username, source_languages, support_languages):
         current_app.logger.info(list(self._collection.find({})))
-        return list(self._collection.find({'source_language': {'$in': source_languages}, 'support_language': {'$in': support_languages} }))
+        return list(self._collection.find({
+            'source_language': {'$in': source_languages},
+            'support_language': {'$in': support_languages},
+            '$or': [{'owner':username}, {'permission':'public'}]
+            }
+        ))
 
     def get_next_id(self):
         id = ObjectId()
-        while self._collection.find_one({"_id":id}):
+        while self._collection.find_one({"_id": id}):
             id = ObjectId()
         return id
 
@@ -75,7 +80,7 @@ class TextfileRepository(MongoWriteRepository, ITextfileRepository):
         if new_permission not in PERMISSION_ENUM:
             raise Exception(f'Wrong permission type: {new_permission}')
         self._collection.update_one(
-            {'_id':id},
+            {'_id': id},
             {'permission': new_permission}
         )
 
@@ -87,13 +92,13 @@ class TextfileRepository(MongoWriteRepository, ITextfileRepository):
 
     def update_average_lemma_rank(self, id, new_difficulty):
         id = ObjectId(id)
-        self._collection.update_one({'_id': id}, {'$set':{'average_lemma_rank':new_difficulty}})
+        self._collection.update_one({'_id': id}, {'$set': {'average_lemma_rank': new_difficulty}})
 
 
-class FrequencyListRepository(MongoWriteRepository, MongoReadRepository,IFrequencyListRepository):
+class FrequencyListRepository(MongoWriteRepository, MongoReadRepository, IFrequencyListRepository):
     def __init__(self, db):
-        MongoWriteRepository.__init__(self,LIBRARY_FREQUENCY_LIST_COLLECTION_NAME,db,key_field_name='textfile_id')
-        MongoReadRepository.__init__(self,LIBRARY_FREQUENCY_LIST_COLLECTION_NAME,db,key_field_name='textfile_id')
+        MongoWriteRepository.__init__(self, LIBRARY_FREQUENCY_LIST_COLLECTION_NAME, db, key_field_name='textfile_id')
+        MongoReadRepository.__init__(self, LIBRARY_FREQUENCY_LIST_COLLECTION_NAME, db, key_field_name='textfile_id')
         IFrequencyListRepository.__init__(self)
         self._collection.create_index('language')
 
@@ -105,10 +110,10 @@ class FrequencyListRepository(MongoWriteRepository, MongoReadRepository,IFrequen
 
 
 class LemmaRankRepository(ILemmaRankRepository):
-    def __init__(self,db):
-        self._collection =db[LIBRARY_LEMMA_RANK_COLLECTION_NAME]
+    def __init__(self, db):
+        self._collection = db[LIBRARY_LEMMA_RANK_COLLECTION_NAME]
 
-    def delete_by_language(self,language):
+    def delete_by_language(self, language):
         self._collection.delete_many({'language': language})
 
     def add_many(self, lemma_ranks):
@@ -123,5 +128,3 @@ class LemmaRankRepository(ILemmaRankRepository):
         for rank in ranks:
             ranks_dictionary[rank['lemma']] = rank['rank']
         return ranks_dictionary
-
-
