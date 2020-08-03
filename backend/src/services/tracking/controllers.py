@@ -14,6 +14,8 @@ class Controllers:
         self.ignore_repository = ignore_repository
         self.learning_repository = learning_repository
 
+        self.log_repository.create_index([('user',1), ('lemma',1)])
+
     def add(self, user, message, lemmas, source_language, support_language):
         for lemma in lemmas:
             if self.__should_log_lemma(user, lemma, message):
