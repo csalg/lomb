@@ -98,6 +98,7 @@ const UserAreaContainer = ({match, history}) => (
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="upload">
+                    <AdminOnlyContainer>
                     <UploadOutlined
                         style={{
                             marginRight: '3px',
@@ -106,7 +107,6 @@ const UserAreaContainer = ({match, history}) => (
                             fontSize: '20px',
                         }}
                     />
-                    <AdminOnlyContainer>
                         <Link to={`${match.url}/upload`}>Upload</Link>
                     </AdminOnlyContainer>
                 </Menu.Item>
