@@ -1,14 +1,16 @@
 from flask import current_app
 
-from mq.signals import lemma_examples_were_found
+from lib.db import get_db
+from mq.signals import NewLemmaToLearnEvent, LemmaExamplesWereFoundEvent
+from services.library.controllers import create_controllers_with_mongo_repositories
 
+controllers = create_controllers_with_mongo_repositories(get_db())
 
-def new_lemma_was_added_handler(payload):
-    # current_app.logger.info(payload)
-    # try:
-    #     examples = list(Library.get_examples(payload[ "lemma" ],  payload['source_language'], payload['support_language'],textfiles=None))
-    #     lemma_examples_were_found.send({'context': payload, 'examples':examples})
-    #     return examples
-    # except Exception as e:
-    #     current_app.logger.error(e)
-    pass
+def new_lemma_was_added_handler(new_lemma_to_learn : NewLemmaToLearnEvent):
+    current_app.logger.info(new_lemma_to_learn)
+    user, lemma, source_language, support_language = new_lemma_to_learn.user, new_lemma_to_learn.lemma, new_lemma_to_learn.source_language, new_lemma_to_learn.support_language
+    try:
+        examples = controllers.find_examples(user, lemma, source_language, support_language)
+        LemmaExamplesWereFoundEvent(user,lemma,source_language,support_language, len(examples), examples).dispatch()
+    except Exception as e:
+        current_app.logger.error(e)

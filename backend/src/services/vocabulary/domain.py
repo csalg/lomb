@@ -4,7 +4,6 @@ from lib.time import now_timestamp
 
 from .db_repository import LemmaExamplesRepository
 from .infrastructure.ml import probability_of_recall_leitner
-from mq.signals import new_word_to_learn_was_added
 
 
 class VocabularyDomain:
@@ -64,6 +63,6 @@ class VocabularyDomain:
     def update_lemma_examples(self,*args, **kwargs):
         self.repository.update_lemma_examples(*args,**kwargs)
 
-    def request_update_all_examples(self):
-        for lemma in self.repository.all_learning_lemmas():
-            new_word_to_learn_was_added.send(lemma['lemma'])
+    # def request_update_all_examples(self):
+    #     for lemma in self.repository.all_learning_lemmas():
+    #         new_lemma_to_learn_was_added.send(lemma['lemma'])

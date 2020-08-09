@@ -43,6 +43,9 @@ class TextManagerService:
     def all(self):
         return self.textfile_repository.all()
 
+    def find_examples(self, user, lemma, source_language, support_language):
+        return self.chunks_repository.find_chunks(lemma,source_language,support_language)
+
 
 class LemmaRankService:
 
@@ -71,9 +74,9 @@ class LemmaRankService:
             rank = lemma_ranks[lemma] if lemma in lemma_ranks else MAXIMUM_LEMMA_RANK
             total_lemmas += frequency
             if rank >= MINIMUM_LEMMA_RANK:
-                rank_times_frequency += (frequency * rank*rank*rank)
+                rank_times_frequency += (frequency * rank)
 
-        return int(rank_times_frequency/(total_lemmas*MAXIMUM_LEMMA_RANK*MAXIMUM_LEMMA_RANK)) if total_lemmas else 0
+        return int(rank_times_frequency/(total_lemmas)) if total_lemmas else 0
 
 
     def update_language_lemma_ranks(self, language):

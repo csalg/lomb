@@ -1,10 +1,52 @@
+from dataclasses import dataclass
+from typing import ClassVar
+
 from blinker import Namespace
+from enforce_typing import enforce_types
+
+from config import LEARNING_LANGUAGES, KNOWN_LANGUAGES
+
 
 signals = Namespace()
 
-new_word_to_learn_was_added = signals.signal('new_word_to_learn_was_added')
-lemma_examples_were_found = signals.signal('lemma_examples_were_found')
+@dataclass
+class Event:
+    signal: ClassVar[any] = signals.signal('new_lemma_to_learn_was_added')
 
-    # word_exposure   = signals.signal('word_exposure')
-    # word_review     = signals.signal('word_review')
-    #
+    def dispatch(self):
+        self.__class__.signal.send(self)
+
+    @classmethod
+    def addEventListener(cls, handler):
+        cls.signal.connect(handler)
+
+
+@enforce_types
+@dataclass
+class NewLemmaToLearnEvent(Event):
+    signal: ClassVar[any] = signals.signal('new_lemma_to_learn_was_added')
+    user: str
+    lemma: str
+    source_language: str
+    support_language: str
+
+    def __post_init__(self):
+        assert self.source_language in LEARNING_LANGUAGES
+        assert self.support_language in KNOWN_LANGUAGES
+
+
+@enforce_types
+@dataclass
+class LemmaExamplesWereFoundEvent(Event):
+    signal: ClassVar[any] = signals.signal('lemma_examples_were_found')
+    user: str
+    lemma: str
+    source_language: str
+    support_language: str
+    frequency: int
+    examples: list
+
+    def __post_init__(self):
+        assert self.source_language in LEARNING_LANGUAGES
+        assert self.support_language in KNOWN_LANGUAGES
+        assert self.frequency > 0

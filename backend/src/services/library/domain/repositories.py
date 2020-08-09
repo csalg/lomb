@@ -79,6 +79,7 @@ class IFrequencyListRepository:
     def find(self, textfile_id, lemma=None):
         pass
 
+
 class ILemmaRankRepository:
     @abstractmethod
     def delete_by_language(self,language):

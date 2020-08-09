@@ -3,14 +3,15 @@ from flask import Blueprint, render_template, request, current_app
 from flask.json import JSONEncoder, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from mq.signals import LemmaExamplesWereFoundEvent
 from services.vocabulary.infrastructure.signals import lemma_examples_were_found_handler
 from .db_repository import LemmaExamplesRepository
 from .domain import VocabularyDomain
-from mq.signals import lemma_examples_were_found
 
 vocabulary = Blueprint('vocabulary', __name__, template_folder='templates')
 domain = VocabularyDomain()
-lemma_examples_were_found.connect(lemma_examples_were_found_handler)
+# lemma_examples_were_found.connect(lemma_examples_were_found_handler)
+LemmaExamplesWereFoundEvent.addEventListener(lemma_examples_were_found_handler)
 repository = LemmaExamplesRepository()
 
 @vocabulary.route('/revise', methods=['POST'])

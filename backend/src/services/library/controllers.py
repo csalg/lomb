@@ -75,6 +75,9 @@ class Controllers:
             id = ObjectId(id)
             self.lemma_rank_service.update_text_average_lemma_rank(id)
 
+    def find_examples(self, user, lemma, source_language, support_language):
+        return self.text_manager.find_examples(user,lemma,source_language,support_language)
+
 def create_controllers_with_mongo_repositories(db):
     textfiles_repository = TextfileRepository(db)
     chunks_repository = ChunksRepository(db)

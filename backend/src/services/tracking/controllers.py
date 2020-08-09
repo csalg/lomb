@@ -2,7 +2,7 @@
 #     PastLemmaReview_from_PendingWordReview, PendingLemmaReview_from_review
 from flask import current_app
 
-from mq.signals import new_word_to_learn_was_added
+from mq.signals import NewLemmaToLearnEvent
 from services.tracking.repositories import LogRepository, IgnoreRepository, LearningRepository
 from services.tracking.domain import TEXT__WORD_HIGHLIGHTED
 
@@ -20,8 +20,9 @@ class Controllers:
                 self.log_repository.log(user, message, lemma, source_language)
                 if self.__should_add_lemma_to_learning(lemma, message):
                     self.__learn(user, lemma, source_language, support_language)
+                    self.publish_new_learning_word(user,lemma,source_language,support_language)
             else:
-                self.__ignore(user, lemma)
+                self.__ignore(user, lemma, source_language)
 
     def __learn(self,user, lemma, source_language, support_language):
         self.ignore_repository.delete(user,lemma, source_language)
@@ -32,7 +33,9 @@ class Controllers:
         self.ignore_repository.add(user,lemma, source_language)
 
     def publish_new_learning_word(self,user,lemma,source_language, support_language):
-        new_word_to_learn_was_added.send({"user":user, "lemma":lemma, "source_language":source_language, "support_language": support_language})
+        NewLemmaToLearnEvent(user, lemma, source_language, support_language).dispatch()
+        # new_lemma_to_learn_was_added.send(NewLemmaToLearnDTO(user, lemma, source_language, support_language))
+        # pass
 
     def __should_log_lemma(self, user, lemma, message):
         return self.learning_repository.contains(user, lemma) or message == TEXT__WORD_HIGHLIGHTED

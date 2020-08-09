@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from jsonschema import validate
 
 from lib.db import get_db
-from mq.signals import new_word_to_learn_was_added
+from mq.signals import NewLemmaToLearnEvent
 from config import UPLOADS_FOLDER
 from lib.json import JSONEncoder
 from services.library.controllers import Controllers, AddTextMetadataDTO, create_controllers_with_mongo_repositories
@@ -12,7 +12,8 @@ from services.library.event_handlers import new_lemma_was_added_handler
 import services.library.controllers_rest_lib as lib
 
 library_blueprint = Blueprint('library', __name__, template_folder='templates')
-new_word_to_learn_was_added.connect(new_lemma_was_added_handler)
+# new_lemma_to_learn_was_added.connect(new_lemma_was_added_handler)
+NewLemmaToLearnEvent.addEventListener(new_lemma_was_added_handler)
 
 db = get_db()
 controllers = create_controllers_with_mongo_repositories(db)
@@ -67,7 +68,6 @@ def all():
     username = lib.get_username()
     learning_languages, known_languages = request.json['learning_languages'], request.json['known_languages']
     all = JSONEncoder().encode(controllers.all_filtered_by_language(username,learning_languages,known_languages))
-    current_app.logger.info(all)
     return all
 
 @library_blueprint.route('/text/<id>', methods=['DELETE'])
