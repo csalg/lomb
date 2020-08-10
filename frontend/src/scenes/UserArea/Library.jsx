@@ -54,11 +54,12 @@ class Library extends React.Component {
                    style={{marginRight: 16}}>{record.title}</a>
             ),
         },
-        {
-            title: 'Difficulty',
-            dataIndex: 'average_lemma_rank',
-            width: '10%',
-        },
+        
+        // {
+        //     title: 'Difficulty',
+        //     dataIndex: 'average_lemma_rank',
+        //     width: '10%',
+        // },
         {
             title: 'Tags',
             dataIndex: 'tags',
