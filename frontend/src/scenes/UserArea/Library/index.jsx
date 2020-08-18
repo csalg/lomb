@@ -1,11 +1,11 @@
 import React from "react";
 import {Alert, Tag, Table} from 'antd';
-import AuthService from "../../services/auth";
-import {ALL_TEXTS, LIBRARY_TEXT, LIBRARY_UPLOADS} from "../../endpoints";
-import UserPreferences from "../../services/userPreferences";
-import {LANGUAGE_NAMES} from "../../services/languages";
-import parseErrorMessage from "../../services/parseErrorMessage";
-import {AdminOnlyContainer, AdminOrSameUsernameContainer} from "../../services/Permissions";
+import AuthService from "../../../services/auth";
+import {ALL_TEXTS, LIBRARY_TEXT, LIBRARY_UPLOADS} from "../../../endpoints";
+import UserPreferences from "../../../services/userPreferences";
+import {LANGUAGE_NAMES} from "../../../services/languages";
+import parseErrorMessage from "../../../services/parseErrorMessage";
+import {AdminOnlyContainer, AdminOrSameUsernameContainer} from "../../../services/Permissions";
 import jwt_decode from 'jwt-decode'
 import {toast} from "react-toastify";
 
@@ -31,7 +31,7 @@ const actionsView = (id,username,deleteRow) => {
     )
 }
 
-class Library extends React.Component {
+class Index extends React.Component {
     constructor() {
         super();
         this.deleteRow = this.deleteRow.bind(this)
@@ -54,12 +54,7 @@ class Library extends React.Component {
                    style={{marginRight: 16}}>{record.title}</a>
             ),
         },
-        
-        // {
-        //     title: 'Difficulty',
-        //     dataIndex: 'average_lemma_rank',
-        //     width: '10%',
-        // },
+
         {
             title: 'Tags',
             dataIndex: 'tags',
@@ -161,4 +156,4 @@ class Library extends React.Component {
 }
 
 
-export default Library;
+export default Index;
