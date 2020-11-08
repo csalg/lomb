@@ -18,9 +18,9 @@ class Controllers:
         for lemma in lemmas:
             if self.__should_log_lemma(user, lemma, message):
                 self.log_repository.log(user, message, lemma, source_language)
+                self.publish_new_learning_word(user, lemma, source_language, support_language)
                 if self.__should_add_lemma_to_learning(lemma, message):
                     self.__learn(user, lemma, source_language, support_language)
-                    self.publish_new_learning_word(user,lemma,source_language,support_language)
             else:
                 self.__ignore(user, lemma, source_language)
 
@@ -34,8 +34,12 @@ class Controllers:
 
     def publish_new_learning_word(self,user,lemma,source_language, support_language):
         NewLemmaToLearnEvent(user, lemma, source_language, support_language).dispatch()
-        # new_lemma_to_learn_was_added.send(NewLemmaToLearnDTO(user, lemma, source_language, support_language))
-        # pass
+
+    # def update_all_examples(self):
+    #     all_learning_lemmas = self.learning_repository.all()
+    #
+    #     for learning_lemma in all_learning_lemmas:
+    #         NewLemmaToLearnEvent(user, lemma, source_language, support_language).dispatch()
 
     def __should_log_lemma(self, user, lemma, message):
         return self.learning_repository.contains(user, lemma) or message == TEXT__WORD_HIGHLIGHTED
