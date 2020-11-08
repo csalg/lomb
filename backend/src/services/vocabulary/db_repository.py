@@ -1,3 +1,5 @@
+import random
+
 from config import VOCABULARY_LOGS_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA
 from lib.db import get_db
 
@@ -23,6 +25,8 @@ class LemmaExamplesRepository:
         })
 
     def update_lemma_examples(self, user, lemma, language, examples):
+        if len(examples) >= MAXIMUM_EXAMPLES_PER_LEMMA:
+            examples = random.sample(examples, MAXIMUM_EXAMPLES_PER_LEMMA)
         self.lemmas_learning.update(
             {
                 'user': user,
@@ -33,7 +37,7 @@ class LemmaExamplesRepository:
                 'user': user,
                 'lemma': lemma,
                 'language': language,
-                'examples': examples[0:MAXIMUM_EXAMPLES_PER_LEMMA]
+                'examples': examples
             },
             upsert=True
         )
