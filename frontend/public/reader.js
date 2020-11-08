@@ -279,6 +279,7 @@ class DefinitionController {
             en: 'English',
             zh: 'Chinese',
             de: 'German',
+            da: 'Danish'
         }
         return dict[code]
     }

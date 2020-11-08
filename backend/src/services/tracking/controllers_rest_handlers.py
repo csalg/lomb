@@ -30,7 +30,6 @@ def rest_handler():
 
     message, lemmas, source_language, support_language = itemgetter('message', 'lemmas', 'source_language', 'support_language')(content)
     current_app.logger.info(f"Tracking: {content}")
-    # tracker.add(user, message, lemmas, source_language, support_language)
 
     try:
         controllers.add(user, message, lemmas, source_language, support_language)
