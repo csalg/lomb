@@ -39,6 +39,8 @@ export default class extends React.Component {
         try {
             const sourceLanguage = LANGUAGE_NAMES[sourceLanguage_].toLowerCase()
             const supportLanguage = LANGUAGE_NAMES[supportLanguage_].toLowerCase()
+            if (sourceLanguage == "danish")
+                return `https://da.bab.la/ordbog/dansk-engelsk/${currentLemma}`
             return `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`
         } catch {
             console.log(`Exception: ${sourceLanguage_}, ${supportLanguage_} don't seem to be valid language codes.`)
