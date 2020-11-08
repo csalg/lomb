@@ -62,7 +62,3 @@ class VocabularyDomain:
 
     def update_lemma_examples(self,*args, **kwargs):
         self.repository.update_lemma_examples(*args,**kwargs)
-
-    # def request_update_all_examples(self):
-    #     for lemma in self.repository.all_learning_lemmas():
-    #         new_lemma_to_learn_was_added.send(lemma['lemma'])

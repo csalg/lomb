@@ -1,4 +1,4 @@
-from config import VOCABULARY_LOGS_COLLECTION_NAME
+from config import VOCABULARY_LOGS_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA
 from lib.db import get_db
 
 
@@ -33,7 +33,7 @@ class LemmaExamplesRepository:
                 'user': user,
                 'lemma': lemma,
                 'language': language,
-                'examples': examples
+                'examples': examples[0:MAXIMUM_EXAMPLES_PER_LEMMA]
             },
             upsert=True
         )
