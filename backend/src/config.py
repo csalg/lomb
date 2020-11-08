@@ -10,10 +10,11 @@ LANGUAGE_NAMES = {
     'pl': 'Polish',
     'ru': 'Russian',
     'jp': 'Japanese',
-    'zh': 'Chinese'
+    'zh': 'Chinese',
+    'da': 'Danish'
 }
-LEARNING_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru']
-KNOWN_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru', 'jp', 'zh']
+LEARNING_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru', 'da']
+KNOWN_LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'nl', 'pl', 'ru', 'jp', 'zh', 'da']
 MAXIMUM_EXAMPLES_PER_TEXT = 50
 MINIMUM_LEMMA_RANK = 0 # Minimum rank to count for average lemma rank count
 MAXIMUM_LEMMA_RANK = 20000
