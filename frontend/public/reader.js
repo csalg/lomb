@@ -269,7 +269,10 @@ class DefinitionController {
     }
 
     changeDefinition(newWord) {
-        const uri = `https://www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
+        let uri = `https://www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
+        if (this.sourceLanguage == 'Danish') {
+            uri = `https://da.bab.la/ordbog/dansk-engelsk/${encodeURI(newWord)}`
+        }
         this.view = changeFrameSrcWithoutAffectingBrowserHistory(this.view, uri)
     }
 
