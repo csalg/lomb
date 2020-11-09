@@ -54,7 +54,6 @@ class IntegerStep extends React.Component {
                     <Col span={8}>
                         <InputNumber
                             min={1}
-                            max={2000}
                             style={{margin: '0'}}
                             value={minimum_frequency}
                             onChange={val => this.setState({minimum_frequency:val})}
