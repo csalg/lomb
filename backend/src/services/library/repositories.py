@@ -56,7 +56,6 @@ class TextfileRepository(MongoWriteRepository, ITextfileRepository):
         return self._find(id, lambda key: f'Textfile with key {key} not found')
 
     def all_filtered_by_language(self, username, source_languages, support_languages):
-        current_app.logger.info(list(self._collection.find({})))
         return list(self._collection.find({
             'source_language': {'$in': source_languages},
             'support_language': {'$in': support_languages},
