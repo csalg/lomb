@@ -24,7 +24,11 @@ class VocabularyDomain:
 
     def learning_lemmas(self,username, minimum_frequency):
         all = self.repository.all_learning_lemmas(username)
-        return filter(lambda record:len(record['examples'])>minimum_frequency, all)
+        def filter_function(record):
+            if 'frequency' in record:
+                return minimum_frequency <= record['frequency']
+            return minimum_frequency <= len(record['examples'])
+        return filter(filter_function, all)
 
     def probability_of_recall(self, user,lemma):
         lemma_log = list(self.repository.get_lemma_logs(user,lemma))
