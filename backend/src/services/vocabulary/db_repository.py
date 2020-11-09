@@ -1,6 +1,8 @@
 import logging
 import random
 
+from flask import current_app
+
 from config import VOCABULARY_LOGS_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA
 from lib.db import get_db
 
@@ -26,7 +28,7 @@ class LemmaExamplesRepository:
         })
 
     def update_lemma_examples(self, user, lemma, language, examples, frequency):
-        logging.info(f'Updated lemma examples: {lemma}, {frequency}')
+        current_app.logger.info(f'Updated lemma examples: {lemma}, {frequency}')
 
         self.lemmas_learning.update(
             {
