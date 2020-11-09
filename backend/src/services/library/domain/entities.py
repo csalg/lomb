@@ -4,7 +4,7 @@ from dataclasses import dataclass, asdict
 from enforce_typing import enforce_types
 import bson
 
-from config import LEARNING_LANGUAGES, KNOWN_LANGUAGES, MAXIMUM_EXAMPLES_PER_TEXT
+from config import LEARNING_LANGUAGES, KNOWN_LANGUAGES
 
 
 class ReturnsDictionary:
