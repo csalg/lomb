@@ -1,7 +1,9 @@
+import random
+
 from bson import ObjectId
 from flask import current_app
 
-from config import MAXIMUM_LEMMA_RANK, MINIMUM_LEMMA_RANK
+from config import MAXIMUM_LEMMA_RANK, MINIMUM_LEMMA_RANK, MAXIMUM_EXAMPLES_PER_LEMMA
 from services.library.domain.entities import LemmaRank, FrequencyList
 from services.library.domain.repositories import IFrequencyListRepository, ILemmaRankRepository, IChunksRepository, \
     ITextfileRepository
@@ -44,7 +46,12 @@ class TextManagerService:
         return self.textfile_repository.all()
 
     def find_examples(self, user, lemma, source_language, support_language):
-        return self.chunks_repository.find_chunks(lemma,source_language,support_language)
+        examples = self.chunks_repository.find_chunks(lemma,source_language,support_language)
+
+        frequency = len(examples)
+        if len(examples) >= MAXIMUM_EXAMPLES_PER_LEMMA:
+            examples = random.sample(examples, MAXIMUM_EXAMPLES_PER_LEMMA)
+        return examples, frequency
 
 
 class LemmaRankService:

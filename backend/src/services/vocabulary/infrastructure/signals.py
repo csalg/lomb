@@ -11,4 +11,4 @@ def lemma_examples_were_found_handler(lemma_examples: LemmaExamplesWereFoundEven
                   'support_language': example['support_language'],
                   } for example in lemma_examples.examples]
     domain = VocabularyDomain()
-    domain.update_lemma_examples(lemma_examples.user,lemma_examples.lemma,lemma_examples.source_language,examples)
+    domain.update_lemma_examples(lemma_examples.user,lemma_examples.lemma,lemma_examples.source_language,examples, lemma_examples.frequency)

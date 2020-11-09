@@ -24,10 +24,8 @@ class LemmaExamplesRepository:
             'timestamp': {"$exists": True}
         })
 
-    def update_lemma_examples(self, user, lemma, language, examples):
-        frequency = len(examples)
-        if len(examples) >= MAXIMUM_EXAMPLES_PER_LEMMA:
-            examples = random.sample(examples, MAXIMUM_EXAMPLES_PER_LEMMA)
+    def update_lemma_examples(self, user, lemma, language, examples, frequency):
+
         self.lemmas_learning.update(
             {
                 'user': user,
