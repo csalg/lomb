@@ -67,10 +67,14 @@ class ReviseContainer extends React.Component {
             })
             const lemmas = data.data.map(record => {
                 console.log(record)
+                let frequency = record.examples.length;
+                if (record.hasOwnProperty('frequency')){
+                    frequency = record.frequency
+                }
                 return {
                     _id: record.lemma,
                     sourceLanguage: record.language,
-                    frequency: record.examples.length,
+                    frequency: frequency,
                     probability: record.probability_of_recall,
                 }
             })

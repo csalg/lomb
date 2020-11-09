@@ -25,6 +25,7 @@ class LemmaExamplesRepository:
         })
 
     def update_lemma_examples(self, user, lemma, language, examples):
+        frequency = len(examples)
         if len(examples) >= MAXIMUM_EXAMPLES_PER_LEMMA:
             examples = random.sample(examples, MAXIMUM_EXAMPLES_PER_LEMMA)
         self.lemmas_learning.update(
@@ -37,7 +38,8 @@ class LemmaExamplesRepository:
                 'user': user,
                 'lemma': lemma,
                 'language': language,
-                'examples': examples
+                'examples': examples,
+                'frequency': frequency
             },
             upsert=True
         )

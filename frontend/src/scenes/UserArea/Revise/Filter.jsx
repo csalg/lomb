@@ -45,16 +45,16 @@ class IntegerStep extends React.Component {
                 <Row>
                     <Col span={16}>
                         <Slider
-                            min={3}
-                            max={50}
+                            min={1}
+                            max={2000}
                             onChange={val => this.setState({minimum_frequency:val})}
                             value={typeof minimum_frequency === 'number' ? minimum_frequency : 0}
                         />
                     </Col>
                     <Col span={8}>
                         <InputNumber
-                            min={3}
-                            max={50}
+                            min={1}
+                            max={2000}
                             style={{margin: '0'}}
                             value={minimum_frequency}
                             onChange={val => this.setState({minimum_frequency:val})}
