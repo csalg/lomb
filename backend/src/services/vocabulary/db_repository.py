@@ -26,7 +26,7 @@ class LemmaExamplesRepository:
         })
 
     def update_lemma_examples(self, user, lemma, language, examples, frequency):
-        logging.log(f'Updated lemma examples: {lemma}, {frequency}')
+        logging.info(f'Updated lemma examples: {lemma}, {frequency}')
 
         self.lemmas_learning.update(
             {
