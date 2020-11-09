@@ -1,3 +1,4 @@
+import logging
 import random
 
 from config import VOCABULARY_LOGS_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA
@@ -25,6 +26,7 @@ class LemmaExamplesRepository:
         })
 
     def update_lemma_examples(self, user, lemma, language, examples, frequency):
+        logging.log(f'Updated lemma examples: {lemma}, {frequency}')
 
         self.lemmas_learning.update(
             {
