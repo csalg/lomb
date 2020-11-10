@@ -46,7 +46,7 @@ class TextManagerService:
         return self.textfile_repository.all()
 
     def find_examples(self, user, lemma, source_language, support_language):
-        examples = self.chunks_repository.find_chunks(lemma,source_language,support_language)
+        return self.chunks_repository.find_chunks(lemma,source_language,support_language)
 
         frequency = len(examples)
         if len(examples) >= MAXIMUM_EXAMPLES_PER_LEMMA:

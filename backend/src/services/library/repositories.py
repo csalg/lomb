@@ -1,10 +1,7 @@
-import bson
 from bson import ObjectId
-from flask import current_app
-from pymongo import IndexModel, TEXT, HASHED, MongoClient
 
 from config import LIBRARY_CHUNKS_COLLECTION_NAME, LIBRARY_TEXTFILE_COLLECTION_NAME, \
-    LIBRARY_FREQUENCY_LIST_COLLECTION_NAME, LIBRARY_LEMMA_RANK_COLLECTION_NAME
+    LIBRARY_FREQUENCY_LIST_COLLECTION_NAME, LIBRARY_LEMMA_RANK_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA
 from lib.db import get_db, MongoWriteRepository, MongoReadRepository
 from services.library.domain.entities import PERMISSION_ENUM, PERMISSION_PUBLIC
 from services.library.domain.repositories import IChunksRepository, ITextfileRepository, IFrequencyListRepository, \
@@ -23,11 +20,20 @@ class ChunksRepository(IChunksRepository):
                  'support_language': support_language}
         if textfile_ids:
             query = {**query, 'textfile_id': {'$in': textfile_ids}}
-        result = list(self._collection.find(query))
-        if not result:
+
+        chunks_cursor =self._collection.find(query)
+        frequency = chunks_cursor.count()
+
+        if frequency == 0:
             raise Exception(f'No chunks found for lemma {lemma}')
-        else:
-            return result
+
+        if MAXIMUM_EXAMPLES_PER_LEMMA <= frequency:
+            chunks_cursor = self._collection.aggregate([
+                {'$match': query},
+                {'$sample': {'size': MAXIMUM_EXAMPLES_PER_LEMMA}}
+            ])
+        return list(chunks_cursor), frequency
+
 
     def delete_text(self, textfile_id):
         self._collection.delete_many({'textfile_id': textfile_id})
