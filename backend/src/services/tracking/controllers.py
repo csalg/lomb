@@ -18,18 +18,21 @@ class Controllers:
         for lemma in lemmas:
             if self.__should_log_lemma(user, lemma, message):
                 self.log_repository.log(user, message, lemma, source_language)
-                self.publish_new_learning_word(user, lemma, source_language, support_language)
+                if 'REVISION' not in message:
+                    # Revision doesn´t currently send back support language
+                    self.publish_new_learning_word(user, lemma, source_language, support_language)
                 if self.__should_add_lemma_to_learning(lemma, message):
                     self.__learn(user, lemma, source_language, support_language)
             else:
-                self.__ignore(user, lemma, source_language)
+                self.ignore(user, lemma, source_language)
 
     def __learn(self,user, lemma, source_language, support_language):
         self.ignore_repository.delete(user,lemma, source_language)
         self.learning_repository.add(user,lemma, source_language)
         self.publish_new_learning_word(user,lemma, source_language, support_language)
 
-    def __ignore(self,user, lemma, source_language):
+    def ignore(self, user, lemma, source_language):
+        current_app.logger.info(f"Ignoring {user, lemma, source_language}")
         self.learning_repository.delete(user, lemma, source_language)
         self.ignore_repository.add(user,lemma, source_language)
 

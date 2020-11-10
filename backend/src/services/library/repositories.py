@@ -16,8 +16,7 @@ class ChunksRepository(IChunksRepository):
 
     def find_chunks(self, lemma, source_language, support_language, textfile_ids=None):
         query = {'lemmas._id': lemma,
-                 'source_language': source_language,
-                 'support_language': support_language}
+                 'source_language': source_language}
         if textfile_ids:
             query = {**query, 'textfile_id': {'$in': textfile_ids}}
 

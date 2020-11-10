@@ -46,5 +46,5 @@ class LemmaExamplesRepository:
             upsert=True
         )
 
-    def delete(self, user, lemma):
-        self.lemmas_learning.remove({'user':user,'lemma':lemma})
+    def delete(self, user, lemma, language):
+        self.lemmas_learning.remove({'user':user,'lemma':lemma, 'language': language})

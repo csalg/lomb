@@ -136,6 +136,7 @@ class Lemma extends React.Component {
     render() {
         const {_id: lemma_, sourceLanguage, frequency, probability} = this.props.row
         console.log(`rendering lemma: ${lemma_}`)
+        console.log(this.props.row)
         if (this.state.isVisible) {
             return (
                 <tr
@@ -151,7 +152,10 @@ class Lemma extends React.Component {
                         <Tooltip title={`Remove ${lemma_} from my revision items`}>
                             <a onClick={_ => {
                                 this.setState({isVisible:false})
-                                AuthService.jwt_delete(DELETE_URL + lemma_)}
+                                AuthService.jwt_post(DELETE_URL, {
+                                    lemma : lemma_,
+                                    source_language:sourceLanguage
+                                })}
                             }>
                                 <DeleteOutlined/>
                             </a>

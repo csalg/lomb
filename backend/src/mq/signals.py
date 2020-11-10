@@ -37,6 +37,18 @@ class NewLemmaToLearnEvent(Event):
 
 @enforce_types
 @dataclass
+class StopLearningLemmaEvent(Event):
+    signal: ClassVar[any] = signals.signal('stop_learning_lemma')
+    username: str
+    lemma: str
+    source_language : str
+
+    def __post_init__(self):
+        assert self.source_language in LEARNING_LANGUAGES
+
+
+@enforce_types
+@dataclass
 class LemmaExamplesWereFoundEvent(Event):
     signal: ClassVar[any] = signals.signal('lemma_examples_were_found')
     user: str
@@ -48,5 +60,5 @@ class LemmaExamplesWereFoundEvent(Event):
 
     def __post_init__(self):
         assert self.source_language in LEARNING_LANGUAGES
-        assert self.support_language in KNOWN_LANGUAGES
+        # assert self.support_language in KNOWN_LANGUAGES
         assert self.frequency > 0

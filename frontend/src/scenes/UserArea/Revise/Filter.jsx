@@ -2,8 +2,7 @@ import React from "react";
 import 'antd/dist/antd.css';
 import {Slider, InputNumber, Row, Col, Button} from 'antd';
 import styled from 'styled-components'
-import {neutral1, neutral2, neutral3} from "../../../PALETTE";
-import {Weight} from "@styled-icons/fa-solid/Weight";
+import {neutral1, neutral3} from "../../../PALETTE";
 import ReloadOutlined from "@ant-design/icons/lib/icons/ReloadOutlined";
 import UserPreferences from "../../../services/userPreferences";
 

@@ -1,7 +1,5 @@
 import logging
 
-from flask import current_app
-
 from mq.signals import LemmaExamplesWereFoundEvent
 from services.vocabulary.domain import VocabularyDomain
 

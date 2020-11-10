@@ -19,5 +19,5 @@ export const UPDATE_TEXT_DIFFICULTIES = LIBRARY_ADMIN + '/update_text_difficulty
 
 export const VOCABULARY = API_URL + "/vocabulary"
 export const REVISE_URL = VOCABULARY + '/revise'
-export const DELETE_URL = VOCABULARY + '/word/'
+export const DELETE_URL = VOCABULARY + '/delete_word'
 export const INTERACTION_TRACKING_URL = API_URL+ '/tracking/'
