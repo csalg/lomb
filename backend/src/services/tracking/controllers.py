@@ -30,16 +30,11 @@ class Controllers:
         self.publish_new_learning_word(user,lemma, source_language, support_language)
 
     def __ignore(self,user, lemma, source_language):
+        self.learning_repository.delete(user, lemma, source_language)
         self.ignore_repository.add(user,lemma, source_language)
 
     def publish_new_learning_word(self,user,lemma,source_language, support_language):
         NewLemmaToLearnEvent(user, lemma, source_language, support_language).dispatch()
-
-    # def update_all_examples(self):
-    #     all_learning_lemmas = self.learning_repository.all()
-    #
-    #     for learning_lemma in all_learning_lemmas:
-    #         NewLemmaToLearnEvent(user, lemma, source_language, support_language).dispatch()
 
     def __should_log_lemma(self, user, lemma, message):
         return self.learning_repository.contains(user, lemma) or message == TEXT__WORD_HIGHLIGHTED
