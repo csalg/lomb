@@ -47,10 +47,10 @@ def delete():
         current_app.logger.info(str(e))
         return jsonify({'error': str(e)}), 400
 
-@vocabulary.route('/heatmap/<neighbours>')
-def heatmap(neighbours):
+@vocabulary.route('/heatmap/<resolution>/<neighbours>')
+def heatmap(resolution, neighbours):
     username = 'charlie'
-    fig = domain.heatmap(username, int(neighbours))
+    fig = domain.heatmap(username, int(resolution), int(neighbours))
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')

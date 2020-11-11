@@ -12,7 +12,7 @@ class VocabularyDomain:
                  repository=LemmaExamplesRepository):
         self.repository = repository()
 
-    def heatmap(self, username, neighbours):
+    def heatmap(self, username, resolution, neighbours):
         learning_lemmas_with_probability = self.learning_lemmas_with_probability(username, 1, 1)
         def frequency_map_function(record):
             if 'frequency' in record:
@@ -20,7 +20,7 @@ class VocabularyDomain:
             return len(record['examples'])
         frequency = list(map(frequency_map_function, learning_lemmas_with_probability))
         por = list(map(lambda record : record['probability_of_recall'], learning_lemmas_with_probability))
-        fig, ax = heatmap(frequency, por, neighbours)
+        fig, ax = heatmap(frequency, por, resolution, neighbours)
         return fig
 
     def learning_lemmas_with_probability(self,username,minimum_frequency,maximum_por):

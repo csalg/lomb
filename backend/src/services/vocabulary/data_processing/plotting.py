@@ -4,7 +4,7 @@ import matplotlib.cm as cm
 from scipy.spatial import cKDTree
 
 
-def heatmap(xs, ys, neighbours=50):
+def heatmap(xs, ys, resolution=100, neighbours=50):
     """
     Attribution: https://stackoverflow.com/questions/2369492/generate-a-heatmap-in-matplotlib-using-a-scatter-data-set/59920744#59920744
     """
@@ -13,8 +13,6 @@ def heatmap(xs, ys, neighbours=50):
         dp = pmax - pmin
         dv = (p - pmin) / dp * resolution
         return dv
-
-    resolution = 10
 
     extent = [np.min(xs), np.max(xs), np.float64(0), np.float64(1)]
     xv = data_coord2view_coord(xs, resolution, extent[0], extent[1])
