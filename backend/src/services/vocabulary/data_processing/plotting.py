@@ -14,9 +14,9 @@ def heatmap(xs, ys, neighbours=8):
         dv = (p - pmin) / dp * resolution
         return dv
 
-    resolution = 250
+    resolution = 50
 
-    extent = [np.min(xs), np.max(xs), np.min(ys), np.max(ys)]
+    extent = [np.min(xs), np.max(xs), np.float64(0), np.float64(1)]
     xv = data_coord2view_coord(xs, resolution, extent[0], extent[1])
     yv = data_coord2view_coord(ys, resolution, extent[2], extent[3])
 
@@ -41,7 +41,8 @@ def heatmap(xs, ys, neighbours=8):
 
     ax.imshow(im, origin='lower', extent=extent, cmap=cm.terrain)
     ax.set_xlim(extent[0], extent[1])
-    ax.set_ylim(0, 1)
+    ax.set_ylim(extent[2], extent[3])
+    ax.set_xscale('log')
     ax.set_aspect('auto')
 
     return fig, ax
