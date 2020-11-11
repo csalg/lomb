@@ -1,6 +1,7 @@
 from flask import current_app
 
 from lib.time import now_timestamp
+from .data_processing.plotting import heatmap
 
 from .db_repository import LemmaExamplesRepository
 from .infrastructure.ml import probability_of_recall_leitner
@@ -10,6 +11,17 @@ class VocabularyDomain:
     def __init__(self,
                  repository=LemmaExamplesRepository):
         self.repository = repository()
+
+    def heatmap(self, username):
+        learning_lemmas_with_probability = self.learning_lemmas_with_probability(username, 1, 1)
+        def frequency_map_function(record):
+            if 'frequency' in record:
+                return record['frequency']
+            return len(record['examples'])
+        frequency = list(map(frequency_map_function, learning_lemmas_with_probability))
+        por = list(map(lambda record : record['probability_of_recall'], learning_lemmas_with_probability))
+        fig, ax = heatmap(frequency, por)
+        return fig
 
     def learning_lemmas_with_probability(self,username,minimum_frequency,maximum_por):
         all_lemmas = self.learning_lemmas(username,minimum_frequency)

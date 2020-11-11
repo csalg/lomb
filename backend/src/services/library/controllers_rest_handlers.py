@@ -2,6 +2,7 @@ from flask import Blueprint, request, send_from_directory, current_app, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from jsonschema import validate
 
+
 from lib.db import get_db
 from mq.signals import NewLemmaToLearnEvent
 from config import UPLOADS_FOLDER
@@ -99,3 +100,4 @@ def update_text_difficulty():
         return 'Text difficulties were successfully updated'
     except Exception as e:
         return jsonify({'error': str(e)}), 400
+

@@ -1,6 +1,11 @@
 from flask import Blueprint, request, current_app
 from flask.json import JSONEncoder, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+import io
+import random
+from flask import Response
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib.pyplot as plt
 
 from mq.signals import LemmaExamplesWereFoundEvent, StopLearningLemmaEvent
 from services.vocabulary.infrastructure.signals import lemma_examples_were_found_handler
@@ -41,3 +46,12 @@ def delete():
     except Exception as e:
         current_app.logger.info(str(e))
         return jsonify({'error': str(e)}), 400
+
+@vocabulary.route('/heatmap')
+def heatmap():
+    username = 'charlie'
+    fig = domain.heatmap(username)
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+
