@@ -2,12 +2,13 @@ from flask import current_app
 
 from lib.time import now_timestamp
 from .data_processing.plotting import heatmap
+from .data_processing.wrangling.DatasetFactory import DatasetFactory
 
 from .db_repository import LemmaExamplesRepository
 from .infrastructure.ml import probability_of_recall_leitner
 
 
-class VocabularyDomain:
+class Controllers:
     def __init__(self,
                  repository=LemmaExamplesRepository):
         self.repository = repository()
@@ -24,6 +25,7 @@ class VocabularyDomain:
         return fig
 
     def learning_lemmas_with_probability(self,username,minimum_frequency,maximum_por):
+        df = self.__get_datapoints(username, minimum_frequency)
         all_lemmas = self.learning_lemmas(username,minimum_frequency)
         lemmas = []
         for lemma in all_lemmas:
@@ -34,6 +36,17 @@ class VocabularyDomain:
         current_app.logger.info('No issue sorting')
         return lemmas
 
+    # def learning_lemmas_with_probability(self,username,minimum_frequency,maximum_por):
+    #     all_lemmas = self.learning_lemmas(username,minimum_frequency)
+    #     lemmas = []
+    #     for lemma in all_lemmas:
+    #         lemma['probability_of_recall'] = self.probability_of_recall(username, lemma['lemma'])
+    #         if lemma['probability_of_recall'] < maximum_por:
+    #             lemmas.append(lemma)
+    #     lemmas.sort(key=lambda lemma: lemma['probability_of_recall'])
+    #     current_app.logger.info('No issue sorting')
+    #     return lemmas
+    #
     def learning_lemmas(self,username, minimum_frequency):
         all = self.repository.all_learning_lemmas(username)
         def filter_function(record):
@@ -78,3 +91,12 @@ class VocabularyDomain:
 
     def update_lemma_examples(self,*args, **kwargs):
         self.repository.update_lemma_examples(*args,**kwargs)
+
+    def __get_datapoints(self, username, frequency):
+        factory = DatasetFactory()
+        logs = self.__logs_under_frequency(username, frequency)
+        factory.add_logs(logs)
+        return factory.create_dataframe_with_all_data_sequence_counting_text_interactions_as_clicks()
+
+    def __logs_under_frequency(self, username, frequency):
+        pass

@@ -10,10 +10,10 @@ import matplotlib.pyplot as plt
 from mq.signals import LemmaExamplesWereFoundEvent, StopLearningLemmaEvent
 from services.vocabulary.infrastructure.signals import lemma_examples_were_found_handler
 from .db_repository import LemmaExamplesRepository
-from .domain import VocabularyDomain
+from .controllers import Controllers
 
 vocabulary = Blueprint('vocabulary', __name__, template_folder='templates')
-domain = VocabularyDomain()
+domain = Controllers()
 LemmaExamplesWereFoundEvent.addEventListener(lemma_examples_were_found_handler)
 repository = LemmaExamplesRepository()
 

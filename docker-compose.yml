@@ -50,8 +50,20 @@ services:
     networks:
       - internal
 
+  jupyter:
+    image: jupyter/scipy-notebook
+    container_name: jupyter
+    restart: unless-stopped
+    ports: 
+      - 8888:8888
+    networks: 
+      - internal
+    volumes:
+      - jupyternotebooks:/home/jovyan/work
+
 volumes:
   mongodbdata:
   node_modules:
+  jupyternotebooks:
 networks:
   internal:
