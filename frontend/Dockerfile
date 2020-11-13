@@ -7,6 +7,6 @@ WORKDIR /app
 RUN npm install
 RUN npm install -g serve
 RUN npm run build
-#CMD /bin/bash
-CMD make run
+CMD /bin/bash
+#CMD make run
 
