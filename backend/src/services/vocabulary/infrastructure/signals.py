@@ -1,9 +1,9 @@
 import logging
 
 from mq.signals import LemmaExamplesWereFoundEvent
-from services.vocabulary.domain import VocabularyDomain
+from services.vocabulary.controllers import Controllers
 
-domain = VocabularyDomain()
+domain = Controllers()
 
 
 def lemma_examples_were_found_handler(lemma_examples: LemmaExamplesWereFoundEvent):
