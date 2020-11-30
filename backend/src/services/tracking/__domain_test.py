@@ -1,5 +1,5 @@
-from .util import *
-from .util import *
+from datetime import datetime
+from config import MAXIMUM_SECONDS
 
 repository = None
 FIRST_WORD = 'firstWord'
@@ -103,3 +103,14 @@ def test_add_review():
 #     past_wr = db.past_reviews.find_one({'word':'firstWord'})
 #     # print(pending_wr)
 #     # print(past_wr)
+
+
+def now_timestamp():
+    return int(datetime.timestamp(datetime.now()))
+
+
+def seconds_since_timestamp(then, now=None):
+    now = now if now else now_timestamp()
+    difference = now - then
+    return min(difference, MAXIMUM_SECONDS)
+
