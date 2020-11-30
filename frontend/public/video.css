@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css?family=Comfortaa|Lato|Open+Sans|Roboto&display=swap");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  padding: 0; }
+
+body {
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, sans-serif; }
+
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  background-color: #f1f1f1; }
+  .wrapper .container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column; }
+  .wrapper article {
+    background-color: #fff;
+    color: #3c4043;
+    border: thin solid #dadce0;
+    border-radius: .5rem;
+    padding: 2rem 4rem;
+    font-size: .875rem; }
+    .wrapper article section {
+      margin-bottom: 1rem; }
+
+h1, h2, h3, h4, h5 {
+  font-family: "Lato";
+  font-weight: 550;
+  padding-top: 0.5rem;
+  color: #0F2B46; }
+
+h1 {
+  padding-bottom: 0.2rem; }
+
+strong, b {
+  color: #545a5f; }
+
+.explanation p {
+  padding-bottom: 0.5rem; }
+
+.explanation ol li {
+  margin: .25rem 0 .25rem 1rem; }
+
+video {
+  width: 100%;
+  margin: 1rem 0; }
+
+table {
+  border-collapse: collapse;
+  margin-top: 0.2rem;
+  width: 100%; }
+  table tr {
+    border: thin solid #dadce0; }
+    table tr td {
+      padding: 0.5rem 1rem;
+      padding-left: 0.2rem; }
+      table tr td:last-child {
+        padding-right: 0; }
+
+@media only screen and (min-width: 800px) {
+  .container {
+    width: 800px; } }
+
+@media only screen and (max-width: 800px) {
+  .container {
+    flex: 1; } }

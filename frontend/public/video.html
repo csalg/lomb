@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="./video.css" rel="stylesheet">
+    <title>Video player</title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="container">
+        <article>
+
+            <h1>Dual Subtitle Video Player</h1>
+            <div class="explanation">
+
+                <section>This video player allows you to load two subtitle files and switch between them using the '.'
+                    (dot) key. It is excellent for learning languages. Works with Chrome and Firefox, although Firefox
+                    only changes track when the next caption is loaded (Chrome changes immediately).
+                </section>
+                <section>
+                    <h3>Usage:</h3>
+                    <ol>
+                        <li>Pick two subtitle files in .vtt format.</li>
+                        <li>Pick a video.</li>
+                        <li>Enjoy!</li>
+                    </ol>
+                    <strong>Remark</strong>: Nothing is uploaded anywhere; the video plays locally from your browser.
+                </section>
+
+                <section>
+                    <h3>Files:</h3>
+                    <table>
+                        <tr>
+                            <td>
+                                <label for="sourceLanguage">
+                                    Language (e.g. da, de, es, en):
+                                </label>
+                            </td>
+                            <td>
+                                <input id="sourceLanguage" type="text"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="supportLanguage">
+                                    Translation language (e.g. da, de, es, en):
+                                </label>
+                            </td>
+                            <td>
+                                <input id="supportLanguage" type="text"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="target-file">
+                                    Captions in target language (.vtt):
+                                </label>
+                            </td>
+                            <td>
+                                <input accept=".vtt" id="target-file" type="file"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="target-lemmas-file">
+                                    Lemmas (.vtt):
+                                </label>
+                            </td>
+                            <td>
+                                <input accept=".vtt" id="target-lemmas-file" type="file"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="translation-file">
+                                    Translated captions (.vtt):
+                                </label>
+                            </td>
+                            <td>
+                                <input accept=".vtt" id="translation-file" type="file"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="video-file">
+                                    Video file:
+                                </label>
+                            </td>
+                            <td>
+                                <input accept="video/*" id="video-file" type="file"/>
+                            </td>
+                        </tr>
+                    </table>
+                </section>
+            </div>
+
+            <video autoplay controls>
+                <track default id="target-subs" kind="subtitles" label="Target">
+                <track id="target-lemmas" kind="subtitles" label="Target">
+                <track id="translation-subs" kind="subtitles" label="Translation">
+            </video>
+
+        </article>
+    </div>
+</div>
+
+<script src="api_endpoint.js"></script>
+<script src="auth.js"></script>
+<script src="endpoints.js"></script>
+<script src="video.js" type="text/javascript"></script>
+<script>
+    const tracker = new Tracker(AuthService, INTERACTION_TRACKING_URL)
+    videoFileInput.addEventListener('change', playSelectedFile, false);
+    videoFileInput.addEventListener('change', tracker.track, false);
+</script>
+
+</body>
+</html>

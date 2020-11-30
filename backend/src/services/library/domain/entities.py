@@ -57,16 +57,6 @@ class Chunk(ReturnsDictionary):
 
 @enforce_types
 @dataclass
-class IndexEntry(ReturnsDictionary):
-    lemma : str
-    frequency : int
-
-    def __post_init__(self):
-        if self.frequency <= 0:
-            raise ValueError(f'Received: {self.frequency}, but frequency must be a non-zero positive integer.')
-
-@enforce_types
-@dataclass
 class UserCredentials(ReturnsDictionary):
     username: str
     role: str
