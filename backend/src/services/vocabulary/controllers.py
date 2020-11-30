@@ -92,11 +92,5 @@ class Controllers:
     def update_lemma_examples(self,*args, **kwargs):
         self.repository.update_lemma_examples(*args,**kwargs)
 
-    # def __get_datapoints(self, username, frequency):
-    #     factory = DatasetFactory()
-    #     logs = self.__logs_under_frequency(username, frequency)
-    #     factory.add_logs(logs)
-    #     return factory.create_dataframe_with_all_data_sequence_counting_text_interactions_as_clicks()
-
     def __logs_under_frequency(self, username, frequency):
         pass

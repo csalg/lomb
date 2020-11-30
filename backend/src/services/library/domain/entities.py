@@ -67,46 +67,6 @@ class IndexEntry(ReturnsDictionary):
 
 @enforce_types
 @dataclass
-class FrequencyList(ReturnsDictionary):
-    textfile_id: bson.ObjectId
-    language: str
-    entries: list
-
-    @classmethod
-    def from_textfile_and_chunks(cls, textfile, chunks):
-        textfile_id = textfile.id
-        language = textfile.source_language
-        entries_dict = {}
-
-        for chunk in chunks:
-            for lemma in chunk.lemmas:
-                entries_dict[lemma] = entries_dict.setdefault(lemma, 0) + 1
-
-        entries = [IndexEntry(lemma,frequency) for lemma,frequency in entries_dict.items()]
-        return cls(textfile_id, language, entries)
-
-
-@enforce_types
-@dataclass
-class LemmaRank(ReturnsDictionary):
-    lemma: str
-    language: str
-    frequency: int
-    rank: int
-
-    def __post_init__(self):
-
-        if self.language not in LEARNING_LANGUAGES:
-            raise ValueError(f"Language {self.language} is unsupported")
-
-        if self.frequency <= 0:
-            raise ValueError(f'Received frequency: {self.frequency}, but frequency must be a non-zero positive integer.')
-
-        if self.rank <= 0:
-            raise ValueError(f'Received rank: {self.rank}, but rank must be a non-zero positive integer.')
-
-@enforce_types
-@dataclass
 class UserCredentials(ReturnsDictionary):
     username: str
     role: str

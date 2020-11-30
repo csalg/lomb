@@ -61,39 +61,3 @@ class IChunksRepository:
     @abstractmethod
     def find_chunks(self, lemma, source_language, support_language, textfile_ids=None):
         pass
-
-class IFrequencyListRepository:
-    @abstractmethod
-    def all(self, language):
-        pass
-
-    @abstractmethod
-    def add(self, frequency_list):
-        pass
-
-    @abstractmethod
-    def delete_text(self, id):
-        pass
-
-    @abstractmethod
-    def find(self, textfile_id, lemma=None):
-        pass
-
-
-class ILemmaRankRepository:
-    @abstractmethod
-    def delete_by_language(self,language):
-        pass
-
-    @abstractmethod
-    def add_many(self, lemma_ranks):
-        pass
-
-    @abstractmethod
-    def find(self, lemma, language):
-        pass
-
-    @abstractmethod
-    def to_dictionary(self, language):
-        pass
-

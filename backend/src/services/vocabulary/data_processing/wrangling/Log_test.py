@@ -1,6 +1,7 @@
 import pytest
 
-from wrangling.Log import TEXT__WORD_HIGHLIGHTED, Log
+from services.tracking.domain import TEXT__WORD_HIGHLIGHTED
+from services.vocabulary.data_processing.wrangling.domain import Log
 
 invalid_logs = [
     (TypeError,

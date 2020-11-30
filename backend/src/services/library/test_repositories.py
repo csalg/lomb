@@ -4,10 +4,9 @@ import mongomock
 import pytest
 from bson import ObjectId
 
-from config import LIBRARY_CHUNKS_COLLECTION_NAME, LIBRARY_TEXTFILE_COLLECTION_NAME
-from services.library.domain.entities import Chunk, Textfile, FrequencyList, LemmaRank
-from services.library.repositories import ChunksRepository, TextfileRepository, FrequencyListRepository, \
-    LemmaRankRepository
+from config import LIBRARY_CHUNKS_COLLECTION_NAME
+from services.library.domain.entities import Chunk, Textfile
+from services.library.repositories import ChunksRepository, TextfileRepository
 
 
 @pytest.fixture
@@ -55,28 +54,3 @@ def test_TextfileRepository(db):
 
     repository.delete(textfile.id)
     assert len(repository.all_filtered_by_language(['en'], ['es'])) == 0
-
-def test_LemmaRankRepository(db):
-    repository = LemmaRankRepository(db)
-    lemma_en = LemmaRank('run', 'en', 15, 1)
-    lemma_es = LemmaRank('correr', 'es', 40, 1)
-
-    repository.add_many([lemma_en, lemma_es])
-
-    result = repository.find('run', 'en')
-    assert result
-    assert result['lemma'] == 'run'
-    assert result['language'] == 'en'
-    assert result['frequency'] == 15
-    assert result['rank'] == 1
-
-    result = repository.find('non-existent lemma', 'en')
-    assert not result
-
-    result = repository.find('run', 'es')
-    assert not result
-
-    repository.delete_by_language('en')
-    result = repository.find('run', 'en')
-
-    assert not result

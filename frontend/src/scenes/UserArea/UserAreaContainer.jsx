@@ -9,11 +9,10 @@ import {LogOut} from '@styled-icons/feather/LogOut'
 import AuthService from '../../services/auth'
 import LogoutOutlined from "@ant-design/icons/lib/icons/LogoutOutlined";
 import './UserAreaContainer.css'
-import UserOutlined from "@ant-design/icons/lib/icons/UserOutlined";
-import LineChartOutlined from "@ant-design/icons/lib/icons/LineChartOutlined";
 import ReconciliationOutlined from '@ant-design/icons/lib/icons/ReconciliationOutlined'
 import UploadOutlined from '@ant-design/icons/lib/icons/UploadOutlined'
 import ReadOutlined from "@ant-design/icons/lib/icons/ReadOutlined";
+import PlayCircleOutlined from "@ant-design/icons/lib/icons/PlayCircleOutlined";
 import {Brain} from '@styled-icons/boxicons-regular/Brain'
 import Admin from './Admin'
 import {AdminOnlyContainer} from "../../services/Permissions";
@@ -84,6 +83,19 @@ const UserAreaContainer = ({match, history}) => (
                         />
                         Read
                     </Link>
+                </Menu.Item>
+                <Menu.Item key="video">
+                    <a href={`/video.html`}>
+                        <PlayCircleOutlined
+                            style={{
+                                marginRight: '3px',
+                                position: 'relative',
+                                top: '3px',
+                                fontSize: '20px',
+                            }}
+                        />
+                       Watch
+                    </a>
                 </Menu.Item>
 
                 <Menu.Item key="revise">

@@ -1,49 +1,61 @@
-# from services.tracking.db_repository import Logger, PendingLemmaReview, \
-#     PastLemmaReview_from_PendingWordReview, PendingLemmaReview_from_review
 from flask import current_app
 
 from mq.signals import NewLemmaToLearnEvent
+from services.tracking.message_constants import valid_messages, TEXT__WORD_HIGHLIGHTED
 from services.tracking.repositories import LogRepository, IgnoreRepository, LearningRepository
-from services.tracking.domain import TEXT__WORD_HIGHLIGHTED
 
 
 class Controllers:
     def __init__(self, log_repository, ignore_repository, learning_repository):
 
-        self.log_repository = log_repository
-        self.ignore_repository = ignore_repository
-        self.learning_repository = learning_repository
+        self.__log_repository = log_repository
+        self.__ignore_repository = ignore_repository
+        self.__learning_repository = learning_repository
+
+    def ignore_lemma(self, user, lemma, source_language):
+        current_app.logger.info(f"Ignoring {user, lemma, source_language}")
+        self.__learning_repository.delete(user, lemma, source_language)
+        self.__ignore_repository.add(user, lemma, source_language)
 
     def add(self, user, message, lemmas, source_language, support_language):
+        if message not in valid_messages:
+            return
         for lemma in lemmas:
-            if self.__should_log_lemma(user, lemma, message):
-                self.log_repository.log(user, message, lemma, source_language)
-                if 'REVISION' not in message:
-                    # Revision doesn´t currently send back support language
-                    self.publish_new_learning_word(user, lemma, source_language, support_language)
-                if self.__should_add_lemma_to_learning(lemma, message):
-                    self.__learn(user, lemma, source_language, support_language)
-            else:
-                self.ignore(user, lemma, source_language)
+            if 'VIDEO__' in message:
+                self.__add_video_log(user, message, lemma, source_language, support_language)
+            if 'TEXT__' in message:
+                self.__add_text_log(user, message, lemma, source_language, support_language)
+            if 'REVISION__' in message:
+                self.__add_revision_log(user, message, lemma, source_language, support_language)
 
-    def __learn(self,user, lemma, source_language, support_language):
-        self.ignore_repository.delete(user,lemma, source_language)
-        self.learning_repository.add(user,lemma, source_language)
-        self.publish_new_learning_word(user,lemma, source_language, support_language)
+    def __add_revision_log(self, user, message, lemma, source_language, support_language):
+        self.__log_repository.log(user, message, lemma, source_language)
 
-    def ignore(self, user, lemma, source_language):
-        current_app.logger.info(f"Ignoring {user, lemma, source_language}")
-        self.learning_repository.delete(user, lemma, source_language)
-        self.ignore_repository.add(user,lemma, source_language)
+    def __add_text_log(self, user, message, lemma, source_language, support_language):
+        if message == TEXT__WORD_HIGHLIGHTED or self.__is_learning(user, lemma):
+            self.__log_repository.log(user, message, lemma, source_language)
+            self.__learn(user, lemma, source_language, support_language)
+        else:
+            self.ignore_lemma(user, lemma, source_language)
 
-    def publish_new_learning_word(self,user,lemma,source_language, support_language):
+    def __add_video_log(self, user, message, lemma, source_language, support_language):
+        if not self.__is_ignored(user, lemma):
+            self.__log_repository.log(user, message, lemma, source_language)
+            self.__learn(user, lemma, source_language, support_language)
+
+    def __learn(self, user, lemma, source_language, support_language):
+        self.__ignore_repository.delete(user, lemma, source_language)
+        self.__learning_repository.add(user, lemma, source_language)
+        self.__publish_new_learning_word(user, lemma, source_language, support_language)
+
+    def __publish_new_learning_word(self, user, lemma, source_language, support_language):
         NewLemmaToLearnEvent(user, lemma, source_language, support_language).dispatch()
 
-    def __should_log_lemma(self, user, lemma, message):
-        return self.learning_repository.contains(user, lemma) or message == TEXT__WORD_HIGHLIGHTED
+    def __is_learning(self, user, lemma):
+        return self.__learning_repository.contains(user, lemma)
 
-    def __should_add_lemma_to_learning(self, lemma, message):
-       return message == TEXT__WORD_HIGHLIGHTED
+    def __is_ignored(self, user, lemma):
+        return self.__ignore_repository.contains(user, lemma)
 
 
 def create_controllers_with_mongo_repositories(db):

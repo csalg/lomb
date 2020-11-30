@@ -17,7 +17,7 @@ controllers = create_controllers_with_mongo_repositories(db)
 
 def stop_learning_lemma_handler(stop_learning_lemma_event):
     current_app.logger.info('Inside tracking')
-    controllers.ignore(stop_learning_lemma_event.username, stop_learning_lemma_event.lemma, stop_learning_lemma_event.source_language)
+    controllers.ignore_lemma(stop_learning_lemma_event.username, stop_learning_lemma_event.lemma, stop_learning_lemma_event.source_language)
 StopLearningLemmaEvent.addEventListener(stop_learning_lemma_handler)
 
 

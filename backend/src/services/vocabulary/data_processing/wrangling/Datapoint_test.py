@@ -1,6 +1,8 @@
 import pytest
-from wrangling.Datapoint import *
-from config import NEVER
+
+from services.tracking.domain import TEXT__WORD_HIGHLIGHTED, TEXT__SENTENCE_CLICK
+from services.vocabulary.data_processing.wrangling.DatapointBuilder import DatapointBuilder
+from services.vocabulary.data_processing.wrangling.domain import REVISION__CLICKED, REVISION__NOT_CLICKED, Log
 
 logs = [
     {

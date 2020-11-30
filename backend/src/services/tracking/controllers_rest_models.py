@@ -1,14 +1,10 @@
+from services.tracking.message_constants import valid_messages
+
 tracking_event_schema = {
     "type": "object",
     "properties": {
         "message": {"type": "string",
-                    "enum": [
-                        "TEXT__WORD_HIGHLIGHTED",
-                        "TEXT__SENTENCE_CLICK",
-                        "TEXT__SENTENCE_READ",
-                        "REVISION__CLICKED",
-                        "REVISION__NOT_CLICKED"
-                    ]
+                    "enum": valid_messages
                     },
         "lemmas": {"type": "array",
                    "items": {

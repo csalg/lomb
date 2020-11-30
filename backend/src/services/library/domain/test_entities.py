@@ -1,8 +1,7 @@
 import bson
 import pytest
 
-from config import MAXIMUM_EXAMPLES_PER_TEXT
-from services.library.domain.entities import Textfile, IndexEntry, LemmaRank
+from services.library.domain.entities import Textfile, IndexEntry
 
 
 def test_Textfile():
@@ -51,31 +50,3 @@ def test_IndexEntry():
         params['frequency'] = 0
         entry = IndexEntry(*params.values())
 
-
-def test_LemmaRank():
-
-    # Sanity check
-    params = {
-        'lemma': 'run',
-        "language": 'en',
-        'frequency': 20,
-        "rank": 100
-    }
-    entry = LemmaRank(*params.values())
-
-    # Language must be in LEARNING_LANGUAGES
-    with pytest.raises(ValueError, match=r".*Language.*"):
-        params['language'] = 'xyz123'
-        entry = LemmaRank(*params.values())
-
-    # Frequency must be a non-zero positive integer.
-    with pytest.raises(ValueError, match=r".frequency.*non-zero positive.*"):
-        params['language'] = 'en'
-        params['frequency'] = 0
-        entry = LemmaRank(*params.values())
-
-    # Rank must be non-zero positive integer.
-    with pytest.raises(ValueError, match=r".rank.*non-zero positive.*"):
-        params['frequency'] = 10
-        params['rank'] = 0
-        entry = LemmaRank(*params.values())

@@ -2,7 +2,6 @@ import json
 import os
 import hashlib
 from bs4 import BeautifulSoup
-from flask import current_app
 
 from config import UPLOADS_FOLDER, TRANSLATABLE_EXTENSIONS
 from services.library.domain.entities import Chunk, Textfile

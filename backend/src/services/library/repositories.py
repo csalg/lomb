@@ -1,11 +1,9 @@
 from bson import ObjectId
 
-from config import LIBRARY_CHUNKS_COLLECTION_NAME, LIBRARY_TEXTFILE_COLLECTION_NAME, \
-    LIBRARY_FREQUENCY_LIST_COLLECTION_NAME, LIBRARY_LEMMA_RANK_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA
-from lib.db import get_db, MongoWriteRepository, MongoReadRepository
+from config import LIBRARY_CHUNKS_COLLECTION_NAME, LIBRARY_TEXTFILE_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA
+from lib.db import MongoWriteRepository
 from services.library.domain.entities import PERMISSION_ENUM, PERMISSION_PUBLIC
-from services.library.domain.repositories import IChunksRepository, ITextfileRepository, IFrequencyListRepository, \
-    ILemmaRankRepository
+from services.library.domain.repositories import IChunksRepository, ITextfileRepository
 
 
 class ChunksRepository(IChunksRepository):
@@ -101,37 +99,3 @@ class TextfileRepository(MongoWriteRepository, ITextfileRepository):
         id = ObjectId(id)
         self._collection.update_one({'_id': id}, {'$set': {'average_lemma_rank': new_difficulty}})
 
-
-class FrequencyListRepository(MongoWriteRepository, MongoReadRepository, IFrequencyListRepository):
-    def __init__(self, db):
-        MongoWriteRepository.__init__(self, LIBRARY_FREQUENCY_LIST_COLLECTION_NAME, db, key_field_name='textfile_id')
-        MongoReadRepository.__init__(self, LIBRARY_FREQUENCY_LIST_COLLECTION_NAME, db, key_field_name='textfile_id')
-        IFrequencyListRepository.__init__(self)
-        self._collection.create_index('language')
-
-    def all(self, language):
-        return list(self._collection.find({'language': language}))
-
-    def find(self, textfile_id, lemma=None):
-        return self._find(textfile_id, lambda key: f'No frequency list was found for textfile with id {textfile_id}')
-
-
-class LemmaRankRepository(ILemmaRankRepository):
-    def __init__(self, db):
-        self._collection = db[LIBRARY_LEMMA_RANK_COLLECTION_NAME]
-
-    def delete_by_language(self, language):
-        self._collection.delete_many({'language': language})
-
-    def add_many(self, lemma_ranks):
-        self._collection.insert_many([lemma_rank.to_dict() for lemma_rank in lemma_ranks])
-
-    def find(self, lemma, language):
-        return self._collection.find_one({'language': language, 'lemma': lemma})
-
-    def to_dictionary(self, language):
-        ranks = self._collection.find({'language': language})
-        ranks_dictionary = {}
-        for rank in ranks:
-            ranks_dictionary[rank['lemma']] = rank['rank']
-        return ranks_dictionary

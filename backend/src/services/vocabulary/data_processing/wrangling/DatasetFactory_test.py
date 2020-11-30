@@ -1,8 +1,8 @@
 import pytest
 
-from wrangling.Datapoint_test import logs, logs_insufficient_data
-from wrangling.DatasetFactory import DatasetFactory
-from wrangling.Log_test import invalid_logs
+from services.vocabulary.data_processing.wrangling.Datapoint_test import logs_insufficient_data, logs
+from services.vocabulary.data_processing.wrangling.DatasetFactory import DatasetFactory
+from services.vocabulary.data_processing.wrangling.Log_test import invalid_logs
 
 
 def test_DatasetFactory():

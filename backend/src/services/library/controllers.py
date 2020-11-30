@@ -1,15 +1,13 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
-from bson import ObjectId
 from enforce_typing import enforce_types
 
-from config import UPLOADS_FOLDER, LEARNING_LANGUAGES, KNOWN_LANGUAGES
 from flask import current_app
 
 from .domain.entities import Textfile
-from .domain.services import TextManagerService, LemmaRankService
-from .infrastructure import FileManager, TextfileFactory, ChunkFactory, TranslationDispatcher
-from .repositories import TextfileRepository, ChunksRepository, FrequencyListRepository, LemmaRankRepository
+from .domain.services import TextManagerService
+from .infrastructure import FileManager, ChunkFactory, TranslationDispatcher
+from .repositories import TextfileRepository, ChunksRepository
 
 
 @enforce_types
@@ -24,9 +22,8 @@ class AddTextMetadataDTO:
 
 
 class Controllers:
-    def __init__(self, text_manager: TextManagerService, lemma_rank_service: LemmaRankService):
+    def __init__(self, text_manager: TextManagerService):
         self.text_manager = text_manager
-        self.lemma_rank_service = lemma_rank_service
 
     def add_text(self, add_text_dto, file, extension):
 
@@ -65,26 +62,13 @@ class Controllers:
             self.text_manager.delete(id)
             raise e
 
-    def update_language_lemma_ranks(self):
-        for language in LEARNING_LANGUAGES:
-            self.lemma_rank_service.update_language_lemma_ranks(language)
-
-    def update_text_average_lemma_rank(self):
-        for textfile in self.text_manager.all():
-            id = textfile['_id']
-            id = ObjectId(id)
-            self.lemma_rank_service.update_text_average_lemma_rank(id)
-
     def find_examples(self, user, lemma, source_language, support_language):
         return self.text_manager.find_examples(user,lemma,source_language,support_language)
 
 def create_controllers_with_mongo_repositories(db):
     textfiles_repository = TextfileRepository(db)
     chunks_repository = ChunksRepository(db)
-    frequency_lists_repository = FrequencyListRepository(db)
-    lemma_rank_repository = LemmaRankRepository(db)
 
-    text_manager = TextManagerService(textfiles_repository,chunks_repository,frequency_lists_repository)
-    lemma_rank_service = LemmaRankService(lemma_rank_repository, frequency_lists_repository, textfiles_repository)
+    text_manager = TextManagerService(textfiles_repository,chunks_repository)
 
-    return Controllers(text_manager, lemma_rank_service)
+    return Controllers(text_manager)
