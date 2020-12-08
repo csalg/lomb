@@ -2,13 +2,14 @@ version: '3'
 services:
 
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      args: 
+        - API_URL
+        - HOSTNAME
     container_name: frontend
     restart: unless-stopped
     stdin_open: true
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     env_file:
       - env
     expose: 
