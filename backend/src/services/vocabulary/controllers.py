@@ -75,7 +75,7 @@ class Controllers:
         if not timestamp:
             return 0
 
-        elapsed = timestamp - now_timestamp()
+        elapsed =  now_timestamp() - timestamp
         return probability_of_recall_leitner(elapsed, successes, failures)
 
     def update_lemma_examples(self,*args, **kwargs):
