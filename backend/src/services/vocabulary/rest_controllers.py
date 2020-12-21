@@ -28,7 +28,7 @@ def revise():
         payload = JSONEncoder().encode(list(all_learning_lemmas))
         return payload, 200
     except Exception as e:
-        current_app.logger.info(str(e))
+        current_app.logger.exception(e)
         return jsonify({'error': str(e)}), 400
 
 
