@@ -56,38 +56,27 @@ class Controllers:
         return filter(filter_function, all)
 
     def probability_of_recall(self, user,lemma):
-        lemma_log = list(self.repository.get_lemma_logs(user,lemma))
+        lemma_log = self.repository.get_lemma_logs(user,lemma)
 
-        if not lemma_log:
-            return 0
-        lemma_log.sort(key=lambda lemma_: lemma_['timestamp'])
-
-        first_timestamp = lemma_log[0]['timestamp']
-
-        timestamp = first_timestamp
-        previous_timestamp = first_timestamp
+        timestamp = 0
         successes = 0
         failures = 0
-
         for event in lemma_log:
-            if event['message'] in ['REVISION__CLICKED', 'TEXT__WORD_HIGHLIGHTED']:
-                failures += 1
-            elif event['message'] in ['REVISION__NOT_CLICKED', 'TEXT__SENTENCE_READ']:
-                successes += 1
-            else:
-                continue
             if event['timestamp'] > timestamp:
-                previous_timestamp = timestamp
                 timestamp = event['timestamp']
+            if event['message'] in ['REVISION__CLICKED',
+                                    'TEXT__WORD_HIGHLIGHTED']:
+                failures += 1
+            elif event['message'] in ['REVISION__NOT_CLICKED',
+                                      'TEXT__SENTENCE_READ',
+                                      "VIDEO__WAS_SEEN"]:
+                successes += 1
 
-        previous_previous_timestamp = previous_timestamp
-        previous_timestamp = timestamp
-        timestamp = now_timestamp()
+        if not timestamp:
+            return 0
 
-        elapsed = timestamp - previous_timestamp
-        previous_elapsed = previous_timestamp - previous_previous_timestamp
-
-        return probability_of_recall_leitner(elapsed, previous_elapsed, successes, failures)
+        elapsed = timestamp - now_timestamp()
+        return probability_of_recall_leitner(elapsed, successes, failures)
 
     def update_lemma_examples(self,*args, **kwargs):
         self.repository.update_lemma_examples(*args,**kwargs)
