@@ -7,4 +7,4 @@ RUN mkdir /app
 COPY . /app
 WORKDIR /app
 RUN make build
-CMD /bin/bash
+CMD http-server-spa build index.html 3000
