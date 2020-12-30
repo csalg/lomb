@@ -109,7 +109,7 @@ export default () => {
                 {/*<Upload onChange={onFilesUploaded} multiple={true}>*/}
                 {/*    <Button icon={<UploadOutlined />}>Upload</Button>*/}
                 {/*</Upload>*/}
-                <Input type={'file'} onChange={onFileUploaded} multiple={true}/>
+                <Input type={'file'} onChange={onFileUploaded} multiple={true} accept={'.html'}/>
             </Form.Item>
 
             {/*<Form.Item*/}
