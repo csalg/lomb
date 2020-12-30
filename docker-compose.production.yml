@@ -2,7 +2,7 @@ version: '3'
 services:
 
   frontend:
-    entrypoint: "http-server-spa build index.html"
+    entrypoint: "http-server-spa build index.html 3000"
 
   nginx:
     image: nginx:latest
