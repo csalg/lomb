@@ -5,13 +5,15 @@ services:
     build: 
       context: ./frontend
       args: 
-        - API_URL
-        - HOSTNAME
+        - API_URL=$API_URL
+        - HOSTNAME=$HOSTNAME
     container_name: frontend
     restart: unless-stopped
     stdin_open: true
+    volumes:
+      - ./frontend:/app
     env_file:
-      - env
+      - .env
     expose: 
       - "3000"
     stdin_open: true
@@ -23,7 +25,7 @@ services:
     container_name: backend
     restart: unless-stopped
     env_file:
-      - env
+      - .env
     expose:
       - "5000"
     volumes:
