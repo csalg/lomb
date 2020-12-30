@@ -1,12 +1,6 @@
 import React, {useState} from 'react';
 import 'antd/dist/antd.css';
-import {
-    Form,
-    Select,
-    Input,
-    Radio,
-    Button, Alert,
-} from 'antd';
+import {Button, Form, Input, Radio, Select,} from 'antd';
 import Tags from './Tags'
 import {UPLOAD} from "../../../endpoints";
 import AuthService from "../../../services/auth";
@@ -41,24 +35,35 @@ export default () => {
     const history = useHistory()
 
     const onFinish = values => {
-        const data = new FormData()
-        Object.entries(values).forEach(entry => {
-            let [key, value] = entry
-            if (key === 'tags' && !value){
-                value = []
+        const forms = Array.from(values.files).map(
+            file => {
+                const data = new FormData()
+                data.append('file', file);
+                data.append('title', file.name)
+                Object.entries(values).forEach(entry => {
+                    let [key, value] = entry
+                    if (key === "fileList")
+                        return;
+                    if (key === 'tags' && !value) {
+                        value = []
+                    }
+                    data.append(key, value)
+                })
+                return data
             }
-            data.append(key, value)
-        })
-        AuthService
-            .jwt_post(UPLOAD, data)
-            .then(response => {
-                toast(response.data)
-                history.push('/user/library')
-            })
-            .catch(e => {
-                console.log(e.response);
-                setError(parseErrorMessage(e));
-            })
+        )
+        console.log(forms)
+        forms.map(data =>
+            AuthService
+                .jwt_post(UPLOAD, data)
+                .then(response => {
+                    toast(`${data.get('title')}: ${response.data}`)
+                })
+                .catch(e => {
+                    console.log(e.response);
+                    setError(parseErrorMessage(e));
+                })
+        )
     };
 
     const [form] = Form.useForm();
@@ -68,10 +73,13 @@ export default () => {
     }
 
     const onFileUploaded = event => {
-        const file = event.target.files[0]
-        form.setFieldsValue({file: file})
+        form.setFieldsValue({files: event.target.files})
     }
 
+    // const onFilesUploaded = ({ file, fileList })  => {
+    //     form.setFieldsValue({files: fileList})
+    //     console.log(fileList);
+    // }
     return (
         <Form
             style={{margin: '1em 0'}}
@@ -85,22 +93,40 @@ export default () => {
                 rate: 3.5,
             }}
         >
-
             <Form.Item
-                name="title"
                 style={{marginBottom: '1em'}}
-                label="Title"
-                help={'What is this text called?'}
-                hasFeedback
+                name="files"
+                label="Files"
+                valuePropName="files"
+                getValueFromEvent={normFile}
                 rules={[
                     {
                         required: true,
-                        message: 'Please provide a title for the text.',
+                        message: 'Please upload a file.',
                     },
                 ]}
             >
-                <Input/>
+                {/*<Upload onChange={onFilesUploaded} multiple={true}>*/}
+                {/*    <Button icon={<UploadOutlined />}>Upload</Button>*/}
+                {/*</Upload>*/}
+                <Input type={'file'} onChange={onFileUploaded} multiple={true}/>
             </Form.Item>
+
+            {/*<Form.Item*/}
+            {/*    name="title"*/}
+            {/*    style={{marginBottom: '1em'}}*/}
+            {/*    label="Title"*/}
+            {/*    help={'What is this text called?'}*/}
+            {/*    hasFeedback*/}
+            {/*    rules={[*/}
+            {/*        {*/}
+            {/*            required: true,*/}
+            {/*            message: 'Please provide a title for the text.',*/}
+            {/*        },*/}
+            {/*    ]}*/}
+            {/*>*/}
+            {/*    <Input/>*/}
+            {/*</Form.Item>*/}
 
             <Form.Item
                 style={{marginBottom: '1em'}}
@@ -126,6 +152,12 @@ export default () => {
                 name="support_language"
                 label="Support language"
                 help={'What language should we use for definitions and translations? Can be blank for native texts.'}
+                rules={[
+                    {
+                        required: true,
+                        message: 'We need to know the support language.',
+                    },]
+                }
             >
                 <Select placeholder="Please select a language">
                     {
@@ -144,22 +176,6 @@ export default () => {
 
             </Form.Item>
 
-
-            <Form.Item
-                style={{marginBottom: '1em'}}
-                name="file"
-                label="File"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please upload a file.',
-                    },
-                ]}
-            >
-                <Input type={'file'} onChange={onFileUploaded}/>
-            </Form.Item>
 
             <Form.Item
                 style={{marginBottom: '1em'}}
@@ -190,13 +206,6 @@ export default () => {
             >
                 <Button type="primary" htmlType="submit">
                     Submit
-                </Button>
-                <Button type="primary" onClick={_ => {
-                    history.push('/user/library');
-                    toast('Toast');
-
-                }}>
-                    Toast
                 </Button>
             </Form.Item>
         </Form>
