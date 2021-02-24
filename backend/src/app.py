@@ -26,10 +26,6 @@ def resource_not_found(e):
     return jsonify(error=str(e)), 400
 
 
-@app.route('/')
-def index():
-    return render_template('index.html.j2')
-
 @app.route('/langs')
 @jwt_required
 def langs():
