@@ -7,8 +7,8 @@ from jsonschema import validate
 
 from lib.db import get_db
 from mq.signals import StopLearningLemmaEvent
+from .constants import valid_messages
 from .controllers import create_controllers_with_mongo_repositories
-from .controllers_rest_models  import *
 
 tracking = Blueprint('tracking', __name__)
 db = get_db()
@@ -35,12 +35,23 @@ def rest_handler():
     message, lemmas, source_language, support_language = itemgetter('message', 'lemmas', 'source_language', 'support_language')(content)
     current_app.logger.info(f"Tracking: {content}")
 
-    # try:
-    #     controllers.add(user, message, lemmas, source_language, support_language)
-    # except Exception as e:
-    #     current_app.logger.error(str(e))
-    #     return str(e), 400
     controllers.add(user, message, lemmas, source_language, support_language)
 
     return 'ok',200
 
+tracking_event_schema = {
+    "type": "object",
+    "properties": {
+        "message": {"type": "string",
+                    "enum": valid_messages
+                    },
+        "lemmas": {"type": "array",
+                   "items": {
+                       "type": "string"
+                   }
+                   },
+        "source_language": {'type': 'string'},
+        "support_language": {'type': 'string'}
+    },
+    "required": ["message", "lemmas", "source_language"]
+}
