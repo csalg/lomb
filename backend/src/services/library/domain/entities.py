@@ -54,6 +54,13 @@ class Chunk(ReturnsDictionary):
     lemmas : list
     source_language: str
     support_language: str
+    def __post_init__(self):
+
+        if self.source_language not in LEARNING_LANGUAGES:
+            raise ValueError(f'Source language {self.source_language} is not supported')
+
+        if self.support_language not in KNOWN_LANGUAGES:
+            raise ValueError(f'Support language {self.support_language} is not supported')
 
 @enforce_types
 @dataclass
