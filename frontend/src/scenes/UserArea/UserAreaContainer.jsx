@@ -85,7 +85,7 @@ const UserAreaContainer = ({match, history}) => (
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="video">
-                    <a href={`/video.html`}>
+                    <a href={`/video.html?`}>
                         <PlayCircleOutlined
                             style={{
                                 marginRight: '3px',
