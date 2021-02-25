@@ -7,9 +7,10 @@ from flask import Response
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
+from config import MINIMUM_LEARNING_LEMMA_FREQUENCY_ALLOWED_FOR_REVISION
 from mq.signals import LemmaExamplesWereFoundEvent, StopLearningLemmaEvent
 from services.vocabulary.infrastructure.signals import lemma_examples_were_found_handler
-from .db_repository import LemmaExamplesRepository
+from .db import LemmaExamplesRepository
 from .controllers import Controllers
 
 vocabulary = Blueprint('vocabulary', __name__, template_folder='templates')
@@ -55,3 +56,16 @@ def heatmap(resolution, neighbours):
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
 
+
+learning_lemmas_request = {
+    "type": "object",
+    "properties": {
+        "minimum_frequency": {"type": "integer",
+                              "minimum": MINIMUM_LEARNING_LEMMA_FREQUENCY_ALLOWED_FOR_REVISION},
+        "maximum_por": {"type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                        },
+    },
+    "required": ["minimum_frequency", "maximum_por"]
+}

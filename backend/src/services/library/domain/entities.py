@@ -54,6 +54,7 @@ class Chunk(ReturnsDictionary):
     lemmas : list
     source_language: str
     support_language: str
+
     def __post_init__(self):
 
         if self.source_language not in LEARNING_LANGUAGES:

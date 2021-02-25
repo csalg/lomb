@@ -36,10 +36,11 @@ export default class extends React.Component {
     }
 
     __makeDictionaryUrl(sourceLanguage_, supportLanguage_, currentLemma) {
+        console.log("Making dictionary url")
         try {
             const sourceLanguage = LANGUAGE_NAMES[sourceLanguage_].toLowerCase()
             const supportLanguage = LANGUAGE_NAMES[supportLanguage_].toLowerCase()
-            if (sourceLanguage == "danish")
+            if (sourceLanguage === "danish")
                 return `https://da.bab.la/ordbog/dansk-engelsk/${currentLemma}`
             return `https://android.linguee.com/${sourceLanguage}-${supportLanguage}/translation/${currentLemma}.html`
         } catch {

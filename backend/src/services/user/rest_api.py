@@ -3,7 +3,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 from .db import CredentialsRepository, UserPreferencesRepository
 from .domain.credentials import CredentialsDTO, CredentialsWriteModel, CredentialsReadModel
-from .rest_controllers_lib import CredentialsParser, RegistrationJsonValidator
+from .rest_api_lib import CredentialsParser, RegistrationJsonValidator
 
 
 user_blueprint = Blueprint('users', __name__, template_folder='templates')

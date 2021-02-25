@@ -4,7 +4,7 @@ from lib.time import now_timestamp
 from .data_processing.plotting import heatmap
 # from .data_processing.wrangling.DatasetFactory import DatasetFactory
 
-from .db_repository import LemmaExamplesRepository
+from .db import LemmaExamplesRepository
 from .infrastructure.ml import probability_of_recall_leitner
 
 

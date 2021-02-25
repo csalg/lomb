@@ -1,7 +1,7 @@
 FROM python:3.8.3
 
 RUN mkdir /app
-COPY ./src/requirements.txt /tmp
+COPY requirements.txt /tmp
 COPY ./install.sh /tmp
 
 WORKDIR /app

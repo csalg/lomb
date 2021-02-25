@@ -1,8 +1,8 @@
 from flask import current_app
 
 from mq.signals import NewLemmaToLearnEvent
-from services.tracking.message_constants import valid_messages, TEXT__WORD_HIGHLIGHTED
-from services.tracking.repositories import LogRepository, IgnoreRepository, LearningRepository
+from services.tracking.constants import valid_messages, TEXT__WORD_HIGHLIGHTED
+from services.tracking.db import LogRepository, IgnoreRepository, LearningRepository
 
 
 class Controllers:

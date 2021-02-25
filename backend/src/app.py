@@ -5,9 +5,9 @@ from flask_cors import CORS
 
 from config import LANGUAGE_NAMES
 from services.library.controllers_rest_handlers import library_blueprint
-from services.tracking.controllers_rest_handlers import tracking
-from services.user.rest_controllers import user_blueprint
-from services.vocabulary.rest_controllers import vocabulary
+from services.tracking.rest_api import tracking
+from services.user.rest_api import user_blueprint
+from services.vocabulary.rest_api import vocabulary
 
 app = Flask(__name__)
 app.register_blueprint(tracking, url_prefix='/tracking')
