@@ -164,6 +164,7 @@ class ReadingDocumentController {
             }
         }
         this.frame.contentDocument.body.addEventListener('mouseup', lookup_word)
+        this.frame.contentDocument.body.addEventListener('touchend', lookup_word)
     }
 
     __addIntersectionObserver() {

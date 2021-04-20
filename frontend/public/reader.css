@@ -28,3 +28,23 @@ body {
     max-width: 30rem;
     margin: 0 auto;
 }
+
+@media (max-width: 960px) {
+    .text-and-support-area {
+        width: 100vw;
+        height: 60vh;
+    }
+
+    .support-area {
+        height: 20vh;
+    }
+
+    .text-area {
+        height: 40vh;
+    }
+
+    #definition {
+        height: 40vh;
+        width: 100vw;
+    }
+}
