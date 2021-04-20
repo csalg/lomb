@@ -10,8 +10,6 @@ services:
     container_name: frontend
     restart: unless-stopped
     stdin_open: true
-    volumes:
-      - ./frontend:/app
     env_file:
       - .env
     expose: 
