@@ -6,10 +6,11 @@ import {neutral1, neutral3} from "../../../PALETTE";
 import ReloadOutlined from "@ant-design/icons/lib/icons/ReloadOutlined";
 import UserPreferences from "../../../services/userPreferences";
 
-class IntegerStep extends React.Component {
+class Filter extends React.Component {
     state = {
         minimum_frequency: 5,
         maximum_por: 0.6,
+        maximum_time_elapsed: 7,
     };
 
     componentDidMount() {
@@ -23,6 +24,11 @@ class IntegerStep extends React.Component {
                 this.setState({maximum_por: val})
             )
             .catch(e => console.log(e))
+        UserPreferences.get('revision__maximum_time_elapsed')
+            .then(maximum_time_elapsed =>
+                this.setState({maximum_time_elapsed})
+            )
+            .catch(e => console.log(e))
     }
 
     render() {
@@ -33,7 +39,7 @@ class IntegerStep extends React.Component {
                 margin: 1rem;
             `
 
-        const {minimum_frequency, maximum_por} = this.state;
+        const {minimum_frequency, maximum_por, maximum_time_elapsed} = this.state;
         return (
             <Container style={this.props.style}>
                 <Row>
@@ -58,7 +64,8 @@ class IntegerStep extends React.Component {
                             onChange={val => this.setState({minimum_frequency:val})}
                         />
                     </Col>
-                </Row><Row>
+                </Row>
+                <Row>
                 <Col span={24}>
                     <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
                         Maximum probability of recall:</b></Col>
@@ -85,6 +92,32 @@ class IntegerStep extends React.Component {
                     </Col>
                 </Row>
                 <Row>
+                    <Col span={24}>
+                        <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
+                            Maximum time elapsed since last exposure</b></Col>
+                </Row>
+                <Row>
+                    <Col span={16}>
+                        <Slider
+                            min={0}
+                            max={60}
+                            step={1}
+                            onChange={maximum_time_elapsed => this.setState({maximum_time_elapsed})}
+                            value={typeof maximum_time_elapsed === 'number' ? maximum_time_elapsed : 0}
+                        />
+                    </Col>
+                    <Col span={8}>
+                        <InputNumber
+                            min={0}
+                            max={50}
+                            step={1}
+                            style={{margin: '0'}}
+                            value={maximum_time_elapsed}
+                            onChange={maximum_time_elapsed => this.setState({maximum_time_elapsed})}
+                        />
+                    </Col>
+                </Row>
+                <Row>
                     <Col span={16}></Col>
                     <Col span={8}>
                         <Button
@@ -96,6 +129,7 @@ class IntegerStep extends React.Component {
                             onClick={e => {
                                 UserPreferences.set('revision__minimum_frequency', this.state.minimum_frequency)
                                 UserPreferences.set('revision__maximum_por', this.state.maximum_por)
+                                UserPreferences.set('revision__maximum_time_elapsed', this.state.maximum_time_elapsed)
                                 this.props.fetchTexts()
                             }
                             }
@@ -111,6 +145,6 @@ class IntegerStep extends React.Component {
 
 export default class extends React.Component {
     render() {
-        return <div><IntegerStep {...this.props}/></div>
+        return <div><Filter {...this.props}/></div>
     }
 }

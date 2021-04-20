@@ -61,9 +61,11 @@ class ReviseContainer extends React.Component {
         try {
             const minimum_frequency = await UserPreferences.get('revision__minimum_frequency')
             const maximum_por = await UserPreferences.get('revision__maximum_por')
+            const maximum_time_elapsed = await UserPreferences.get('revision__maximum_time_elapsed')
             const data = await AuthService.jwt_post(REVISE_URL, {
-                "minimum_frequency": minimum_frequency,
-                "maximum_por": maximum_por,
+                minimum_frequency,
+                maximum_por,
+                maximum_time_elapsed
             })
             const lemmas = data.data.map(record => {
                 console.log(record)
@@ -113,14 +115,6 @@ class ReviseContainer extends React.Component {
                 })
             })
         )
-        // this.setState({
-        //         currentLemma:    newLemma,
-        //         sourceLanguage:  newSourceLanguage,
-        //         currentExamples: this.state.lemmasToExamples[newSourceLanguage][newLemma],
-        //         supportLanguage: this.state.lemmasToExamples[newSourceLanguage][newLemma][0]['support_language']
-        //     },
-        //     () => document.body.dispatchEvent(this.wordWasClickedEvent)
-        // )
     }
 
     render() {
@@ -129,17 +123,30 @@ class ReviseContainer extends React.Component {
             display: flex;
             height: 100vh;
             width: 100vw;
+          @media (max-width: 768px) {
+            flex-direction: column;
+          }
 `
         const LemmasContainer = styled.div`
             overflow-y: scroll;
             width: 40%;
+          @media (max-width: 768px) {
+            width: 100%;
+            height: 40vh;
+          }
 `
         const Sidebar = styled.div`
             width: 60%;
+          @media (max-width: 768px) {
+            width: 100%;
+          }
 `
         const SidebarSection = styled.div`
             width: 100%;
             height: 50%;
+          @media (max-width: 768px) {
+            height: 30vh;
+          }
 `
 
 
