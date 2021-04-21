@@ -2,7 +2,50 @@ version: '3'
 services:
 
   frontend:
+    build: 
+      context: ./frontend-dist
+    container_name: frontend
+    restart: unless-stopped
+    stdin_open: true
+    expose: 
+      - "3000"
+    stdin_open: true
+    networks:
+      - internal
     entrypoint: "http-server-spa build index.html 3000"
+
+  backend:
+    build: ./backend
+    container_name: backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    expose:
+      - "5000"
+    volumes:
+      - ./backend:/app
+      - /uploads:/uploads
+    depends_on:
+      - mongodb
+    networks:
+      - internal
+
+  mongodb:
+    image: mongo:4.0.8
+    container_name: mongodb
+    restart: unless-stopped
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: lomb
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: lomb
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+      FLASK_ENV: development
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - internal
 
   nginx:
     image: nginx:latest
@@ -18,3 +61,8 @@ services:
     depends_on:
       - frontend
       - backend
+volumes:
+  mongodbdata:
+  node_modules:
+networks:
+  internal:
