@@ -3,4 +3,6 @@ FROM node:14
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
+RUN npm install -g http-server-spa
+
 CMD http-server-spa . index.html 3000
