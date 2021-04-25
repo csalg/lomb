@@ -64,11 +64,11 @@ class ReviseContainer extends React.Component {
             return
         }
         try {
+            await this.setState({loading:true})
             const minimum_frequency = await UserPreferences.get('revision__minimum_frequency')
             const maximum_por = await UserPreferences.get('revision__maximum_por')
             const maximum_days_elapsed = await UserPreferences.get('revision__maximum_days_elapsed')
             const use_smart_fetch= await UserPreferences.get('revision__use_smart_fetch')
-            await this.setState({loading:true})
             const data = await AuthService.jwt_post(REVISE_URL, {
                 minimum_frequency,
                 maximum_por,
