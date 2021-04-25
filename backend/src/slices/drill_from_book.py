@@ -28,15 +28,16 @@ class LemmaAndExamples:
         self.frequency += 1
 
 
-def drill_from_book_slice(textfile_id):
-    user = "charlie"
+def drill_from_book_slice(username, textfile_id):
     # Grab all the chunks for a book
     chunks = list(chunks_repository.find_chunks_in_textfiles([ObjectId(textfile_id), ]))
     if not len(chunks):
         raise Exception(f"No chunks found for text file with id {textfile_id}")
 
     # Find out all the frequencies, store them
-    ignore_list = list(db[IGNORE_LEMMAS_COLLECTION_NAME].find({'user': user}))
+    ignore_list = list(db[IGNORE_LEMMAS_COLLECTION_NAME].find({'user':username}))
+    current_app.logger.info(username)
+    current_app.logger.info(ignore_list)
     ignore_set = set(list(map(lambda record: record['key'], ignore_list)))
     current_app.logger.info(ignore_set)
     lemmas: Dict[str, LemmaAndExamples] = {}
@@ -59,8 +60,6 @@ def drill_from_book_slice(textfile_id):
                                         reverse=True)
 
     # Store in mongodb
-    chunk = db[LIBRARY_CHUNKS_COLLECTION_NAME].find_one({'textfile_id': ObjectId(textfile_id)})
-    source_language, support_language = chunk['source_language'], chunk['support_language']
     # db[BOOK_DRILLS_CACHE].insert_one({
     #     'id': textfile_id,
     #     'user': user,
@@ -72,10 +71,14 @@ def drill_from_book_slice(textfile_id):
     # Go over the frequencies calculating the PoR
     result = []
     for lemma in lemmas_and_examples_sorted:
-        seconds_since_last_exposure, por = vocabulary_controllers.probability_of_recall(user, lemma.lemma)
+        seconds_since_last_exposure, por = vocabulary_controllers.probability_of_recall(username, lemma.lemma)
         result.append({'lemma': lemma.lemma, 'examples': lemma.examples, 'frequency': lemma.frequency,
                        'probability_of_recall': por})
+        if len(result) == 200:
+            break
 
+    chunk = db[LIBRARY_CHUNKS_COLLECTION_NAME].find_one({'textfile_id': ObjectId(textfile_id)})
+    source_language, support_language = chunk['source_language'], chunk['support_language']
     return {
         'source_language': source_language,
         'support_language': support_language,

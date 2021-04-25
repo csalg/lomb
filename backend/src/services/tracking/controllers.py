@@ -1,7 +1,7 @@
 from flask import current_app
 
 from mq.signals import NewLemmaToLearnEvent
-from services.tracking.constants import valid_messages, TEXT__WORD_HIGHLIGHTED
+from services.tracking.constants import valid_messages, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_SCROLL, BOOK_DRILL_CLICK
 from services.tracking.db import LogRepository, IgnoreRepository, LearningRepository
 
 
@@ -27,6 +27,8 @@ class Controllers:
                 self.__add_text_log(user, message, lemma, source_language, support_language)
             if 'REVISION__' in message:
                 self.__add_revision_log(user, message, lemma, source_language, support_language)
+            if 'BOOK_DRILL' in message:
+                self.__add_book_drill_log(user, message, lemma, source_language, support_language)
 
     def __add_revision_log(self, user, message, lemma, source_language, support_language):
         self.__log_repository.log(user, message, lemma, source_language)
@@ -42,6 +44,13 @@ class Controllers:
         if not self.__is_ignored(user, lemma):
             self.__log_repository.log(user, message, lemma, source_language)
             self.__learn(user, lemma, source_language, support_language)
+
+    def __add_book_drill_log(self, user, message, lemma, source_language, support_language):
+        if message == BOOK_DRILL_CLICK or self.__is_learning(user, lemma):
+            self.__log_repository.log(user, message, lemma, source_language)
+            self.__learn(user, lemma, source_language, support_language)
+        else:
+            self.ignore_lemma(user, lemma, source_language)
 
     def __learn(self, user, lemma, source_language, support_language):
         self.__ignore_repository.delete(user, lemma, source_language)

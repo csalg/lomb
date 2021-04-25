@@ -1,4 +1,4 @@
-from flask_jwt_extended import JWTManager, jwt_required
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 
 from flask import Flask, render_template, jsonify
 from flask_cors import CORS
@@ -33,6 +33,8 @@ def resource_not_found(e):
 def langs():
     return jsonify(LANGUAGE_NAMES)
 
-@app.route('/slices/drill_from_book/<book>')
-def drill_from_book(book):
-    return drill_from_book_slice(book)
+@app.route('/slices/drill_book/<textfile_id>')
+@jwt_required
+def drill_from_book(textfile_id):
+    username = get_jwt_identity()['username']
+    return drill_from_book_slice(username, textfile_id)
