@@ -8,7 +8,7 @@ import Filter from "./Filter";
 import {neutral3, neutral4} from "../../../PALETTE";
 import UserPreferences from "../../../services/userPreferences";
 import {REVISE_URL} from "../../../endpoints";
-import {LEMMAS_TO_FETCH_ON_SMART_FETCH, MINIMUM_LEMMAS_LEFT_FOR_SMART_FETCH_RELOAD} from "../../../config";
+import {EVENT_TYPES, LEMMAS_TO_FETCH_ON_SMART_FETCH, MINIMUM_LEMMAS_LEFT_FOR_SMART_FETCH_RELOAD} from "../../../config";
 
 
 const PaddedContainer = styled.div`
@@ -28,6 +28,8 @@ const Header = styled(PaddedContainer)`
 class ReviseContainer extends React.Component {
     constructor(props) {
         super(props);
+        this.click_event_type = EVENT_TYPES.REVISION__CLICKED
+        this.scroll_event_type = EVENT_TYPES.REVISION__NOT_CLICKED
         this.lemmasRef = React.createRef();
         this.changeLemma = this.changeLemma.bind(this)
         this.fetchTexts = this.fetchTexts.bind(this)
@@ -191,6 +193,8 @@ class ReviseContainer extends React.Component {
                         rows={this.state.lemmas}
                         changeLemma={this.changeLemma}
                         notifyInfiniteScroll={this.notifyInfiniteScroll}
+                        scrollEventType={this.scroll_event_type}
+                        clickEventType={this.click_event_type}
                         ref={this.lemmasRef}
                     />
                 </LemmasContainer>

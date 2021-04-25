@@ -7,8 +7,8 @@ import Definition from "./Definition";
 import Filter from "./Filter";
 import {neutral3, neutral4} from "../../../PALETTE";
 import UserPreferences from "../../../services/userPreferences";
-import {REVISE_URL} from "../../../endpoints";
-import {LEMMAS_TO_FETCH_ON_SMART_FETCH, MINIMUM_LEMMAS_LEFT_FOR_SMART_FETCH_RELOAD} from "../../../config";
+import {BOOK_DRILL_URL, REVISE_URL} from "../../../endpoints";
+import {EVENT_TYPES, LEMMAS_TO_FETCH_ON_SMART_FETCH, MINIMUM_LEMMAS_LEFT_FOR_SMART_FETCH_RELOAD} from "../../../config";
 
 
 const PaddedContainer = styled.div`
@@ -28,6 +28,9 @@ const Header = styled(PaddedContainer)`
 class ReviseContainer extends React.Component {
     constructor(props) {
         super(props);
+        this.textfileId = props.match.params.id
+        this.click_event_type = EVENT_TYPES.BOOK_DRILL_CLICK
+        this.scroll_event_type = EVENT_TYPES.BOOK_DRILL_SCROLL
         this.lemmasRef = React.createRef();
         this.changeLemma = this.changeLemma.bind(this)
         this.fetchTexts = this.fetchTexts.bind(this)
@@ -65,34 +68,23 @@ class ReviseContainer extends React.Component {
         }
         try {
             await this.setState({loading:true})
-            const minimum_frequency = await UserPreferences.get('revision__minimum_frequency')
-            const maximum_por = await UserPreferences.get('revision__maximum_por')
-            const maximum_days_elapsed = await UserPreferences.get('revision__maximum_days_elapsed')
-            const use_smart_fetch= await UserPreferences.get('revision__use_smart_fetch')
-            const data = await AuthService.jwt_post(REVISE_URL, {
-                minimum_frequency,
-                maximum_por,
-                maximum_days_elapsed,
-                use_smart_fetch,
-                fetch_amount: LEMMAS_TO_FETCH_ON_SMART_FETCH
-            })
-            const lemmas = data.data.map(record => {
-                let frequency = record.examples.length;
-                if (record.hasOwnProperty('frequency')){
-                    frequency = record.frequency
-                }
+            const data = await AuthService.jwt_get(BOOK_DRILL_URL(this.textfileId))
+            console.log(data)
+            const {source_language, support_language} = data.data
+            await this.setState({supportLanguage: support_language})
+            const lemmas = data.data.lemmas.map(record => {
                 return {
                     _id: record.lemma,
-                    sourceLanguage: record.language,
-                    frequency: frequency,
+                    frequency: record.frequency,
+                    sourceLanguage: source_language,
                     probability: record.probability_of_recall,
                 }
             })
             const lemmasToExamples = {}
             for (let i = 0; i < lemmas.length; i++) {
-                const sourceLanguage = data.data[i].language
-                const lemma = data.data[i].lemma
-                const examples = data.data[i].examples
+                const sourceLanguage = source_language
+                const lemma = data.data.lemmas[i].lemma
+                const examples = data.data.lemmas[i].examples
                 if (!(sourceLanguage in lemmasToExamples)) {
                     lemmasToExamples[sourceLanguage] = {}
                 }
@@ -191,6 +183,9 @@ class ReviseContainer extends React.Component {
                         rows={this.state.lemmas}
                         changeLemma={this.changeLemma}
                         notifyInfiniteScroll={this.notifyInfiniteScroll}
+                        scrollEventType={this.scroll_event_type}
+                        clickEventType={this.click_event_type}
+                        supportLanguage={this.state.supportLanguage}
                         ref={this.lemmasRef}
                     />
                 </LemmasContainer>

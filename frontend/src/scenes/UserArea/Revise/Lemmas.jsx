@@ -55,10 +55,10 @@ export default class Lemmas extends React.Component {
     __lemma_was_not_clicked_message(lemma, sourceLanguage) {
         console.log(lemma)
         return {
-            message: 'REVISION__NOT_CLICKED',
+            message: this.props.scrollEventType,
             lemmas: new Array(lemma,),
             source_language: sourceLanguage,
-            support_language: "",
+            support_language: this.props.supportLanguage,
         }
     }
 
@@ -78,10 +78,10 @@ export default class Lemmas extends React.Component {
     __lemma_was_clicked_message(lemma, sourceLanguage) {
         console.log(lemma)
         return {
-            message: 'REVISION__CLICKED',
+            message: this.props.clickEventType,
             lemmas: new Array(lemma,),
             source_language: sourceLanguage,
-            support_language: "",
+            support_language: this.props.supportLanguage,
         }
     }
 

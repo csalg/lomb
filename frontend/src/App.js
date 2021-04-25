@@ -10,6 +10,7 @@ import {PrivateRoute} from "./services/Permissions";
 import ReviseContainer from "./scenes/UserArea/Revise/ReviseContainer";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import DrillBook from "./scenes/UserArea/Revise/DrillBook";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
                   </Route>
                   <PrivateRoute path='/revise' component={ReviseContainer}/>
                   <PrivateRoute path='/user' component={UserAreaContainer}/>
+                  <PrivateRoute exact path="/drill/:id"  component={DrillBook}/>
                   <Route><DecideWhereToGo/></Route>
 
               </Switch>
