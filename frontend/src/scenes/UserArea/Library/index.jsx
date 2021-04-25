@@ -1,13 +1,14 @@
 import React from "react";
-import {Alert, Tag, Table} from 'antd';
+import {Alert, Table, Tag} from 'antd';
 import AuthService from "../../../services/auth";
 import {ALL_TEXTS, LIBRARY_TEXT, LIBRARY_UPLOADS} from "../../../endpoints";
 import UserPreferences from "../../../services/userPreferences";
 import {LANGUAGE_NAMES} from "../../../services/languages";
 import parseErrorMessage from "../../../services/parseErrorMessage";
-import {AdminOnlyContainer, AdminOrSameUsernameContainer} from "../../../services/Permissions";
+import {AdminOrSameUsernameContainer} from "../../../services/Permissions";
 import jwt_decode from 'jwt-decode'
 import {toast} from "react-toastify";
+import {Link} from "react-router-dom";
 
 const actionsView = (id,username,deleteRow) => {
     const deleteHandler = _ => {
@@ -23,10 +24,14 @@ const actionsView = (id,username,deleteRow) => {
         <>
             {/*<a>Pre-drill vocabulary</a>*/}
             {/*<a>Read</a>*/}
-            <AdminOrSameUsernameContainer username={username} >
-                <a onClick={deleteHandler}>Delete</a>
-                {/*<a>Edit</a>*/}
-            </AdminOrSameUsernameContainer>
+            <>
+                <AdminOrSameUsernameContainer username={username}>
+                    <a onClick={deleteHandler} style={{paddingRight: '0.2em'}}>Delete</a>
+                    {/*<a>Edit</a>*/}
+                </AdminOrSameUsernameContainer>
+                <Link to={`/drill/${id}`}>Drill</Link>
+            </>
+
         </>
     )
 }
