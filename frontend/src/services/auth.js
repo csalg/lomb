@@ -37,9 +37,9 @@ class AuthService {
             .post(url, data, {headers: authHeader()})
     }
 
-    static jwt_get(url) {
+    static jwt_get(url, params) {
         return axios
-            .get(url, {headers: authHeader()})
+            .get(url, {params, headers: authHeader()})
     }
 
     static jwt_delete(url, data) {

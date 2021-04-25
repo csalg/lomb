@@ -21,18 +21,12 @@ const actionsView = (id,username,deleteRow) => {
             .catch(error => toast(parseErrorMessage(error)))
     }
     return (
-        <>
-            {/*<a>Pre-drill vocabulary</a>*/}
-            {/*<a>Read</a>*/}
             <>
                 <AdminOrSameUsernameContainer username={username}>
                     <a onClick={deleteHandler} style={{paddingRight: '0.2em'}}>Delete</a>
-                    {/*<a>Edit</a>*/}
                 </AdminOrSameUsernameContainer>
                 <Link to={`/drill/${id}`}>Drill</Link>
             </>
-
-        </>
     )
 }
 

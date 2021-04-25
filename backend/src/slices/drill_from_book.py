@@ -28,7 +28,7 @@ class LemmaAndExamples:
         self.frequency += 1
 
 
-def drill_from_book_slice(username, textfile_id):
+def drill_from_book_slice(username, textfile_id, maximum_por):
     # Grab all the chunks for a book
     chunks = list(chunks_repository.find_chunks_in_textfiles([ObjectId(textfile_id), ]))
     if not len(chunks):
@@ -72,6 +72,8 @@ def drill_from_book_slice(username, textfile_id):
     result = []
     for lemma in lemmas_and_examples_sorted:
         seconds_since_last_exposure, por = vocabulary_controllers.probability_of_recall(username, lemma.lemma)
+        if maximum_por < por:
+            continue
         result.append({'lemma': lemma.lemma, 'examples': lemma.examples, 'frequency': lemma.frequency,
                        'probability_of_recall': por})
         if len(result) == 200:

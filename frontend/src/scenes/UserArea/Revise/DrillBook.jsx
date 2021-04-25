@@ -68,7 +68,8 @@ class ReviseContainer extends React.Component {
         }
         try {
             await this.setState({loading:true})
-            const data = await AuthService.jwt_get(BOOK_DRILL_URL(this.textfileId))
+            const maximum_por = await UserPreferences.get('revision__maximum_por')
+            const data = await AuthService.jwt_get(BOOK_DRILL_URL(this.textfileId), {maximum_por})
             console.log(data)
             const {source_language, support_language} = data.data
             await this.setState({supportLanguage: support_language})

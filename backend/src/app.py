@@ -1,6 +1,6 @@
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 
 from config import LANGUAGE_NAMES
@@ -37,4 +37,5 @@ def langs():
 @jwt_required
 def drill_from_book(textfile_id):
     username = get_jwt_identity()['username']
-    return drill_from_book_slice(username, textfile_id)
+    maximum_por = float(request.args.get('maximum_por'))
+    return drill_from_book_slice(username, textfile_id, maximum_por)
