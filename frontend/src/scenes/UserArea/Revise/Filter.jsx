@@ -53,31 +53,29 @@ class CustomSettings extends React.Component {
                         />
                     </Col>
                 </Row>
-                <div style={{display: (this.state.use_smart_fetch? 'none': 'block')}}>
-                    <Row>
-                        <Col span={24}>
-                            <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
-                                Minimum frequency:</b></Col>
-                    </Row>
-                    <Row>
-                        <Col span={16}>
-                            <Slider
-                                min={1}
-                                max={2000}
-                            onChange={val => this.setState({minimum_frequency:val})}
+                <Row>
+                    <Col span={24}>
+                        <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
+                            Minimum frequency:</b></Col>
+                </Row>
+                <Row>
+                    <Col span={16}>
+                        <Slider
+                            min={1}
+                            max={2000}
+                            onChange={val => this.setState({minimum_frequency: val})}
                             value={typeof minimum_frequency === 'number' ? minimum_frequency : 0}
                         />
-                        </Col>
-                        <Col span={8}>
-                            <InputNumber
-                                min={1}
-                                style={{margin: '0'}}
-                                value={minimum_frequency}
-                                onChange={val => this.setState({minimum_frequency: val})}
-                            />
-                        </Col>
-                    </Row>
-                </div>
+                    </Col>
+                    <Col span={8}>
+                        <InputNumber
+                            min={1}
+                            style={{margin: '0'}}
+                            value={minimum_frequency}
+                            onChange={val => this.setState({minimum_frequency: val})}
+                        />
+                    </Col>
+                </Row>
                 <Row>
                     <Col span={24}>
                         <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
