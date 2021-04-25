@@ -9,10 +9,9 @@ build:
 	npm run build
 
 deploy:
-	npm install
-	echo 'const API_URL="${https://eu.lomb.app/api }"' > 'public/api_endpoint.js'
-	echo 'const HOSTNAME="${https://eu.lomb.app }"' >> 'public/api_endpoint.js'
-	echo 'export default "${https://eu.lomb.app/api }"' > 'src/api_endpoint.js'
+	echo 'const API_URL="https://eu.lomb.app/api"' > 'public/api_endpoint.js'
+	echo 'const HOSTNAME="https://eu.lomb.app"' >> 'public/api_endpoint.js'
+	echo 'export default "https://eu.lomb.app/api"' > 'src/api_endpoint.js'
 	npm run build
 	rsync -r ./build/ root@eu.lomb.app:/app/deploy/frontend-dist
 	rsync ./Dockerfile.production root@eu.lomb.app:/app/deploy/frontend-dist/Dockerfile

@@ -62,13 +62,14 @@ class ReviseContainer extends React.Component {
             const minimum_frequency = await UserPreferences.get('revision__minimum_frequency')
             const maximum_por = await UserPreferences.get('revision__maximum_por')
             const maximum_time_elapsed = await UserPreferences.get('revision__maximum_time_elapsed')
+            const use_smart_fetch= await UserPreferences.get('revision__use_smart_fetch')
             const data = await AuthService.jwt_post(REVISE_URL, {
                 minimum_frequency,
                 maximum_por,
-                maximum_time_elapsed
+                maximum_time_elapsed,
+                use_smart_fetch
             })
             const lemmas = data.data.map(record => {
-                console.log(record)
                 let frequency = record.examples.length;
                 if (record.hasOwnProperty('frequency')){
                     frequency = record.frequency

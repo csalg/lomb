@@ -1,13 +1,14 @@
 import React from "react";
 import 'antd/dist/antd.css';
-import {Slider, InputNumber, Row, Col, Button} from 'antd';
+import {Button, Col, InputNumber, Row, Slider, Switch} from 'antd';
 import styled from 'styled-components'
 import {neutral1, neutral3} from "../../../PALETTE";
 import ReloadOutlined from "@ant-design/icons/lib/icons/ReloadOutlined";
 import UserPreferences from "../../../services/userPreferences";
 
-class Filter extends React.Component {
+class CustomSettings extends React.Component {
     state = {
+        use_smart_fetch: true,
         minimum_frequency: 5,
         maximum_por: 0.6,
         maximum_time_elapsed: 7,
@@ -29,47 +30,59 @@ class Filter extends React.Component {
                 this.setState({maximum_time_elapsed})
             )
             .catch(e => console.log(e))
+        UserPreferences.get('revision__use_smart_fetch')
+            .then(use_smart_fetch =>
+                this.setState({use_smart_fetch})
+            )
+            .catch(e => console.log(e))
     }
 
     render() {
-        const Container = styled.div`
-                background: ${neutral1};
-                border: thin solid ${neutral3};
-                padding: 1rem;
-                margin: 1rem;
-            `
-
         const {minimum_frequency, maximum_por, maximum_time_elapsed} = this.state;
         return (
-            <Container style={this.props.style}>
-                <Row>
-                    <Col span={24}>
-                        <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
-                            Minimum frequency:</b></Col>
-                </Row>
+            <>
                 <Row>
                     <Col span={16}>
-                        <Slider
-                            min={1}
-                            max={2000}
+                        <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
+                            Use smart fetch</b>
+                    </Col>
+                    <Col span={8}>
+                        <Switch
+                            checked={this.state.use_smart_fetch}
+                            onChange={use_smart_fetch => this.setState({use_smart_fetch})}
+                        />
+                    </Col>
+                </Row>
+                <div style={{display: (this.state.use_smart_fetch? 'none': 'block')}}>
+                    <Row>
+                        <Col span={24}>
+                            <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
+                                Minimum frequency:</b></Col>
+                    </Row>
+                    <Row>
+                        <Col span={16}>
+                            <Slider
+                                min={1}
+                                max={2000}
                             onChange={val => this.setState({minimum_frequency:val})}
                             value={typeof minimum_frequency === 'number' ? minimum_frequency : 0}
                         />
-                    </Col>
-                    <Col span={8}>
-                        <InputNumber
-                            min={1}
-                            style={{margin: '0'}}
-                            value={minimum_frequency}
-                            onChange={val => this.setState({minimum_frequency:val})}
-                        />
-                    </Col>
-                </Row>
+                        </Col>
+                        <Col span={8}>
+                            <InputNumber
+                                min={1}
+                                style={{margin: '0'}}
+                                value={minimum_frequency}
+                                onChange={val => this.setState({minimum_frequency: val})}
+                            />
+                        </Col>
+                    </Row>
+                </div>
                 <Row>
-                <Col span={24}>
-                    <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
-                        Maximum probability of recall:</b></Col>
-            </Row>
+                    <Col span={24}>
+                        <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
+                            Maximum probability of recall:</b></Col>
+                </Row>
                 <Row>
                     <Col span={16}>
                         <Slider
@@ -130,6 +143,7 @@ class Filter extends React.Component {
                                 UserPreferences.set('revision__minimum_frequency', this.state.minimum_frequency)
                                 UserPreferences.set('revision__maximum_por', this.state.maximum_por)
                                 UserPreferences.set('revision__maximum_time_elapsed', this.state.maximum_time_elapsed)
+                                UserPreferences.set('revision__use_smart_fetch', this.state.use_smart_fetch)
                                 this.props.fetchTexts()
                             }
                             }
@@ -138,13 +152,22 @@ class Filter extends React.Component {
                         </Button>
                     </Col>
                 </Row>
-            </Container>
+            </>
         );
     }
 }
 
-export default class extends React.Component {
-    render() {
-        return <div><Filter {...this.props}/></div>
-    }
+
+export default props => {
+    const Container = styled.div`
+      background: ${neutral1};
+      border: thin solid ${neutral3};
+      padding: 1rem;
+      margin: 1rem;
+    `
+    return (
+        <Container>
+            <CustomSettings {...props}/>
+        </Container>
+    )
 }
