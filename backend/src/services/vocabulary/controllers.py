@@ -16,18 +16,27 @@ from .infrastructure.ml import probability_of_recall_leitner
 @dataclass
 class ReviseQueryDTO:
     username: str
-    minimum_frequency: int
     maximum_por: float
     maximum_days_elapsed: int
-    use_smart_fetch: bool
+    minimum_frequency: int
+    use_smart_fetch: bool = False
+    fetch_amount: int = 0
 
     def __post_init__(self):
-        if self.minimum_frequency < 0:
-            raise Exception("Minimum frequency should be a positive integer")
-        if self.maximum_por < 0 or self.maximum_por > 1:
-            raise Exception("Maximum PoR must be between 0 and 1")
+
+        if self.minimum_frequency <= 0:
+            raise Exception("Minimum frequency should be a strictly positive integer")
         if self.maximum_days_elapsed < 0:
-            raise Exception("Maximum days should be a positive integer")
+            raise Exception("Maximum days should be a non-negative integer")
+
+        if self.use_smart_fetch:
+            if self.fetch_amount <= 0:
+                raise Exception("Provide a positive integer for the `fetch_amount` parameter if using `use_smart_fetch`")
+            return self
+        else:
+            if self.maximum_por < 0 or self.maximum_por > 1:
+                raise Exception("Maximum PoR must be between 0 and 1")
+        return self
 
 
 class Controllers:
@@ -97,14 +106,14 @@ class Controllers:
         # current_app.logger.info('No issue sorting')
         # return result
 
-    def learning_lemmas_with_probability_smart_fetch(self, query: ReviseQueryDTO, batch_size=SMART_FETCH_BATCH_SIZE):
+    def learning_lemmas_with_probability_smart_fetch(self, query: ReviseQueryDTO):
         lemmas = self.learning_lemmas(query.username, query.minimum_frequency)
         lemmas.sort(key=calculate_lemma_frequency, reverse=True)
         current_app.logger.info('smart fetch')
         current_app.logger.info(lemmas)
         result = []
         for lemma in lemmas:
-            if len(result) == batch_size:
+            if len(result) == query.fetch_amount:
                 return result
             _, por = self.probability_of_recall(query.username, lemma['lemma'])
             if por <= query.maximum_por:

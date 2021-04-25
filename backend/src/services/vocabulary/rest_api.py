@@ -25,10 +25,12 @@ def revise():
     try:
         dto = ReviseQueryDTO(
             get_jwt_identity()['username'],
-            request.json['minimum_frequency'],
             float(request.json['maximum_por']),
             request.json['maximum_days_elapsed'],
-            request.json['use_smart_fetch']
+            request.json['minimum_frequency'],
+            request.json['use_smart_fetch'],
+            request.json['fetch_amount'],
+
         )
         all_learning_lemmas = domain.learning_lemmas_with_probability(dto)
         payload = JSONEncoder().encode(list(all_learning_lemmas))
