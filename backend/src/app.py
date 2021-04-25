@@ -14,7 +14,8 @@ app.register_blueprint(tracking, url_prefix='/tracking')
 app.register_blueprint(library_blueprint, url_prefix='/library')
 app.register_blueprint(vocabulary, url_prefix='/vocabulary')
 app.register_blueprint(user_blueprint, url_prefix='/user')
-CORS(app, resources=r'*')
+# CORS(app, resources={r'*': {'origins': ['http://localhost:3000', 'http://127.0.0.1:3000']}}, supports_credentials=True)
+CORS(app)
 
 app.config['JWT_SECRET_KEY'] = 'super-secret'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
