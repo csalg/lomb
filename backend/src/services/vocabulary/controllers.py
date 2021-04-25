@@ -109,8 +109,6 @@ class Controllers:
     def learning_lemmas_with_probability_smart_fetch(self, query: ReviseQueryDTO):
         lemmas = self.learning_lemmas(query.username, 0)
         lemmas.sort(key=calculate_lemma_frequency, reverse=True)
-        current_app.logger.info('smart fetch')
-        current_app.logger.info(lemmas)
         result = []
         for lemma in lemmas:
             if len(result) == query.fetch_amount:
