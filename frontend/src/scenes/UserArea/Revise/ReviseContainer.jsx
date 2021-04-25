@@ -8,6 +8,7 @@ import Filter from "./Filter";
 import {neutral3, neutral4} from "../../../PALETTE";
 import UserPreferences from "../../../services/userPreferences";
 import {REVISE_URL} from "../../../endpoints";
+import {LEMMAS_TO_FETCH_ON_SMART_FETCH, MINIMUM_LEMMAS_LEFT_FOR_SMART_FETCH_RELOAD} from "../../../config";
 
 
 const PaddedContainer = styled.div`
@@ -30,6 +31,7 @@ class ReviseContainer extends React.Component {
         this.lemmasRef = React.createRef();
         this.changeLemma = this.changeLemma.bind(this)
         this.fetchTexts = this.fetchTexts.bind(this)
+        this.notifyInfiniteScroll = this.notifyInfiniteScroll.bind(this)
 
         this.wordWasClickedEvent = new CustomEvent('wordWasClicked', {
             bubbles: true,
@@ -61,13 +63,14 @@ class ReviseContainer extends React.Component {
         try {
             const minimum_frequency = await UserPreferences.get('revision__minimum_frequency')
             const maximum_por = await UserPreferences.get('revision__maximum_por')
-            const maximum_time_elapsed = await UserPreferences.get('revision__maximum_time_elapsed')
+            const maximum_days_elapsed = await UserPreferences.get('revision__maximum_days_elapsed')
             const use_smart_fetch= await UserPreferences.get('revision__use_smart_fetch')
             const data = await AuthService.jwt_post(REVISE_URL, {
                 minimum_frequency,
                 maximum_por,
-                maximum_time_elapsed,
-                use_smart_fetch
+                maximum_days_elapsed,
+                use_smart_fetch,
+                fetch_amount: LEMMAS_TO_FETCH_ON_SMART_FETCH
             })
             const lemmas = data.data.map(record => {
                 let frequency = record.examples.length;
@@ -118,6 +121,26 @@ class ReviseContainer extends React.Component {
         )
     }
 
+    notifyInfiniteScroll(key){
+        const amountOfLemmasBeingRevised = this.state.lemmas.length;
+        if (amountOfLemmasBeingRevised < MINIMUM_LEMMAS_LEFT_FOR_SMART_FETCH_RELOAD*2){
+            return
+        }
+
+        let locationInScroll = 1;
+        for( let i=0; i!==this.state.lemmas.length; i++){
+            const lemma_id = this.state.lemmas[i]._id
+            if (lemma_id === key){
+                locationInScroll = i+1
+            }
+        }
+        const lemmasLeft = amountOfLemmasBeingRevised - locationInScroll
+        if (lemmasLeft < MINIMUM_LEMMAS_LEFT_FOR_SMART_FETCH_RELOAD){
+            return this.fetchTexts()
+        }
+
+    }
+
     render() {
 
         const Container = styled.div`
@@ -162,6 +185,7 @@ class ReviseContainer extends React.Component {
                         key="lemmas"
                         rows={this.state.lemmas}
                         changeLemma={this.changeLemma}
+                        notifyInfiniteScroll={this.notifyInfiniteScroll}
                         ref={this.lemmasRef}
                     />
                 </LemmasContainer>

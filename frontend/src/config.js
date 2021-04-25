@@ -1,1 +1,4 @@
 export const USE_LINGUEE_SERVICES = true;
+
+export const MINIMUM_LEMMAS_LEFT_FOR_SMART_FETCH_RELOAD = 5
+export const LEMMAS_TO_FETCH_ON_SMART_FETCH = 30

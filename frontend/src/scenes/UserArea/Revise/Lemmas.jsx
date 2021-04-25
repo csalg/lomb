@@ -2,7 +2,7 @@ import React from "react";
 import AuthService from "../../../services/auth";
 import {DELETE_URL, INTERACTION_TRACKING_URL} from "../../../endpoints";
 import './Lemmas.css'
-import {neutral1, neutral2, neutral3, neutral9} from "../../../PALETTE";
+import {neutral2, neutral3} from "../../../PALETTE";
 import styled from 'styled-components'
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import {Tooltip} from "antd";
@@ -46,6 +46,7 @@ export default class Lemmas extends React.Component {
                             INTERACTION_TRACKING_URL,
                             this.__lemma_was_not_clicked_message(lemma, sourceLanguage)
                         )
+                    this.props.notifyInfiniteScroll(lemma)
                 }
             }
         )
@@ -72,6 +73,7 @@ export default class Lemmas extends React.Component {
                 )
         }
         this.props.changeLemma(lemma, sourceLanguage)
+        this.props.notifyInfiniteScroll(lemma)
     }
 
     __lemma_was_clicked_message(lemma, sourceLanguage) {
@@ -113,8 +115,8 @@ export default class Lemmas extends React.Component {
                     <th>Actions</th>
                     </thead>
                     <tbody>
-                    {this.props.rows.map((row, i) => <Lemma clickCallback={this.clickCallback}
-                                                            key={i} row={row}
+                    {this.props.rows.map((row) => <Lemma clickCallback={this.clickCallback}
+                                                            key={row.id_} row={row}
                                                             observer={this.observer}/>)}
                     </tbody>
                 </table>

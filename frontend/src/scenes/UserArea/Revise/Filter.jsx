@@ -11,7 +11,7 @@ class CustomSettings extends React.Component {
         use_smart_fetch: true,
         minimum_frequency: 5,
         maximum_por: 0.6,
-        maximum_time_elapsed: 7,
+        maximum_days_elapsed: 7,
     };
 
     componentDidMount() {
@@ -25,9 +25,9 @@ class CustomSettings extends React.Component {
                 this.setState({maximum_por: val})
             )
             .catch(e => console.log(e))
-        UserPreferences.get('revision__maximum_time_elapsed')
-            .then(maximum_time_elapsed =>
-                this.setState({maximum_time_elapsed})
+        UserPreferences.get('revision__maximum_days_elapsed')
+            .then(maximum_days_elapsed =>
+                this.setState({maximum_days_elapsed})
             )
             .catch(e => console.log(e))
         UserPreferences.get('revision__use_smart_fetch')
@@ -38,7 +38,7 @@ class CustomSettings extends React.Component {
     }
 
     render() {
-        const {minimum_frequency, maximum_por, maximum_time_elapsed} = this.state;
+        const {minimum_frequency, maximum_por, maximum_days_elapsed} = this.state;
         return (
             <>
                 <Row>
@@ -107,7 +107,7 @@ class CustomSettings extends React.Component {
                 <Row>
                     <Col span={24}>
                         <b style={{color: 'hsla(0,0%,0%,0.5)'}}>
-                            Maximum time elapsed since last exposure</b></Col>
+                            Maximum days elapsed since last exposure</b></Col>
                 </Row>
                 <Row>
                     <Col span={16}>
@@ -115,8 +115,8 @@ class CustomSettings extends React.Component {
                             min={0}
                             max={60}
                             step={1}
-                            onChange={maximum_time_elapsed => this.setState({maximum_time_elapsed})}
-                            value={typeof maximum_time_elapsed === 'number' ? maximum_time_elapsed : 0}
+                            onChange={maximum_days_elapsed => this.setState({maximum_days_elapsed})}
+                            value={typeof maximum_days_elapsed === 'number' ? maximum_days_elapsed : 0}
                         />
                     </Col>
                     <Col span={8}>
@@ -125,8 +125,8 @@ class CustomSettings extends React.Component {
                             max={50}
                             step={1}
                             style={{margin: '0'}}
-                            value={maximum_time_elapsed}
-                            onChange={maximum_time_elapsed => this.setState({maximum_time_elapsed})}
+                            value={maximum_days_elapsed}
+                            onChange={maximum_days_elapsed => this.setState({maximum_days_elapsed})}
                         />
                     </Col>
                 </Row>
@@ -142,7 +142,7 @@ class CustomSettings extends React.Component {
                             onClick={e => {
                                 UserPreferences.set('revision__minimum_frequency', this.state.minimum_frequency)
                                 UserPreferences.set('revision__maximum_por', this.state.maximum_por)
-                                UserPreferences.set('revision__maximum_time_elapsed', this.state.maximum_time_elapsed)
+                                UserPreferences.set('revision__maximum_days_elapsed', this.state.maximum_days_elapsed)
                                 UserPreferences.set('revision__use_smart_fetch', this.state.use_smart_fetch)
                                 this.props.fetchTexts()
                             }
