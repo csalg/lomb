@@ -37,17 +37,17 @@ export default class Lemmas extends React.Component {
             return
         }
         entries.forEach(entry => {
-                if (!this.__isLemmaSeen(entry.target)) {
+            const lemma = entry.target.childNodes[0].innerText
+            if (!this.__isLemmaSeen(entry.target)) {
                     entry.target.classList.add('exposed');
-                    const lemma = entry.target.childNodes[0].innerText
                     const sourceLanguage = entry.target.dataset.sourceLanguage
                     AuthService
                         .jwt_post(
                             INTERACTION_TRACKING_URL,
                             this.__lemma_was_not_clicked_message(lemma, sourceLanguage)
                         )
-                    this.props.notifyInfiniteScroll(lemma)
                 }
+            this.props.notifyInfiniteScroll(lemma)
             }
         )
     }
@@ -73,7 +73,6 @@ export default class Lemmas extends React.Component {
                 )
         }
         this.props.changeLemma(lemma, sourceLanguage)
-        this.props.notifyInfiniteScroll(lemma)
     }
 
     __lemma_was_clicked_message(lemma, sourceLanguage) {
