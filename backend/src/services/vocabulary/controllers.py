@@ -113,8 +113,13 @@ class Controllers:
         for lemma in lemmas:
             if len(result) == query.fetch_amount:
                 return result
-            _, por = self.probability_of_recall(query.username, lemma['lemma'])
-            if por <= query.maximum_por:
+            elapsed, por = self.probability_of_recall(query.username, lemma['lemma'])
+            elapsed_days = elapsed / (24*60*60)
+
+            is_not_too_old = not query.maximum_days_elapsed or elapsed_days <= query.maximum_days_elapsed
+            is_not_too_easy = por <= query.maximum_por
+            
+            if is_not_too_old and is_not_too_easy:
                 lemma['probability_of_recall'] = por
                 result.append(lemma)
         return result
