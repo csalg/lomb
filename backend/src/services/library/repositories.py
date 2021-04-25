@@ -31,6 +31,8 @@ class ChunksRepository(IChunksRepository):
             ])
         return list(chunks_cursor), frequency
 
+    def find_chunks_in_textfiles(self, textfile_ids):
+        return list(self._collection.find({'textfile_id': {'$in': textfile_ids}}))
 
     def delete_text(self, textfile_id):
         self._collection.delete_many({'textfile_id': textfile_id})

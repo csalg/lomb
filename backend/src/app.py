@@ -8,6 +8,7 @@ from services.library.controllers_rest_handlers import library_blueprint
 from services.tracking.rest_api import tracking
 from services.user.rest_api import user_blueprint
 from services.vocabulary.rest_api import vocabulary
+from slices.drill_from_book import drill_from_book_slice
 
 app = Flask(__name__)
 app.register_blueprint(tracking, url_prefix='/tracking')
@@ -31,3 +32,7 @@ def resource_not_found(e):
 @jwt_required
 def langs():
     return jsonify(LANGUAGE_NAMES)
+
+@app.route('/slices/drill_from_book/<book>')
+def drill_from_book(book):
+    return drill_from_book_slice(book)
