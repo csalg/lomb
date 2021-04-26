@@ -1,9 +1,9 @@
 import React from "react";
-import {Layout, Menu, Dropdown, Tooltip, Button} from 'antd';
+import {Button, Dropdown, Layout, Menu, Tooltip} from 'antd';
 import Library from './Library'
 import Upload from "./Upload";
 import {DownOutlined} from '@ant-design/icons';
-import {Link, Switch, Route, Redirect, withRouter} from "react-router-dom";
+import {Link, Redirect, Route, Switch, withRouter} from "react-router-dom";
 import styled from 'styled-components';
 import {LogOut} from '@styled-icons/feather/LogOut'
 import AuthService from '../../services/auth'
@@ -61,10 +61,12 @@ const VocabularyDropdown = () =>
 
 const UserAreaContainer = ({match, history}) => (
     <Layout className="layout" style={{minHeight: '100vh'}}>
-        <Header>
-            <Link to={'/'}><Logo>
-                Lomb
-            </Logo></Link>
+        <Header className={'responsive-padding'}>
+            <Link className={'logo'} to={'/'}>
+                <Logo>
+                    Lomb
+                </Logo>
+            </Link>
             <Menu
                 theme="dark"
                 mode="horizontal"
@@ -94,7 +96,7 @@ const UserAreaContainer = ({match, history}) => (
                                 fontSize: '20px',
                             }}
                         />
-                       Watch
+                        Watch
                     </a>
                 </Menu.Item>
 
@@ -111,14 +113,14 @@ const UserAreaContainer = ({match, history}) => (
                 </Menu.Item>
                 <Menu.Item key="upload">
                     <AdminOnlyContainer>
-                    <UploadOutlined
-                        style={{
-                            marginRight: '3px',
-                            position: 'relative',
-                            top: '3px',
-                            fontSize: '20px',
-                        }}
-                    />
+                        <UploadOutlined
+                            style={{
+                                marginRight: '3px',
+                                position: 'relative',
+                                top: '3px',
+                                fontSize: '20px',
+                            }}
+                        />
                         <Link to={`${match.url}/upload`}>Upload</Link>
                     </AdminOnlyContainer>
                 </Menu.Item>
@@ -169,7 +171,7 @@ const UserAreaContainer = ({match, history}) => (
                 </Right>
             </Menu>
         </Header>
-        <Content style={{padding: '0 50px'}}>
+        <Content className='responsive-padding'>
 
             <div className="site-layout-content">
                 <Switch>
