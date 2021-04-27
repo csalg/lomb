@@ -156,9 +156,9 @@ class Controllers:
         for event in lemma_log:
             if event['timestamp'] > timestamp:
                 timestamp = event['timestamp']
-            if event['message'] in SUCCESS_MESSAGES:
+            if event['message'] in FAILURE_MESSAGES:
                 failures += 1
-            elif event['message'] in FAILURE_MESSAGES:
+            elif event['message'] in SUCCESS_MESSAGES:
                 successes += 1
 
         elapsed =  now_timestamp() - timestamp
