@@ -2,6 +2,7 @@ import React from "react";
 import {Button, Dropdown, Layout, Menu, Tooltip} from 'antd';
 import Library from './Library'
 import Upload from "./Upload";
+import Stats from "./Stats";
 import {DownOutlined} from '@ant-design/icons';
 import {Link, Redirect, Route, Switch, withRouter} from "react-router-dom";
 import styled from 'styled-components';
@@ -9,10 +10,13 @@ import {LogOut} from '@styled-icons/feather/LogOut'
 import AuthService from '../../services/auth'
 import LogoutOutlined from "@ant-design/icons/lib/icons/LogoutOutlined";
 import './UserAreaContainer.css'
-import ReconciliationOutlined from '@ant-design/icons/lib/icons/ReconciliationOutlined'
-import UploadOutlined from '@ant-design/icons/lib/icons/UploadOutlined'
-import ReadOutlined from "@ant-design/icons/lib/icons/ReadOutlined";
-import PlayCircleOutlined from "@ant-design/icons/lib/icons/PlayCircleOutlined";
+import {
+    LineChartOutlined,
+    PlayCircleOutlined,
+    ReadOutlined,
+    ReconciliationOutlined,
+    UploadOutlined
+} from "@ant-design/icons/lib/icons";
 import {Brain} from '@styled-icons/boxicons-regular/Brain'
 import Admin from './Admin'
 import {AdminOnlyContainer} from "../../services/Permissions";
@@ -111,6 +115,21 @@ const UserAreaContainer = ({match, history}) => (
                         Revise
                     </Link>
                 </Menu.Item>
+
+                <Menu.Item key="stats">
+                    <Link to={`${match.url}/stats`}>
+                        <LineChartOutlined
+                            style={{
+                                marginRight: '3px',
+                                position: 'relative',
+                                top: '3px',
+                                fontSize: '20px',
+                            }}
+                        />
+                        Stats
+                    </Link>
+                </Menu.Item>
+
                 <Menu.Item key="upload">
                     <AdminOnlyContainer>
                         <UploadOutlined
@@ -180,6 +199,10 @@ const UserAreaContainer = ({match, history}) => (
                     </Route>
                     <Route path={`${match.url}/library`}>
                         <Library/>
+                    </Route>
+                    <Route path={`${match.url}/stats`}>
+                        {/*<Upload/>*/}
+                        <Stats/>
                     </Route>
                     <Route path={`${match.url}/admin`}>
                         <Admin/>

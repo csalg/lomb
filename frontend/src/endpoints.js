@@ -23,3 +23,4 @@ export const DELETE_URL = VOCABULARY + '/delete_word'
 export const INTERACTION_TRACKING_URL = API_URL+ '/tracking/'
 
 export const BOOK_DRILL_URL = textfileId => API_URL + "/slices/drill_book/" + textfileId
+export const STATS_URL = API_URL + "/slices/stats"

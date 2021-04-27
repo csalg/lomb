@@ -14,6 +14,7 @@ class AuthService {
 
     static logout() {
         localStorage.removeItem('user')
+        localStorage.removeItem('preferences')
     }
 
     static register(user) {
