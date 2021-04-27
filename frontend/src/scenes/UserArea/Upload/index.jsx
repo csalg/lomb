@@ -7,7 +7,6 @@ import AuthService from "../../../services/auth";
 import ServerErrorMessage from '../../../lib/SharedComponents/ServerErrorMessage'
 import parseErrorMessage from "../../../services/parseErrorMessage";
 import {toast} from "react-toastify";
-import {useHistory} from 'react-router-dom'
 import {KNOWN_LANGUAGES, LANGUAGE_NAMES, LEARNING_LANGUAGES} from "../../../services/languages";
 
 const {Option} = Select;
@@ -32,7 +31,6 @@ const normFile = e => {
 
 export default () => {
     const [err, setError] = useState("")
-    const history = useHistory()
 
     const onFinish = values => {
         const forms = Array.from(values.files).map(
@@ -76,10 +74,6 @@ export default () => {
         form.setFieldsValue({files: event.target.files})
     }
 
-    // const onFilesUploaded = ({ file, fileList })  => {
-    //     form.setFieldsValue({files: fileList})
-    //     console.log(fileList);
-    // }
     return (
         <Form
             style={{margin: '1em 0'}}
@@ -111,22 +105,6 @@ export default () => {
                 {/*</Upload>*/}
                 <Input type={'file'} onChange={onFileUploaded} multiple={true} accept={'.html'}/>
             </Form.Item>
-
-            {/*<Form.Item*/}
-            {/*    name="title"*/}
-            {/*    style={{marginBottom: '1em'}}*/}
-            {/*    label="Title"*/}
-            {/*    help={'What is this text called?'}*/}
-            {/*    hasFeedback*/}
-            {/*    rules={[*/}
-            {/*        {*/}
-            {/*            required: true,*/}
-            {/*            message: 'Please provide a title for the text.',*/}
-            {/*        },*/}
-            {/*    ]}*/}
-            {/*>*/}
-            {/*    <Input/>*/}
-            {/*</Form.Item>*/}
 
             <Form.Item
                 style={{marginBottom: '1em'}}
