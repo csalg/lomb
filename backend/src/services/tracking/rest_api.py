@@ -7,7 +7,7 @@ from jsonschema import validate
 
 from lib.db import get_db
 from mq.signals import StopLearningLemmaEvent
-from .constants import valid_messages
+from .constants import VALID_MESSAGES
 from .controllers import create_controllers_with_mongo_repositories
 
 tracking = Blueprint('tracking', __name__)
@@ -43,7 +43,7 @@ tracking_event_schema = {
     "type": "object",
     "properties": {
         "message": {"type": "string",
-                    "enum": valid_messages
+                    "enum": VALID_MESSAGES
                     },
         "lemmas": {"type": "array",
                    "items": {

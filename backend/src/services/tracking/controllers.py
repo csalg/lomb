@@ -1,7 +1,7 @@
 from flask import current_app
 
 from mq.signals import NewLemmaToLearnEvent
-from services.tracking.constants import valid_messages, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_SCROLL, BOOK_DRILL_CLICK
+from services.tracking.constants import VALID_MESSAGES, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_SCROLL, BOOK_DRILL_CLICK
 from services.tracking.db import LogRepository, IgnoreRepository, LearningRepository
 
 
@@ -18,7 +18,7 @@ class Controllers:
         self.__ignore_repository.add(user, lemma, source_language)
 
     def add(self, user, message, lemmas, source_language, support_language):
-        if message not in valid_messages:
+        if message not in VALID_MESSAGES:
             return
         for lemma in lemmas:
             if 'VIDEO__' in message:

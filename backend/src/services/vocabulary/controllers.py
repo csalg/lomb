@@ -11,6 +11,8 @@ from .data_processing.plotting import heatmap
 
 from .db import LemmaExamplesRepository
 from .infrastructure.ml import probability_of_recall_leitner
+from ..tracking.constants import SUCCESS_MESSAGES, FAILURE_MESSAGES
+
 
 @enforce_types
 @dataclass
@@ -118,7 +120,7 @@ class Controllers:
 
             is_not_too_old = not query.maximum_days_elapsed or elapsed_days <= query.maximum_days_elapsed
             is_not_too_easy = por <= query.maximum_por
-            
+
             if is_not_too_old and is_not_too_easy:
                 lemma['probability_of_recall'] = por
                 result.append(lemma)
@@ -154,12 +156,9 @@ class Controllers:
         for event in lemma_log:
             if event['timestamp'] > timestamp:
                 timestamp = event['timestamp']
-            if event['message'] in ['REVISION__CLICKED',
-                                    'TEXT__WORD_HIGHLIGHTED']:
+            if event['message'] in SUCCESS_MESSAGES:
                 failures += 1
-            elif event['message'] in ['REVISION__NOT_CLICKED',
-                                      'TEXT__SENTENCE_READ',
-                                      "VIDEO__WAS_SEEN"]:
+            elif event['message'] in FAILURE_MESSAGES:
                 successes += 1
 
         elapsed =  now_timestamp() - timestamp
