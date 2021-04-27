@@ -9,6 +9,7 @@ from services.tracking.rest_api import tracking
 from services.user.rest_api import user_blueprint
 from services.vocabulary.rest_api import vocabulary
 from slices.drill_from_book import drill_from_book_slice
+from slices.stats import stats
 
 app = Flask(__name__)
 app.register_blueprint(tracking, url_prefix='/tracking')
@@ -39,3 +40,9 @@ def drill_from_book(textfile_id):
     username = get_jwt_identity()['username']
     maximum_por = float(request.args.get('maximum_por'))
     return drill_from_book_slice(username, textfile_id, maximum_por)
+
+@app.route('/slices/stats')
+@jwt_required
+def stats_endpoint():
+    username = get_jwt_identity()['username']
+    return stats(username)
