@@ -58,7 +58,7 @@ export default class Lemmas extends React.Component {
             message: this.props.scrollEventType,
             lemmas: new Array(lemma,),
             source_language: sourceLanguage,
-            support_language: this.props.supportLanguage,
+            support_language: this.props.supportLanguage || 'en',
         }
     }
 
