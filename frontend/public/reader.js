@@ -270,6 +270,10 @@ class DefinitionController {
     }
 
     changeDefinition(newWord) {
+        if (getComputedStyle(this.view).fontWeight === "900"){
+            this.view.textContent = newWord;
+            return
+        }
         let uri = `https://www.linguee.com/${this.supportLanguage.toLowerCase()}-${this.sourceLanguage.toLowerCase()}/search?qe=${encodeURI(newWord)}&source=auto&cw=714&ch=398`
         if (this.sourceLanguage == 'Danish') {
             uri = `https://da.bab.la/ordbog/dansk-engelsk/${encodeURI(newWord)}`
@@ -366,7 +370,6 @@ class InteractionTracker {
 
 function changeFrameSrcWithoutAffectingBrowserHistory(iframe, uri) {
 
-    console.log(iframe)
     const clonedFrame = iframe.cloneNode(true)
     const parentNode = iframe.parentNode
     clonedFrame.src = uri
