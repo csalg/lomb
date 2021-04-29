@@ -39,6 +39,12 @@ export default class extends React.Component {
                     <li>{formatAmounts(this.state.seen_last_week)} in the past week ({weeklyAverage} avg/day).</li>
                     <li>{formatAmounts(this.state.seen_last_month)} in the past month ({monthlyAverage} avg/day).</li>
                 </ul>
+                <li>Distinct exposures - here's how many unique lemmas you have been exposed to recently:</li>
+                <ul>
+                    <li>{formatAmounts(this.state.seen_last_day_unique)} in the past 24h.</li>
+                    <li>{formatAmounts(this.state.seen_last_week_unique)} in the past week.</li>
+                    <li>{formatAmounts(this.state.seen_last_month_unique)} in the past month.</li>
+                </ul>
                 {/*<li>Distribution of learning words and PoR Over a certain frequency?</li>*/}
             </ul>
         </div>)

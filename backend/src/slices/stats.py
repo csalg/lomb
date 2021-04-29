@@ -15,6 +15,18 @@ def stats(username):
         .find({'user': username, 'timestamp': {"$gte": when}}) \
         .count()
 
+    def seen_last_unique(when):
+        result = list(db[VOCABULARY_LOGS_COLLECTION_NAME] \
+                .aggregate([{'$match': {'user': username,
+                               'timestamp': {"$gte": when}}
+                     },
+                    {'$group': {'_id':'$lemma'}
+                     },
+                    {'$count': 'count'}]))
+        if len(result):
+            return result[0]['count']
+        return 0
+
     learning_lemmas = db[LEARNING_LEMMAS_COLLECTION_NAME]\
                         .find({'user': username})\
                         .count()
@@ -28,7 +40,10 @@ def stats(username):
         "learning_lemmas": learning_lemmas,
         "lemmas_with_high_por": 2130,
         "seen_last_day": seen_last(a_day_ago),
+        "seen_last_day_unique": seen_last_unique(a_day_ago),
         "seen_last_week": seen_last(a_week_ago),
+        "seen_last_week_unique": seen_last_unique(a_week_ago),
         "seen_last_month": seen_last(a_month_ago),
+        "seen_last_month_unique": seen_last_unique(a_month_ago),
         "seen_total": seen_last(0),
     }
