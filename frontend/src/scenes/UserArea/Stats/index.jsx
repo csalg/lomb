@@ -28,22 +28,19 @@ export default class extends React.Component {
         return (<div style={{padding: '2em 0'}}>
             <span style={{display: this.state.loading? 'auto' : 'none'}}>Loading</span>
             <ul style={{display: this.state.loading? 'none': 'block'}}>
-                <li>There are {formatAmounts(this.state.ignored_lemmas)} lemmas in your ignore list.</li>
-                <li>You have added {formatAmounts(this.state.learning_lemmas)} lemmas to your learning list.</li>
-                {/*<li>Of the lemmas you are learning, {this.state.lemmas_with_high_por} have a probability of recall (PoR)*/}
-                {/*    of 0.5 or higher*/}
-                {/*</li>*/}
+                <li>There are <strong>{formatAmounts(this.state.ignored_lemmas)}</strong> lemmas in your ignore list.</li>
+                <li>You have added <strong>{formatAmounts(this.state.learning_lemmas)}</strong> lemmas to your learning list.</li>
                 <li>Activity level - here's how many exposures you have logged recently:</li>
                 <ul>
-                    <li>{formatAmounts(this.state.seen_last_day)} in the past 24h.</li>
-                    <li>{formatAmounts(this.state.seen_last_week)} in the past week ({weeklyAverage} avg/day).</li>
-                    <li>{formatAmounts(this.state.seen_last_month)} in the past month ({monthlyAverage} avg/day).</li>
+                    <li><strong>{formatAmounts(this.state.seen_last_day)}</strong> in the past 24h.</li>
+                    <li><strong>{formatAmounts(this.state.seen_last_week)}</strong> in the past week ({weeklyAverage} avg/day).</li>
+                    <li><strong>{formatAmounts(this.state.seen_last_month)}</strong> in the past month ({monthlyAverage} avg/day).</li>
                 </ul>
                 <li>Distinct exposures - here's how many unique lemmas you have been exposed to recently:</li>
                 <ul>
-                    <li>{formatAmounts(this.state.seen_last_day_unique)} in the past 24h.</li>
-                    <li>{formatAmounts(this.state.seen_last_week_unique)} in the past week.</li>
-                    <li>{formatAmounts(this.state.seen_last_month_unique)} in the past month.</li>
+                    <li><strong>{formatAmounts(this.state.seen_last_day_unique)}</strong> in the past 24h.</li>
+                    <li><strong>{formatAmounts(this.state.seen_last_week_unique)}</strong> in the past week.</li>
+                    <li><strong>{formatAmounts(this.state.seen_last_month_unique)}</strong> in the past month.</li>
                 </ul>
                 {/*<li>Distribution of learning words and PoR Over a certain frequency?</li>*/}
             </ul>
