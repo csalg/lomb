@@ -46,8 +46,12 @@
             font-style: italic;
         }
 
+        #support {
+            flex: 1;
+        }
+
         #support-text {
-            width: 30rem;
+            max-width: 30rem;
         }
 
         #definition {
@@ -81,7 +85,7 @@
             padding: 1rem;
         }
 
-        @media only screen and (max-width: 768px) {
+        @media only screen and (max-width: 640px) and (min-height: 500px) {
             .container_ {
                 flex-direction: column;
             }
