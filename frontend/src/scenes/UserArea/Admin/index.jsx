@@ -1,13 +1,13 @@
 import React from 'react'
 import {List, Avatar} from 'antd';
 import {
-    OrderedListOutlined,
     SearchOutlined,
     DiffOutlined,
     LineChartOutlined,
+    DownloadOutlined
 } from '@ant-design/icons'
 import {
-    ETL_FROM_SCRATCH_URL,
+    ETL_FROM_SCRATCH_URL, GET_DATASET_URL,
     MAKE_DATASET_URL,
     UPDATE_LEMMA_RANKS_URL,
     UPDATE_TEXT_DIFFICULTIES
@@ -48,7 +48,6 @@ const data = [
         last_performed: '2020/08/01',
         Icon: SearchOutlined
     },
-
     {
         command: 'ETL from scratch',
         description: "Delete all datapoints and recalculate everything again from the logs.",
@@ -67,6 +66,13 @@ const data = [
         },
         last_performed: '2020/08/01',
         Icon: DiffOutlined
+    },
+    {
+        command: 'Make dataset',
+        description: "Make dataset from scratch",
+        action: () => AuthService.jwt_get(MAKE_DATASET_URL),
+        last_performed: '2020/08/01',
+        Icon: LineChartOutlined
     },
 ];
 
@@ -91,9 +97,9 @@ export default props => {
                 })}
                 <List.Item>
                     <List.Item.Meta
-                        avatar={<Avatar><LineChartOutlined/></Avatar>}
-                        title={<a href={MAKE_DATASET_URL}>Make dataset</a>}
-                        description="Make dataset from logs."
+                        avatar={<Avatar><DownloadOutlined/></Avatar>}
+                        title={<a href={GET_DATASET_URL}>Get dataset</a>}
+                        description="Download dataset."
                     />
                     <div>Last performed: '2020/08/01'</div>
                 </List.Item>
