@@ -1,6 +1,6 @@
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 
-from flask import Flask, render_template, jsonify, request, send_file
+from flask import Flask, render_template, jsonify, request, send_file, send_from_directory, current_app
 from flask_cors import CORS
 
 from config import LANGUAGE_NAMES
@@ -55,7 +55,10 @@ def etl_from_scratch_endpoint():
 
 @app.route('/slices/make_dataset')
 def make_dataset_endpoint():
-    buffer = make_dataset()
-    return send_file(buffer, as_attachment=True,
-                     attachment_filename='data.csv',
-                     mimetype='text/csv')
+    make_dataset()
+    return 'Done'
+
+@app.route('/slices/data.csv')
+def get_dataset():
+    current_app.logger.info("YO!")
+    return send_from_directory('static', 'data.csv')

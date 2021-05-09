@@ -2,7 +2,9 @@ from copy import deepcopy
 from io import StringIO, BytesIO
 
 import csv
-from flask import current_app
+
+import os
+from flask import current_app, app
 
 from config import DATAPOINTS, VOCABULARY_LOGS_COLLECTION_NAME
 from lib.db import get_db
@@ -78,16 +80,12 @@ def make_dataset():
     dataset_arr = []
     for datapoint in datapoints:
         dataset_arr.append({**datapoint['datapoint'], 'score': datapoint['score']['current_value']})
-    buffer = StringIO()
-    dict_writer = csv.DictWriter(buffer, dataset_arr[0].keys())
-    dict_writer.writeheader()
-    dict_writer.writerows(dataset_arr)
-    buffer.seek(0)
-    
-    mem = BytesIO()
-    mem.write(buffer.getvalue().encode())
 
-    mem.seek(0)
-    buffer.close()
-    return mem
+    if not os.path.exists('src/static'):
+        os.mkdir('src/static')
+    
+    with open('src/static/data.csv', 'w') as file:
+        dict_writer = csv.DictWriter(file, dataset_arr[0].keys())
+        dict_writer.writeheader()
+        dict_writer.writerows(dataset_arr)
 
