@@ -1,6 +1,6 @@
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_file
 from flask_cors import CORS
 
 from config import LANGUAGE_NAMES
@@ -9,7 +9,7 @@ from services.tracking.rest_api import tracking
 from services.user.rest_api import user_blueprint
 from services.vocabulary.rest_api import vocabulary
 from slices.drill_from_book import drill_from_book_slice
-from slices.etl import etl_from_scratch
+from slices.etl import etl_from_scratch, make_dataset
 from slices.stats import stats
 
 app = Flask(__name__)
@@ -52,3 +52,10 @@ def stats_endpoint():
 @jwt_required
 def etl_from_scratch_endpoint():
     return etl_from_scratch()
+
+@app.route('/slices/make_dataset')
+def make_dataset_endpoint():
+    buffer = make_dataset()
+    return send_file(buffer, as_attachment=True,
+                     attachment_filename='data.csv',
+                     mimetype='text/csv')
