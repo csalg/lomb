@@ -1,7 +1,7 @@
 import React from 'react'
 import {List, Avatar} from 'antd';
 import {OrderedListOutlined,SearchOutlined, DiffOutlined} from '@ant-design/icons'
-import {UPDATE_LEMMA_RANKS_URL, UPDATE_TEXT_DIFFICULTIES} from "../../../endpoints";
+import {ETL_FROM_SCRATCH_URL, UPDATE_LEMMA_RANKS_URL, UPDATE_TEXT_DIFFICULTIES} from "../../../endpoints";
 import AuthService from '../../../services/auth'
 import {toast} from "react-toastify";
 import parseErrorMessage from "../../../services/parseErrorMessage";
@@ -9,7 +9,7 @@ import parseErrorMessage from "../../../services/parseErrorMessage";
 const data = [
     {
         command: 'Update lemma ranks',
-        description: "Updates lemma ranks for a specific language",
+        description: "Update lemma ranks for a specific language",
         action: () => {
             AuthService
                 .jwt_get(UPDATE_LEMMA_RANKS_URL)
@@ -33,12 +33,24 @@ const data = [
     },
     {
         command: 'Search for new examples',
-        description: "Searches for new examples for everyone",
+        description: "Search for new examples for everyone",
         action: () => console.log('update lemma ranks'),
         last_performed: '2020/08/01',
         Icon: SearchOutlined
     },
 
+    {
+        command: 'ETL from scratch',
+        description: "Delete all datapoints and recalculate everything again from the logs.",
+        action: () => {
+            AuthService
+                .jwt_get(ETL_FROM_SCRATCH_URL)
+                .then(response => toast(response.data))
+                .catch(error => toast(parseErrorMessage(error)))
+        },
+        last_performed: '2020/08/01',
+        Icon: SearchOutlined
+    },
 ];
 
 export default props => {

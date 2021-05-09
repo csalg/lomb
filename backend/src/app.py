@@ -9,6 +9,7 @@ from services.tracking.rest_api import tracking
 from services.user.rest_api import user_blueprint
 from services.vocabulary.rest_api import vocabulary
 from slices.drill_from_book import drill_from_book_slice
+from slices.etl import etl_from_scratch
 from slices.stats import stats
 
 app = Flask(__name__)
@@ -46,3 +47,8 @@ def drill_from_book(textfile_id):
 def stats_endpoint():
     username = get_jwt_identity()['username']
     return stats(username)
+
+@app.route('/slices/etl_from_scratch')
+@jwt_required
+def etl_from_scratch_endpoint():
+    return etl_from_scratch()

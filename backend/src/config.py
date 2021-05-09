@@ -38,8 +38,14 @@ LEARNING_LEMMAS_COLLECTION_NAME     = 'learning_lemmas'
 
 BOOK_DRILLS_CACHE = 'book_drills'
 
+DATAPOINTS = 'datapoints'
+
 USERS_COLLECTION_NAME = 'users'
 USER_CREDENTIALS_COLLECTION_NAME = 'user_credentials'
 USER_PREFERENCES_COLLECTION_NAME = 'user_preferences'
 
 SMART_FETCH_BATCH_SIZE = 20
+
+# PoR prediction parameters
+EMA_SMOOTHING_COEFFICIENT = 0.5
+TIME_WINDOW = 24*60*60
