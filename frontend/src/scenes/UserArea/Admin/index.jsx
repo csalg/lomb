@@ -55,22 +55,18 @@ const data = [
         action: () => {
             AuthService
                 .jwt_get(ETL_FROM_SCRATCH_URL)
-                .then(response => toast(response.data))
-                .catch(error => toast(parseErrorMessage(error)))
+                .then((response) => {
+                    console.log(response)
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'file.pdf');
+                    document.body.appendChild(link);
+                    link.click();
+                }).catch(error => toast(parseErrorMessage(error)))
         },
         last_performed: '2020/08/01',
         Icon: DiffOutlined
-    },
-    {
-        command: 'Make dataset',
-        description: "Make dataset from logs.",
-        action: () => {
-            AuthService
-                .jwt_get(MAKE_DATASET_URL)
-                .catch(error => toast(parseErrorMessage(error)))
-        },
-        last_performed: '2020/08/01',
-        Icon: LineChartOutlined
     },
 ];
 
@@ -93,6 +89,14 @@ export default props => {
                         </List.Item>
                     )
                 })}
+                <List.Item>
+                    <List.Item.Meta
+                        avatar={<Avatar><LineChartOutlined/></Avatar>}
+                        title={<a href={MAKE_DATASET_URL}>Make dataset</a>}
+                        description="Make dataset from logs."
+                    />
+                    <div>Last performed: '2020/08/01'</div>
+                </List.Item>
             </List>
 
         </div>
