@@ -83,8 +83,8 @@ def make_dataset():
     datapoints = {}
     snapshots = []
     for event in events:
-        if counter == 100000:
-            break
+        # if counter == 100000:
+        #     break
         if 'source_language' not in event or 'timestamp' not in event:
             continue
 
