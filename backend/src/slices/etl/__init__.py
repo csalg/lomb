@@ -98,7 +98,7 @@ def make_dataset():
         datapoints[key] = datapoint
 
         if snapshot is not None:
-            snapshots.append(datapoint)
+            snapshots.append(snapshot)
 
         counter += 1
 
@@ -111,7 +111,7 @@ def __update_datapoint(datapoint, event):
     snapshot = None
     if are_we_in_a_new_time_window(score, event['timestamp']):
         if score['current_value'] is not None:
-            snapshot = deepcopy((features, score, previous_timestamp))
+            snapshot = deepcopy(features), deepcopy(score), deepcopy(previous_timestamp)
 
     update_features(features, event, previous_timestamp)
     update_score(score, event)
