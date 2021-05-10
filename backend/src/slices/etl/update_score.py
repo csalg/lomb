@@ -7,7 +7,7 @@ from services.tracking.constants import FAILURE_MESSAGES, SUCCESS_MESSAGES, VALI
 
 def update_score(score, event):
     current_timestamp = event['timestamp']
-    if areWeInANewTimeWindow(score, current_timestamp):
+    if are_we_in_a_new_time_window(score, current_timestamp):
         __change_time_window(score)
         # current_app.logger.info('New time window')
 
@@ -22,7 +22,7 @@ def update_score(score, event):
     score['current_value'] = __calculate_score_value(score)
 
 
-def newScore():
+def create_score():
     return {
         'successes': 0,
         'failures': 0,
@@ -34,7 +34,7 @@ def newScore():
     }
 
 
-def areWeInANewTimeWindow(score, current_timestamp):
+def are_we_in_a_new_time_window(score, current_timestamp):
     # current_app.logger.info(score)
     if not score['previous_timestamp']:
         return True
