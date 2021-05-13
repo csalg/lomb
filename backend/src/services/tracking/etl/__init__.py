@@ -135,8 +135,9 @@ def __persist_to_csv_in_static_folder(snapshots):
     dataset_arr = []
     for datapoint in snapshots:
         features, score, timestamp = datapoint
-        __remove_unnecessary_features(features)
-        dataset_arr.append({**features, 'score': score['current_value']})
+        if score['previous_value']:
+            __remove_unnecessary_features(features)
+            dataset_arr.append({**features, 'score': score['current_value'], 'score_prev': score['previous_value']})
 
     if not os.path.exists('src/static'):
         os.mkdir('src/static')

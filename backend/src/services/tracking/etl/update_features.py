@@ -1,5 +1,6 @@
 from flask import current_app
 
+from config import MAX_ELAPSED
 from services.tracking.constants import VALID_MESSAGES, SUCCESS_MESSAGES, FAILURE_MESSAGES
 
 # Streak types
@@ -30,7 +31,6 @@ def create_features():
     return datapoint.copy()
 
 
-MAX_SECONDS = 24*30*24*60*60 # 2 years in seconds
 def update_features(datapoint, current_message, current_timestamp):
 
     if datapoint['FIRST_EXPOSURE_timestamp'] == 0:
@@ -50,7 +50,7 @@ def update_features(datapoint, current_message, current_timestamp):
     for event_type in VALID_MESSAGES:
         if event_type != current_message:
             elapsed = current_timestamp - datapoint[event_type + "_last_seen"]
-            datapoint[event_type+'_seconds'] = min(elapsed, MAX_SECONDS)
+            datapoint[event_type+'_seconds'] = min(elapsed, MAX_ELAPSED)
 
     for message in VALID_MESSAGES:
         datapoint['ALL_amount'] += datapoint[message+"_amount"]

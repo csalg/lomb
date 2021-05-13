@@ -35,6 +35,7 @@ LIBRARY_LEMMA_RANK_COLLECTION_NAME = 'library_lemma_ranks'
 VOCABULARY_LOGS_COLLECTION_NAME     = 'vocabulary_logs'
 IGNORE_LEMMAS_COLLECTION_NAME       = 'vocabulary_ignore'
 LEARNING_LEMMAS_COLLECTION_NAME     = 'learning_lemmas'
+LEARNING_LEMMAS_EXAMPLES_CACHE = 'lemmas__learning'
 
 BOOK_DRILLS_CACHE = 'book_drills'
 
@@ -49,3 +50,6 @@ SMART_FETCH_BATCH_SIZE = 20
 # PoR prediction parameters
 EMA_SMOOTHING_COEFFICIENT = 0.5
 TIME_WINDOW = 24*60*60
+
+# Max allowed time elapsed
+MAX_ELAPSED = 24*30*24*60*60 # 2 years in seconds

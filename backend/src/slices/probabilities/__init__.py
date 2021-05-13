@@ -12,8 +12,6 @@ from lib.db import get_db
 MU_MAX = 10e10
 MU_MIN = 10e-10
 
-
-
 class MTR:
     def __init__(self):
         self.model = LinearRegression

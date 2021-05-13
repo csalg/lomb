@@ -3,7 +3,8 @@ import time
 from flask import current_app
 
 from mq.signals import NewLemmaToLearnEvent
-from services.tracking.constants import VALID_MESSAGES, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_SCROLL, BOOK_DRILL_CLICK
+from services.tracking.constants import VALID_MESSAGES, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_SCROLL, BOOK_DRILL_CLICK, \
+    VIDEO__TRANSLATION_WAS_REVEALED
 from services.tracking.db import LogRepository, IgnoreRepository, LearningRepository
 from services.tracking.etl import etl
 
@@ -47,9 +48,11 @@ class Controllers:
             self.ignore_lemma(user, lemma, source_language)
 
     def __add_video_log(self, user, message, lemma, source_language, support_language):
-        if not self.__is_ignored(user, lemma):
+        if message == VIDEO__TRANSLATION_WAS_REVEALED or self.__is_learning(user, lemma):
             self.__log_repository.log(user, message, lemma, source_language)
             self.__learn(user, lemma, source_language, support_language)
+        else:
+            self.ignore_lemma(user, lemma, source_language)
 
     def __add_book_drill_log(self, user, message, lemma, source_language, support_language):
         if message == BOOK_DRILL_CLICK or self.__is_learning(user, lemma):

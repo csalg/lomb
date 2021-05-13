@@ -6,7 +6,7 @@ from bson import ObjectId
 from flask import current_app
 
 from config import MAXIMUM_EXAMPLES_PER_LEMMA, IGNORE_LEMMAS_COLLECTION_NAME, BOOK_DRILLS_CACHE, \
-    LIBRARY_CHUNKS_COLLECTION_NAME
+    LIBRARY_CHUNKS_COLLECTION_NAME, MAX_ELAPSED
 from lib.db import get_db
 from services.library.repositories import ChunksRepository, TextfileRepository
 from services.vocabulary.controllers import Controllers
@@ -65,7 +65,7 @@ def drill_from_book_slice(username, textfile_id, maximum_por):
     result = []
     for lemma in lemmas_and_examples_sorted:
         # elapsed, por = vocabulary_controllers.probability_of_recall(username, lemma.lemma)
-        elapsed, por = 0, 0
+        elapsed, por = MAX_ELAPSED, 0
         key = f"{source_language}_{lemma.lemma}"
         if key in probabilities.index:
             por = probabilities.loc[key, 'score_pred']
