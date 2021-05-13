@@ -108,7 +108,7 @@ def __update_datapoint(datapoint, event):
 
     snapshot = None
     if are_we_in_a_new_time_window(score, event['timestamp']):
-        if score['current_value'] is not None:
+        if (score['current_value'] is not None) and (features['delta'] is not None):
             snapshot = deepcopy(features), deepcopy(score), deepcopy(previous_timestamp)
 
     update_features(features, event, previous_timestamp)
