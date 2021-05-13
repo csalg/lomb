@@ -51,7 +51,8 @@ def stats_endpoint():
 @app.route('/slices/etl_from_scratch')
 @jwt_required
 def etl_from_scratch_endpoint():
-    return etl_from_scratch()
+    etl_from_scratch()
+    return {'msg': 'ok'}
 
 # @app.route('/slices/make_dataset')
 # def make_dataset_endpoint():

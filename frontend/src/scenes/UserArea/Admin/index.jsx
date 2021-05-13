@@ -50,19 +50,11 @@ const data = [
     },
     {
         command: 'ETL from scratch',
-        description: "Recalculate everything again from the logs. This also generates past datapoint dataset.",
+        description: "Recalculate everything again from the logs. This generates current datapoints as well as a dataset with past datapoint dataset.",
         action: () => {
             AuthService
                 .jwt_get(ETL_FROM_SCRATCH_URL)
-                .then((response) => {
-                    console.log(response)
-                    const url = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', 'file.pdf');
-                    document.body.appendChild(link);
-                    link.click();
-                }).catch(error => toast(parseErrorMessage(error)))
+                .catch(error => toast(parseErrorMessage(error)))
         },
         last_performed: '2020/08/01',
         Icon: LineChartOutlined
@@ -99,7 +91,7 @@ export default props => {
                     <List.Item.Meta
                         avatar={<Avatar><DownloadOutlined/></Avatar>}
                         title={<a href={GET_DATASET_URL}>Get dataset</a>}
-                        description="Download dataset."
+                        description="Download dataset with past datapoints for training models."
                     />
                     <div>Last performed: '2020/08/01'</div>
                 </List.Item>

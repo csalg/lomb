@@ -1,4 +1,5 @@
 from copy import deepcopy, copy
+from dataclasses import dataclass
 from io import StringIO, BytesIO
 
 import csv
@@ -17,6 +18,7 @@ logs_repository = db[VOCABULARY_LOGS_COLLECTION_NAME]
 
 
 # def etl_from_scratch(return_dataset = False):
+#     datapoint_repository.delete_many({})
 #     datapoint_repository.delete_many({})
 #     events = logs_repository.find({})
 #     counter = 0
@@ -76,7 +78,6 @@ def etl(event):
     return snapshot
 
 
-
 def etl_from_scratch():
     events = logs_repository.find({})
     datapoints = {}
@@ -85,19 +86,38 @@ def etl_from_scratch():
         if 'source_language' not in event or 'timestamp' not in event:
             continue
 
-        key = f"{event['lemma']}_{event['user']}_{event['source_language']}"
+        lemma, user, language = event['lemma'], event['user'], event['source_language']
+        key = f"{lemma}_{user}_{language}"
         if key in datapoints:
-            datapoint = datapoints[key]
+            datapoint, _ = datapoints[key]
         else:
             datapoint = (create_features(), create_score(), event['timestamp'])
 
         datapoint, snapshot = __update_datapoint(datapoint, event)
-        datapoints[key] = datapoint
+        datapoints[key] = datapoint, (lemma, user, language)
 
         if snapshot is not None:
             snapshots.append(snapshot)
 
     __persist_to_csv_in_static_folder(snapshots)
+    __wipe_and_persist_to_repo(datapoints)
+
+
+def __wipe_and_persist_to_repo(datapoints):
+    datapoint_repository.delete_many({})
+    new_entries = []
+    for _, datapoint in datapoints.items():
+        datapoint_, meta = datapoint
+        lemma, user, language = meta
+        features, score, previous_timestamp = datapoint_
+        new_entries.append({
+            'lemma': lemma,
+            'user': user,
+            'source_language': language,
+            'features': features,
+            'score': score,
+            'previous_timestamp': previous_timestamp
+        })
 
 
 def __update_datapoint(datapoint, event):
