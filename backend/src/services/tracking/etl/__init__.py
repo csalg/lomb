@@ -48,23 +48,27 @@ def etl(user, language, lemma, message, timestamp):
     current_app.logger.info(message)
     query = {
         'user': user,
-        'language': language,
+        'source_language': language,
         'lemma': lemma
     }
 
     datapoint_record = datapoint_repository.find_one(query)
 
-    datapoint = datapoint_record['datapoint'] if datapoint_record else create_features()
+    features = datapoint_record['features'] if datapoint_record else create_features()
     score = datapoint_record['score'] if datapoint_record else create_score()
 
     # Perform update operations
-    update_features(datapoint, message, timestamp)
+    update_features(features, message, timestamp)
     update_score(score, message, timestamp)
 
-    update =  {"$set": {**query,
-                        'timestamp': timestamp,
-                        'datapoint': datapoint,
-                        'score': score}}
+    update = {"$set":{
+        'lemma': lemma,
+        'user': user,
+        'source_language': language,
+        'features': features,
+        'score': score,
+        'previous_timestamp': timestamp
+    }}
     datapoint_repository.update_one(query, update, upsert=True)
 
 

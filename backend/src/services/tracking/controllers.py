@@ -33,7 +33,8 @@ class Controllers:
             if 'BOOK_DRILL' in message:
                 self.__add_book_drill_log(user, message, lemma, source_language, support_language)
 
-            etl(user, source_language, lemma, message, int(time.time()))
+            if not self.__is_ignored(user, lemma):
+                etl(user, source_language, lemma, message, int(time.time()))
 
     def __add_revision_log(self, user, message, lemma, source_language, support_language):
         self.__log_repository.log(user, message, lemma, source_language)
