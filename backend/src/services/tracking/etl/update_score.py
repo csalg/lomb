@@ -5,20 +5,18 @@ from config import TIME_WINDOW, EMA_SMOOTHING_COEFFICIENT
 from services.tracking.constants import FAILURE_MESSAGES, SUCCESS_MESSAGES, VALID_MESSAGES
 
 
-def update_score(score, event):
-    current_timestamp = event['timestamp']
-    if are_we_in_a_new_time_window(score, current_timestamp):
+def update_score(score, message, timestamp):
+    if are_we_in_a_new_time_window(score, timestamp):
         __change_time_window(score)
         # current_app.logger.info('New time window')
 
-    message = event['message']
     if message in SUCCESS_MESSAGES:
         score['successes'] += 1
     elif message in FAILURE_MESSAGES:
         score['failures'] += 1
 
     score['previous_timestamp'] = score['last_timestamp']
-    score['last_timestamp'] = current_timestamp
+    score['last_timestamp'] = timestamp
     score['current_value'] = __calculate_score_value(score)
 
 

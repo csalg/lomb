@@ -29,10 +29,7 @@ def create_features():
 
 
 MAX_SECONDS = 24*30*24*60*60 # 2 years in seconds
-def update_features(datapoint, event, previous_timestamp):
-
-    current_message = event['message']
-    current_timestamp = event['timestamp']
+def update_features(datapoint, current_message, current_timestamp):
 
     if datapoint['FIRST_EXPOSURE_timestamp'] == 0:
         datapoint['FIRST_EXPOSURE_timestamp'] = current_timestamp

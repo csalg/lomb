@@ -39,43 +39,30 @@ logs_repository = db[VOCABULARY_LOGS_COLLECTION_NAME]
 #     return datapoints
 
 
-def etl(event):
+def etl(user, language, lemma, message, timestamp):
     """
     Gets called whenever an event is received.
     """
     query = {
-        'username': event['user'],
-        'language': event['source_language'],
-        'lemma': event['lemma']
+        'user': user,
+        'language': language,
+        'lemma': lemma
     }
 
     datapoint_record = datapoint_repository.find_one(query)
-    # current_app.logger.info(datapoint_record)
 
-    datapoint = datapoint_record['datapoint'] if datapoint_record else create_features().__next__()
-    # current_app.logger.info(datapoint)
+    datapoint = datapoint_record['datapoint'] if datapoint_record else create_features()
     score = datapoint_record['score'] if datapoint_record else create_score()
-    previous_timestamp = datapoint_record['timestamp'] if datapoint_record else event['timestamp']
-
-    # Take a snapshot if we are going to be changing time window
-    snapshot = None
-    if datapoint_record:
-        if are_we_in_a_new_time_window(score, event['timestamp']):
-            if datapoint_record['score']['current_value'] is not None:
-                snapshot = deepcopy(datapoint_record)
 
     # Perform update operations
-    update_features(datapoint, event, previous_timestamp)
-    update_score(score, event)
+    update_features(datapoint, message, timestamp)
+    update_score(score, message, timestamp)
 
     update =  {"$set": {**query,
-                        'timestamp': event['timestamp'],
+                        'timestamp': timestamp,
                         'datapoint': datapoint,
                         'score': score}}
     datapoint_repository.update_one(query, update, upsert=True)
-
-    # Return snapshot
-    return snapshot
 
 
 def etl_from_scratch():

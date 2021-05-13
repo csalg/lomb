@@ -1,8 +1,11 @@
+import time
+
 from flask import current_app
 
 from mq.signals import NewLemmaToLearnEvent
 from services.tracking.constants import VALID_MESSAGES, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_SCROLL, BOOK_DRILL_CLICK
 from services.tracking.db import LogRepository, IgnoreRepository, LearningRepository
+from services.tracking.etl import etl
 
 
 class Controllers:
@@ -29,6 +32,8 @@ class Controllers:
                 self.__add_revision_log(user, message, lemma, source_language, support_language)
             if 'BOOK_DRILL' in message:
                 self.__add_book_drill_log(user, message, lemma, source_language, support_language)
+
+            etl(user, source_language, lemma, message, int(time.time()))
 
     def __add_revision_log(self, user, message, lemma, source_language, support_language):
         self.__log_repository.log(user, message, lemma, source_language)
