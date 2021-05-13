@@ -139,7 +139,7 @@ def __remove_unnecessary_features(features):
     for key in keys:
         if ('last_seen' in key) \
                 or ('timestamp' in key)\
-                or ('previous_message' in key)\
+                or ('__previous' in key)\
                 or ('FIRST_EXPOSURE_timestamp' == key):
             features.pop(key)
 

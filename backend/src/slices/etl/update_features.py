@@ -38,9 +38,9 @@ def update_features(datapoint, event, previous_timestamp):
         datapoint['FIRST_EXPOSURE_timestamp'] = current_timestamp
     datapoint['FIRST_EXPOSURE_seconds'] = current_timestamp - datapoint['FIRST_EXPOSURE_timestamp']
 
-    if datapoint['previous_timestamp'] is not None:
+    if datapoint['__previous_timestamp'] is not None:
         datapoint['delta'] = current_timestamp - previous_timestamp
-    datapoint['previous_timestamp'] = current_timestamp
+    datapoint['__previous_timestamp'] = current_timestamp
 
     # Count current event
     datapoint[current_message+"_amount"] += 1
