@@ -50,7 +50,7 @@ const data = [
     },
     {
         command: 'ETL from scratch',
-        description: "Recalculate everything again from the logs.",
+        description: "Recalculate everything again from the logs. This also generates past datapoint dataset.",
         action: () => {
             AuthService
                 .jwt_get(ETL_FROM_SCRATCH_URL)
