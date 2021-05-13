@@ -118,6 +118,7 @@ def __wipe_and_persist_to_repo(datapoints):
             'score': score,
             'previous_timestamp': previous_timestamp
         })
+    datapoint_repository.insert_many(new_entries)
 
 
 def __update_datapoint(datapoint, event):
