@@ -6,6 +6,7 @@ from flask import current_app
 
 from config import SMART_FETCH_BATCH_SIZE
 from lib.time import now_timestamp
+from slices.probabilities import predict_scores_for_user
 from .data_processing.plotting import heatmap
 # from .data_processing.wrangling.DatasetFactory import DatasetFactory
 
@@ -110,6 +111,7 @@ class Controllers:
 
     def learning_lemmas_with_probability_smart_fetch(self, query: ReviseQueryDTO):
         lemmas = self.learning_lemmas(query.username, query.minimum_frequency)
+        probabilities = predict_scores_for_user(query.username)
         lemmas.sort(key=calculate_lemma_frequency, reverse=True)
         result = []
         for lemma in lemmas:

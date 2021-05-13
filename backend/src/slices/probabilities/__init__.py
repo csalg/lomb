@@ -1,7 +1,13 @@
+from os import path
+
 import numpy as np
+import pandas as pd
+from flask import current_app
 from sklearn.linear_model import LinearRegression
 import pickle
 
+from config import DATAPOINTS
+from lib.db import get_db
 
 MU_MAX = 10e10
 MU_MIN = 10e-10
@@ -14,10 +20,10 @@ class MTR:
         self.column_names = []
 
     def load(self):
-        with open('model.pkl', 'rb') as file:
+        with open('src/slices/probabilities/model.pkl', 'rb') as file:
             self.model = pickle.load(file)
 
-        with open('column_names.pkl', 'rb') as file:
+        with open('src/slices/probabilities/column_names.pkl', 'rb') as file:
             self.column_names = pickle.load(file)
 
     def predict_to_df(self, df):
@@ -51,5 +57,22 @@ class SimplifiedWickelgren:
 mtr = MTR()
 mtr.load()
 
+db = get_db()
+repo = db[DATAPOINTS]
+
 def predict_score(df):
     return mtr.predict_to_df(df)
+
+def predict_scores_for_user(username):
+    datapoints_cursor = repo.find({'user': username})
+    current_app.logger.info(datapoints_cursor.count())
+    datapoints = list(map(lambda entry: {'index': f"{entry['source_language']}_{entry['lemma']}", **(entry['features'])}, datapoints_cursor))
+    index_0 = datapoints[5]['index']
+    df = pd.DataFrame(datapoints)
+    df.set_index('index', inplace=True)
+    predict_score(df)
+    return df
+    # current_app.logger.info(df[['score_pred']])
+    # current_app.logger.info(df.loc[index_0,'score_pred'])
+
+    # create df with lang_lemma as index

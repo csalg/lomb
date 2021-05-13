@@ -10,6 +10,7 @@ from services.user.rest_api import user_blueprint
 from services.vocabulary.rest_api import vocabulary
 from slices.drill_from_book import drill_from_book_slice
 from services.tracking.etl import etl_from_scratch
+from slices.probabilities import predict_scores_for_user
 from slices.stats import stats
 
 app = Flask(__name__)
@@ -52,6 +53,12 @@ def stats_endpoint():
 @jwt_required
 def etl_from_scratch_endpoint():
     etl_from_scratch()
+    return 'ok'
+
+@app.route('/slices/predict_scores/<username>')
+# @jwt_required
+def predict_scores(username):
+    predict_scores_for_user(username)
     return 'ok'
 
 # @app.route('/slices/make_dataset')
