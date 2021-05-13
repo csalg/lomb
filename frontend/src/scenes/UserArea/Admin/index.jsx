@@ -50,7 +50,7 @@ const data = [
     },
     {
         command: 'ETL from scratch',
-        description: "Delete all datapoints and recalculate everything again from the logs.",
+        description: "Recalculate everything again from the logs.",
         action: () => {
             AuthService
                 .jwt_get(ETL_FROM_SCRATCH_URL)
@@ -65,15 +65,15 @@ const data = [
                 }).catch(error => toast(parseErrorMessage(error)))
         },
         last_performed: '2020/08/01',
-        Icon: DiffOutlined
-    },
-    {
-        command: 'Make dataset',
-        description: "Make dataset from scratch",
-        action: () => AuthService.jwt_get(MAKE_DATASET_URL),
-        last_performed: '2020/08/01',
         Icon: LineChartOutlined
     },
+    // {
+    //     command: 'Make dataset',
+    //     description: "Make dataset from scratch",
+    //     action: () => AuthService.jwt_get(MAKE_DATASET_URL),
+    //     last_performed: '2020/08/01',
+    //     Icon: LineChartOutlined
+    // },
 ];
 
 export default props => {

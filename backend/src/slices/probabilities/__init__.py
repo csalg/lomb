@@ -27,6 +27,7 @@ class MTR:
         df['score_pred'] = SimplifiedWickelgren.calculate_retention_rate(mu_pred, delta)
         return df
 
+
 class SimplifiedWickelgren:
 
     @staticmethod

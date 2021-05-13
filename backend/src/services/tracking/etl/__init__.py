@@ -16,25 +16,25 @@ datapoint_repository = db[DATAPOINTS]
 logs_repository = db[VOCABULARY_LOGS_COLLECTION_NAME]
 
 
-def etl_from_scratch(return_dataset = False):
-    datapoint_repository.delete_many({})
-    events = logs_repository.find({})
-    counter = 0
-    datapoints = []
-    for event in events:
-        if counter == 100000:
-            break
-        if 'source_language' not in event or 'timestamp' not in event:
-            continue
-        if return_dataset:
-            datapoint = etl(event)
-            if datapoint is not None:
-                datapoints.append(datapoint)
-        else:
-            etl(event)
-        counter += 1
-    # Upsert datapoints from event
-    return datapoints
+# def etl_from_scratch(return_dataset = False):
+#     datapoint_repository.delete_many({})
+#     events = logs_repository.find({})
+#     counter = 0
+#     datapoints = []
+#     for event in events:
+#         if counter == 100000:
+#             break
+#         if 'source_language' not in event or 'timestamp' not in event:
+#             continue
+#         if return_dataset:
+#             datapoint = etl(event)
+#             if datapoint is not None:
+#                 datapoints.append(datapoint)
+#         else:
+#             etl(event)
+#         counter += 1
+#     # Upsert datapoints from event
+#     return datapoints
 
 
 def etl(event):
@@ -77,9 +77,8 @@ def etl(event):
 
 
 
-def make_dataset():
+def etl_from_scratch():
     events = logs_repository.find({})
-    counter = 0
     datapoints = {}
     snapshots = []
     for event in events:
@@ -97,8 +96,6 @@ def make_dataset():
 
         if snapshot is not None:
             snapshots.append(snapshot)
-
-        counter += 1
 
     __persist_to_csv_in_static_folder(snapshots)
 
