@@ -1,3 +1,5 @@
+from flask import current_app
+
 from services.tracking.constants import VALID_MESSAGES, SUCCESS_MESSAGES, FAILURE_MESSAGES
 
 # Streak types

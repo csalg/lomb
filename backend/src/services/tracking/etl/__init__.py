@@ -6,6 +6,7 @@ import csv
 
 import os
 from flask import current_app, app
+from operator import itemgetter
 
 from config import DATAPOINTS, VOCABULARY_LOGS_COLLECTION_NAME
 from lib.db import get_db
@@ -43,6 +44,8 @@ def etl(user, language, lemma, message, timestamp):
     """
     Gets called whenever an event is received.
     """
+
+    current_app.logger.info(message)
     query = {
         'user': user,
         'language': language,
@@ -110,14 +113,15 @@ def __wipe_and_persist_to_repo(datapoints):
 
 def __update_datapoint(datapoint, event):
     features, score, previous_timestamp = datapoint
+    message, timestamp = itemgetter('message', 'timestamp')(event)
 
     snapshot = None
     if are_we_in_a_new_time_window(score, event['timestamp']):
         if (score['current_value'] is not None) and features['delta']:
             snapshot = deepcopy(features), deepcopy(score), deepcopy(previous_timestamp)
 
-    update_features(features, event, previous_timestamp)
-    update_score(score, event)
+    update_features(features, message, timestamp)
+    update_score(score, message, timestamp)
 
     datapoint = (features, score, previous_timestamp)
     return datapoint, snapshot
