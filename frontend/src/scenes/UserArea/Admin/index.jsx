@@ -54,6 +54,7 @@ const data = [
         action: () => {
             AuthService
                 .jwt_get(ETL_FROM_SCRATCH_URL)
+                .then(()=> toast('ETL from scratch completed'))
                 .catch(error => toast(parseErrorMessage(error)))
         },
         last_performed: '2020/08/01',
