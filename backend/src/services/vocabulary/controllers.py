@@ -124,7 +124,6 @@ class Controllers:
             if key in probabilities.index:
                 por = probabilities.loc[key,'score_pred']
                 elapsed = now - probabilities.loc[key,'last_timestamp']
-            # por = self.probability_of_recall(query.username, lemma['lemma'])
             elapsed_days = elapsed / (24*60*60)
 
             is_not_too_old = not query.maximum_days_elapsed or elapsed_days <= query.maximum_days_elapsed

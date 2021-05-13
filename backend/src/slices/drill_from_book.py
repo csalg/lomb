@@ -9,6 +9,7 @@ from config import MAXIMUM_EXAMPLES_PER_LEMMA, IGNORE_LEMMAS_COLLECTION_NAME, BO
 from lib.db import get_db
 from services.library.repositories import ChunksRepository, TextfileRepository
 from services.vocabulary.controllers import Controllers
+from slices.probabilities import predict_scores_for_user
 
 db = get_db()
 textfile_repository = TextfileRepository(db)
@@ -36,10 +37,7 @@ def drill_from_book_slice(username, textfile_id, maximum_por):
 
     # Find out all the frequencies, store them
     ignore_list = list(db[IGNORE_LEMMAS_COLLECTION_NAME].find({'user':username}))
-    current_app.logger.info(username)
-    current_app.logger.info(ignore_list)
     ignore_set = set(list(map(lambda record: record['key'], ignore_list)))
-    current_app.logger.info(ignore_set)
     lemmas: Dict[str, LemmaAndExamples] = {}
     for chunk in chunks:
         chunk = {
@@ -59,19 +57,18 @@ def drill_from_book_slice(username, textfile_id, maximum_por):
     lemmas_and_examples_sorted = sorted(lemmas.values(), key=lambda lemma_and_examples: lemma_and_examples.frequency,
                                         reverse=True)
 
-    # Store in mongodb
-    # db[BOOK_DRILLS_CACHE].insert_one({
-    #     'id': textfile_id,
-    #     'user': user,
-    #     'source_language': source_language,
-    #     'support_language': support_language,
-    #     'lemmas_and_examples': lemmas_and_examples_sorted,
-    # })
-
     # Go over the frequencies calculating the PoR
+    chunk = db[LIBRARY_CHUNKS_COLLECTION_NAME].find_one({'textfile_id': ObjectId(textfile_id)})
+    source_language, support_language = chunk['source_language'], chunk['support_language']
+    probabilities = predict_scores_for_user(username)
     result = []
     for lemma in lemmas_and_examples_sorted:
-        seconds_since_last_exposure, por = vocabulary_controllers.probability_of_recall(username, lemma.lemma)
+        # elapsed, por = vocabulary_controllers.probability_of_recall(username, lemma.lemma)
+        elapsed, por = 0, 0
+        key = f"{source_language}_{lemma.lemma}"
+        if key in probabilities.index:
+            por = probabilities.loc[key, 'score_pred']
+
         if maximum_por < por:
             continue
         result.append({'lemma': lemma.lemma, 'examples': lemma.examples, 'frequency': lemma.frequency,
@@ -79,8 +76,6 @@ def drill_from_book_slice(username, textfile_id, maximum_por):
         if len(result) == 200:
             break
 
-    chunk = db[LIBRARY_CHUNKS_COLLECTION_NAME].find_one({'textfile_id': ObjectId(textfile_id)})
-    source_language, support_language = chunk['source_language'], chunk['support_language']
     return {
         'source_language': source_language,
         'support_language': support_language,
