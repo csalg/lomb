@@ -9,7 +9,8 @@ for event_type in VALID_MESSAGES:
     datapoint[event_type + "_seconds"] = 0
     datapoint[event_type + "_amount"] = 0
     datapoint[event_type + "_last_seen"] = 0
-datapoint['FIRST_EXPOSURE'] = 0
+datapoint['FIRST_EXPOSURE_timestamp'] = 0
+datapoint['FIRST_EXPOSURE_seconds'] = 0
 datapoint['__previous_message'] = None
 datapoint['__first_timestamp_in_streak'] = None
 datapoint['ALL_longest_leading_recalls_seconds'] = 0
@@ -31,8 +32,9 @@ def update_features(datapoint, event, previous_timestamp):
     current_message = event['message']
     current_timestamp = event['timestamp']
 
-    if datapoint['FIRST_EXPOSURE'] == 0:
-        datapoint['FIRST_EXPOSURE'] = current_timestamp
+    if datapoint['FIRST_EXPOSURE_timestamp'] == 0:
+        datapoint['FIRST_EXPOSURE_timestamp'] = current_timestamp
+    datapoint['FIRST_EXPOSURE_seconds'] = current_timestamp - datapoint['FIRST_EXPOSURE_timestamp']
 
     # Count current event
     datapoint[current_message+"_amount"] += 1
@@ -49,6 +51,7 @@ def update_features(datapoint, event, previous_timestamp):
         datapoint['ALL_amount'] += datapoint[message+"_amount"]
 
     __calculate_streaks(current_message, current_timestamp, datapoint)
+
     # FUTURE Calculate log, inverse and log of inverse
 
 

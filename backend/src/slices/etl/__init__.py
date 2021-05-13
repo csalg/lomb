@@ -137,6 +137,9 @@ def __persist_to_csv_in_static_folder(snapshots):
 def __remove_unnecessary_features(features):
     keys = copy(list(features.keys()))
     for key in keys:
-        if ('last_seen' in key) or ('timestamp' in key) or ('previous_message' in key):
+        if ('last_seen' in key) \
+                or ('timestamp' in key)\
+                or ('previous_message' in key)\
+                or ('FIRST_EXPOSURE_timestamp' == key):
             features.pop(key)
 
