@@ -1,4 +1,4 @@
-from copy import deepcopy
+from copy import deepcopy, copy
 from io import StringIO, BytesIO
 
 import csv
@@ -83,8 +83,6 @@ def make_dataset():
     datapoints = {}
     snapshots = []
     for event in events:
-        # if counter == 100000:
-        #     break
         if 'source_language' not in event or 'timestamp' not in event:
             continue
 
@@ -124,6 +122,7 @@ def __persist_to_csv_in_static_folder(snapshots):
     dataset_arr = []
     for datapoint in snapshots:
         features, score, timestamp = datapoint
+        __remove_unnecessary_features(features)
         dataset_arr.append({**features, 'score': score['current_value']})
 
     if not os.path.exists('src/static'):
@@ -133,4 +132,11 @@ def __persist_to_csv_in_static_folder(snapshots):
         dict_writer = csv.DictWriter(file, dataset_arr[0].keys())
         dict_writer.writeheader()
         dict_writer.writerows(dataset_arr)
+
+
+def __remove_unnecessary_features(features):
+    keys = copy(list(features.keys()))
+    for key in keys:
+        if ('last_seen' in key) or ('timestamp' in key) or ('previous_message' in key):
+            features.pop(key)
 
