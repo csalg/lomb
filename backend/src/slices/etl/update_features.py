@@ -39,7 +39,7 @@ def update_features(datapoint, event, previous_timestamp):
     datapoint['FIRST_EXPOSURE_seconds'] = current_timestamp - datapoint['FIRST_EXPOSURE_timestamp']
 
     if datapoint['__previous_timestamp'] is not None:
-        datapoint['delta'] = current_timestamp - previous_timestamp
+        datapoint['delta'] = current_timestamp - datapoint['__previous_timestamp']
     datapoint['__previous_timestamp'] = current_timestamp
 
     # Count current event
