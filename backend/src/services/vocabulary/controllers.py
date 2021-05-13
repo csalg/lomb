@@ -113,11 +113,18 @@ class Controllers:
         lemmas = self.learning_lemmas(query.username, query.minimum_frequency)
         probabilities = predict_scores_for_user(query.username)
         lemmas.sort(key=calculate_lemma_frequency, reverse=True)
+        now = now_timestamp()
         result = []
         for lemma in lemmas:
             if len(result) == query.fetch_amount:
                 return result
-            elapsed, por = self.probability_of_recall(query.username, lemma['lemma'])
+            # elapsed, por = self.probability_of_recall(query.username, lemma['lemma'])
+            elapsed, por = 0, 0
+            key = f"{lemma['language']}_{lemma['lemma']}"
+            if key in probabilities.index:
+                por = probabilities.loc[key,'score_pred']
+                elapsed = now - probabilities.loc[key,'last_timestamp']
+            # por = self.probability_of_recall(query.username, lemma['lemma'])
             elapsed_days = elapsed / (24*60*60)
 
             is_not_too_old = not query.maximum_days_elapsed or elapsed_days <= query.maximum_days_elapsed
@@ -149,26 +156,27 @@ class Controllers:
             return lemmas
         return list(filter(is_lemma_too_old, lemmas))
 
-    def probability_of_recall(self, user,lemma):
-        lemma_log = self.repository.get_lemma_logs(user,lemma)
 
-        timestamp = 0
-        successes = 0
-        failures = 0
-        for event in lemma_log:
-            if event['timestamp'] > timestamp:
-                timestamp = event['timestamp']
-            if event['message'] in FAILURE_MESSAGES:
-                failures += 1
-            elif event['message'] in SUCCESS_MESSAGES:
-                successes += 1
-
-        elapsed =  now_timestamp() - timestamp
-
-        if not timestamp:
-            return elapsed, 0
-
-        return elapsed, probability_of_recall_leitner(elapsed, successes, failures)
+    # def probability_of_recall(self, user,lemma):
+    #     lemma_log = self.repository.get_lemma_logs(user,lemma)
+    #
+    #     timestamp = 0
+    #     successes = 0
+    #     failures = 0
+    #     for event in lemma_log:
+    #         if event['timestamp'] > timestamp:
+    #             timestamp = event['timestamp']
+    #         if event['message'] in FAILURE_MESSAGES:
+    #             failures += 1
+    #         elif event['message'] in SUCCESS_MESSAGES:
+    #             successes += 1
+    #
+    #     elapsed =  now_timestamp() - timestamp
+    #
+    #     if not timestamp:
+    #         return elapsed, 0
+    #
+    #     return elapsed, probability_of_recall_leitner(elapsed, successes, failures)
 
     def update_lemma_examples(self,*args, **kwargs):
         self.repository.update_lemma_examples(*args,**kwargs)

@@ -66,7 +66,7 @@ def predict_score(df):
 def predict_scores_for_user(username):
     datapoints_cursor = repo.find({'user': username})
     current_app.logger.info(datapoints_cursor.count())
-    datapoints = list(map(lambda entry: {'index': f"{entry['source_language']}_{entry['lemma']}", **(entry['features'])}, datapoints_cursor))
+    datapoints = list(map(lambda entry: {'index': f"{entry['source_language']}_{entry['lemma']}", **(entry['features']), 'last_timestamp': entry['previous_timestamp']}, datapoints_cursor))
     index_0 = datapoints[5]['index']
     df = pd.DataFrame(datapoints)
     df.set_index('index', inplace=True)
