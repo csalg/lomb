@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass, asdict
 from typing import List, Dict
 
@@ -68,6 +69,7 @@ def drill_from_book_slice(username, textfile_id, maximum_por):
         key = f"{source_language}_{lemma.lemma}"
         if key in probabilities.index:
             por = probabilities.loc[key, 'score_pred']
+        por = 0 if math.isnan(por) else por
 
         if maximum_por < por:
             continue
