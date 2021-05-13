@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from enforce_typing import enforce_types
 from flask import current_app
 
+from config import MAX_ELAPSED
 from lib.time import now_timestamp
 from slices.probabilities import predict_scores_for_user
 from .data_processing.plotting import heatmap
@@ -86,7 +87,7 @@ class Controllers:
         for lemma in lemmas:
             if len(result) == query.fetch_amount:
                 return result
-            elapsed, por = MAX, 0
+            elapsed, por = MAX_ELAPSED, 0
             key = f"{lemma['language']}_{lemma['lemma']}"
             if key in probabilities.index:
                 por = probabilities.loc[key,'score_pred']
