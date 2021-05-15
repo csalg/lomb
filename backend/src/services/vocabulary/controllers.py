@@ -91,7 +91,7 @@ class Controllers:
             key = f"{lemma['language']}_{lemma['lemma']}"
             if key in probabilities.index:
                 por = probabilities.loc[key,'score_pred']
-                elapsed = now - probabilities.loc[key,'last_timestamp']
+                elapsed = now - probabilities.loc[key,'timestamp']
             elapsed_days = elapsed / (24*60*60)
 
             is_not_too_old = not query.maximum_days_elapsed or elapsed_days <= query.maximum_days_elapsed

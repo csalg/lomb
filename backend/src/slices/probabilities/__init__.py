@@ -1,3 +1,4 @@
+import time
 from os import path
 
 import numpy as np
@@ -27,8 +28,9 @@ class MTR:
     def predict_to_df(self, df):
         X = df[self.column_names]
         X = engineer_features(X)
-        delta = df['delta']
+        now = int(time.time())
         mu_pred = self.model.predict(X)
+        delta = now - df['timestamp']
         df['score_pred'] = SimplifiedWickelgren.calculate_retention_rate(mu_pred, delta)
         return df
 
@@ -80,7 +82,7 @@ def predict_score(df):
 
 def predict_scores_for_user(username):
     datapoints_cursor = repo.find({'user': username})
-    datapoints = list(map(lambda entry: {'index': f"{entry['source_language']}_{entry['lemma']}", **(entry['features']), 'last_timestamp': entry['previous_timestamp']}, datapoints_cursor))
+    datapoints = list(map(lambda entry: {'index': f"{entry['source_language']}_{entry['lemma']}", **(entry['features']), 'timestamp': entry['timestamp']}, datapoints_cursor))
     df = pd.DataFrame(datapoints)
     df.set_index('index', inplace=True)
     predict_score(df)
