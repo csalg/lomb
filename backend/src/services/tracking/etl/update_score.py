@@ -27,7 +27,6 @@ def create_score():
         'current_value': None,
         'previous_value': None,
         'previous_timestamp': None,
-        'value': None,
         'last_timestamp': None
     }
 

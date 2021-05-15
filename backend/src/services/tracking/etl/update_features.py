@@ -15,7 +15,7 @@ for event_type in VALID_MESSAGES:
 datapoint['FIRST_EXPOSURE_timestamp'] = 0
 datapoint['FIRST_EXPOSURE_seconds'] = 0
 datapoint['__previous_message'] = None
-datapoint['__previous_timestamp'] = None
+datapoint['__timestamp'] = None
 datapoint['delta'] = None
 datapoint['__first_timestamp_in_streak'] = None
 datapoint['ALL_longest_leading_recalls_seconds'] = 0
@@ -32,14 +32,12 @@ def create_features():
 
 
 def update_features(datapoint, current_message, current_timestamp):
+    datapoint['__timestamp'] = current_timestamp
 
     if datapoint['FIRST_EXPOSURE_timestamp'] == 0:
         datapoint['FIRST_EXPOSURE_timestamp'] = current_timestamp
-    datapoint['FIRST_EXPOSURE_seconds'] = current_timestamp - datapoint['FIRST_EXPOSURE_timestamp']
 
-    if datapoint['__previous_timestamp'] is not None:
-        datapoint['delta'] = current_timestamp - datapoint['__previous_timestamp']
-    datapoint['__previous_timestamp'] = current_timestamp
+    datapoint['FIRST_EXPOSURE_seconds'] = current_timestamp - datapoint['FIRST_EXPOSURE_timestamp']
 
     # Count current event
     datapoint[current_message+"_amount"] += 1

@@ -5,6 +5,8 @@ from io import StringIO, BytesIO
 import csv
 
 import os
+
+from collections import namedtuple
 from flask import current_app, app
 from operator import itemgetter
 
@@ -49,73 +51,94 @@ def etl(user, language, lemma, message, timestamp):
     }}
     datapoint_repository.update_one(query, update, upsert=True)
 
+Interpretation = namedtuple('Interpretation', [
+    'features',
+    'previous_features',
+    'score',
+    'timestamp',
+    'user',
+    'lemma',
+    'source_language'
+])
 
 def etl_from_scratch():
     events = logs_repository.find({})
-    datapoints = {}
-    snapshots = []
+    interpretations= {}
+    datapoints = []
     for event in events:
         if 'source_language' not in event or 'timestamp' not in event:
             continue
 
-        lemma, user, language = event['lemma'], event['user'], event['source_language']
-        key = f"{lemma}_{user}_{language}"
-        if key in datapoints:
-            datapoint, _ = datapoints[key]
+        lemma, user, source_language = event['lemma'], event['user'], event['source_language']
+        key = f"{lemma}_{user}_{source_language}"
+        if key in interpretations:
+            interpretation = interpretations[key]
         else:
-            datapoint = (create_features(), create_score(), event['timestamp'])
+            interpretation = Interpretation(
+                features=create_features(),
+                previous_features=None,
+                score=create_score(),
+                timestamp=event['timestamp'],
+                user=user,
+                lemma=lemma,
+                source_language=source_language
+            )
 
-        datapoint, snapshot = __update_datapoint(datapoint, event)
-        datapoints[key] = datapoint, (lemma, user, language)
+        interpretation, datapoint = __update_interpretation(interpretation, event)
+        interpretations[key] = interpretation
 
-        if snapshot is not None:
-            snapshots.append(snapshot)
+        if datapoint is not None:
+            datapoints.append(datapoint)
 
-    __persist_to_csv_in_static_folder(snapshots)
-    __wipe_and_persist_to_repo(datapoints)
+    __persist_to_csv_in_static_folder(datapoints)
+    __wipe_and_persist_to_repo(interpretations.values())
 
 
-def __wipe_and_persist_to_repo(datapoints):
+def __wipe_and_persist_to_repo(interpretations):
     datapoint_repository.delete_many({})
-    new_entries = []
-    for _, datapoint in datapoints.items():
-        datapoint_, meta = datapoint
-        lemma, user, language = meta
-        features, score, previous_timestamp = datapoint_
-        new_entries.append({
-            'lemma': lemma,
-            'user': user,
-            'source_language': language,
-            'features': features,
-            'score': score,
-            'previous_timestamp': previous_timestamp
-        })
-    datapoint_repository.insert_many(new_entries)
+    datapoint_repository.insert_many(map(lambda interpretation : interpretation._asdict(), interpretations))
 
 
-def __update_datapoint(datapoint, event):
-    features, score, previous_timestamp = datapoint
-    message, timestamp = itemgetter('message', 'timestamp')(event)
+def __update_interpretation(interpretation, event):
+    features, score  = interpretation.features, interpretation.score
+    message, event_timestamp = itemgetter('message', 'timestamp')(event)
 
-    snapshot = None
-    if are_we_in_a_new_time_window(score, event['timestamp']):
-        if (score['current_value'] is not None) and features['delta']:
-            snapshot = deepcopy(features), deepcopy(score), deepcopy(previous_timestamp)
+    datapoint = None
+    previous_features = interpretation.previous_features
+    if are_we_in_a_new_time_window(score, event_timestamp):
+        if (score['current_value'] is not None):
+            if previous_features is not None:
+                timestamp_from_features = previous_features['__timestamp']
+                timestamp_from_score = score['last_timestamp']
+                delta = timestamp_from_score - timestamp_from_features
+                datapoint = deepcopy(interpretation.previous_features), deepcopy(score), delta
+            previous_features = deepcopy(features)
 
-    update_features(features, message, timestamp)
-    update_score(score, message, timestamp)
+    update_features(features, message, event_timestamp)
+    update_score(score, message, event_timestamp)
 
-    datapoint = (features, score, previous_timestamp)
-    return datapoint, snapshot
+    interpretation = Interpretation(
+        features=features,
+        previous_features=previous_features,
+        score=score,
+        timestamp=event_timestamp,
+        user=interpretation.user,
+        lemma=interpretation.lemma,
+        source_language=interpretation.source_language
+    )
+    return interpretation, datapoint
 
 
-def __persist_to_csv_in_static_folder(snapshots):
+def __persist_to_csv_in_static_folder(datapoints):
     dataset_arr = []
-    for datapoint in snapshots:
-        features, score, timestamp = datapoint
+    for datapoint in datapoints:
+        features, score, delta = datapoint
         if score['previous_value']:
             __remove_unnecessary_features(features)
-            dataset_arr.append({**features, 'score': score['current_value'], 'score_prev': score['previous_value']})
+            dataset_arr.append({**features,
+                                'score': score['current_value'],
+                                'score_prev': score['previous_value'],
+                                'delta': delta})
 
     if not os.path.exists('src/static'):
         os.mkdir('src/static')
