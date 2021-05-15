@@ -77,13 +77,9 @@ mtr.load()
 db = get_db()
 repo = db[DATAPOINTS]
 
-def predict_score(df):
-    return mtr.predict_to_df(df)
-
 def predict_scores_for_user(username):
     datapoints_cursor = repo.find({'user': username})
     datapoints = list(map(lambda entry: {'index': f"{entry['source_language']}_{entry['lemma']}", **(entry['features']), 'timestamp': entry['timestamp']}, datapoints_cursor))
     df = pd.DataFrame(datapoints)
     df.set_index('index', inplace=True)
-    predict_score(df)
-    return df
+    return mtr.predict_to_df(df)
