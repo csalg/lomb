@@ -106,8 +106,8 @@ def __update_interpretation(interpretation, event):
     datapoint = None
     previous_features = interpretation.previous_features
     if are_we_in_a_new_time_window(score, event_timestamp):
-        if (score['current_value'] is not None):
-            if previous_features is not None:
+        if (score['current_value'] is not None) and (previous_features is not None):
+            if previous_features['__timestamp'] is not None:
                 timestamp_from_features = previous_features['__timestamp']
                 timestamp_from_score = score['last_timestamp']
                 delta = timestamp_from_score - timestamp_from_features
