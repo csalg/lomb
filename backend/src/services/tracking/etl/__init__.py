@@ -18,28 +18,6 @@ datapoint_repository = db[DATAPOINTS]
 logs_repository = db[VOCABULARY_LOGS_COLLECTION_NAME]
 
 
-# def etl_from_scratch(return_dataset = False):
-#     datapoint_repository.delete_many({})
-#     datapoint_repository.delete_many({})
-#     events = logs_repository.find({})
-#     counter = 0
-#     datapoints = []
-#     for event in events:
-#         if counter == 100000:
-#             break
-#         if 'source_language' not in event or 'timestamp' not in event:
-#             continue
-#         if return_dataset:
-#             datapoint = etl(event)
-#             if datapoint is not None:
-#                 datapoints.append(datapoint)
-#         else:
-#             etl(event)
-#         counter += 1
-#     # Upsert datapoints from event
-#     return datapoints
-
-
 def etl(user, language, lemma, message, timestamp):
     """
     Gets called whenever an event is received.

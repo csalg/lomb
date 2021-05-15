@@ -6,7 +6,7 @@ from flask import current_app
 from sklearn.linear_model import LinearRegression
 import pickle
 
-from config import DATAPOINTS
+from config import DATAPOINTS, MAX_ELAPSED
 from lib.db import get_db
 
 MU_MAX = 10e10
@@ -26,6 +26,7 @@ class MTR:
 
     def predict_to_df(self, df):
         X = df[self.column_names]
+        X = engineer_features(X)
         delta = df['delta']
         mu_pred = self.model.predict(X)
         df['score_pred'] = SimplifiedWickelgren.calculate_retention_rate(mu_pred, delta)
@@ -50,6 +51,22 @@ class SimplifiedWickelgren:
     @staticmethod
     def get_name():
         return "SWP"
+
+
+def engineer_features(X):
+    for feature_name in X.columns:
+        if 'seconds' in feature_name:
+            mask = X[feature_name].where(X[feature_name]<MAX_ELAPSED)
+            inverse = np.clip(np.divide(1.0, mask), 10e-10, 10e-6)
+            log_inverse = np.log(inverse)
+            X[feature_name+"_inverse"] = np.nan_to_num(inverse)
+            X[feature_name+"_log_inverse"] = np.nan_to_num(log_inverse)
+            if 'FIRST_EXPOSURE' in feature_name:
+                continue
+            X.drop(feature_name, axis=1, inplace=True)
+        if 'amount' in feature_name:
+            X[feature_name+"_sqrt"] = np.sqrt(X[feature_name])
+    return X
 
 
 mtr = MTR()
