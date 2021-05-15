@@ -112,7 +112,7 @@ def __update_interpretation(interpretation, event):
                 timestamp_from_score = score['last_timestamp']
                 delta = timestamp_from_score - timestamp_from_features
                 datapoint = deepcopy(interpretation.previous_features), deepcopy(score), delta
-            previous_features = deepcopy(features)
+        previous_features = deepcopy(features)
 
     update_features(features, message, event_timestamp)
     update_score(score, message, event_timestamp)
