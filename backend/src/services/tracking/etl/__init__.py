@@ -111,7 +111,7 @@ def __update_interpretation(interpretation, event):
                 timestamp_from_features = previous_features['__timestamp']
                 timestamp_from_score = score['last_timestamp']
                 delta = timestamp_from_score - timestamp_from_features
-                datapoint = deepcopy(interpretation.previous_features), deepcopy(score), delta
+                datapoint = deepcopy(interpretation.previous_features), deepcopy(score), delta, f"{interpretation.user}_{interpretation.source_language}"
         previous_features = deepcopy(features)
 
     update_features(features, message, event_timestamp)
@@ -132,12 +132,13 @@ def __update_interpretation(interpretation, event):
 def __persist_to_csv_in_static_folder(datapoints):
     dataset_arr = []
     for datapoint in datapoints:
-        features, score, delta = datapoint
+        features, score, delta, user_lang = datapoint
         if score['previous_value']:
             __remove_unnecessary_features(features)
             dataset_arr.append({**features,
                                 'score': score['current_value'],
                                 'score_prev': score['previous_value'],
+                                'user_lang': user_lang,
                                 'delta': delta})
 
     if not os.path.exists('src/static'):
