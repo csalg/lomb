@@ -4,7 +4,7 @@ from typing import Iterable
 from flask import current_app
 
 from db import datapoint_collection, user_collection, chunks_collection
-from types import User, Datapoint
+from types_ import User, Datapoint
 
 
 def add_frequency_and_support_language_to_datapoints():

@@ -7,7 +7,7 @@ import tensorflow.keras as keras
 import pickle
 
 from config import MAX_ELAPSED
-from db import datapoints_collection
+from db import datapoint_collection
 
 MU_MAX = 10e10
 MU_MIN = 10e-10
@@ -25,7 +25,7 @@ class MTR:
         with open('src/slices/probabilities/column_names.pkl', 'rb') as file:
             self.column_names = pickle.load(file)
 
-        with open('src/slices/probabilities/column_names.pkl', 'rb') as file:
+        with open('src/slices/probabilities/scaler.pkl', 'rb') as file:
             self.scaler = pickle.load(file)
 
     def predict_to_df(self, df):
@@ -114,7 +114,254 @@ mtr.load()
 
 
 def predict_scores_for_user(username):
-    datapoints_cursor = datapoints_collection.find({'user': username})
+    datapoints_cursor = datapoint_collection.find({'user': username})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     datapoints = list(map(lambda entry: {'index': f"{entry['source_language']}_{entry['lemma']}", **(entry['features']), 'timestamp': entry['timestamp']}, datapoints_cursor))
     df = pd.DataFrame(datapoints)
     df.set_index('index', inplace=True)

@@ -6,7 +6,7 @@ import csv
 
 import os
 
-from db import namedtuple
+from collections import namedtuple
 from flask import current_app, app
 from operator import itemgetter
 
@@ -47,7 +47,7 @@ def etl(user, language, lemma, message, timestamp):
         'source_language': language,
         'features': features,
         'score': score,
-        'previous_timestamp': timestamp
+        'timestamp': timestamp
     }}
     datapoint_repository.update_one(query, update, upsert=True)
 
