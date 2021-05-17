@@ -1,4 +1,4 @@
-from collections import defaultdict
+from db import defaultdict
 
 import mongomock
 import pytest

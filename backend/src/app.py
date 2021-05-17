@@ -8,6 +8,7 @@ from services.library.controllers_rest_handlers import library_blueprint
 from services.tracking.rest_api import tracking
 from services.user.rest_api import user_blueprint
 from services.vocabulary.rest_api import vocabulary
+from slices.add_frequency_and_support_language_to_datapoints import add_frequency_and_support_language_to_datapoints
 from slices.drill_from_book import drill_from_book_slice
 from services.tracking.etl import etl_from_scratch
 from slices.probabilities import predict_scores_for_user
@@ -70,3 +71,8 @@ def predict_scores(username):
 def get_dataset():
     current_app.logger.info("YO!")
     return send_from_directory('static', 'data.csv')
+
+@app.route('/slices/add_frequency_and_support_language_to_datapoints')
+def add_frequency_and_support_language_to_datapoints_endpoint():
+    add_frequency_and_support_language_to_datapoints()
+    return 'ok'

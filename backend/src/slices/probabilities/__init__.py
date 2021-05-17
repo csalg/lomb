@@ -1,15 +1,13 @@
 import time
-from os import path
 
 import numpy as np
 import pandas as pd
-from flask import current_app
 from sklearn.linear_model import LinearRegression
 import tensorflow.keras as keras
 import pickle
 
-from config import DATAPOINTS, MAX_ELAPSED
-from lib.db import get_db
+from config import MAX_ELAPSED
+from db import datapoints_collection
 
 MU_MAX = 10e10
 MU_MIN = 10e-10
@@ -27,12 +25,16 @@ class MTR:
         with open('src/slices/probabilities/column_names.pkl', 'rb') as file:
             self.column_names = pickle.load(file)
 
+        with open('src/slices/probabilities/column_names.pkl', 'rb') as file:
+            self.scaler = pickle.load(file)
+
     def predict_to_df(self, df):
         X = df[self.column_names]
         X = engineer_features(X)
+        X_scaled = self.scaler.transform(X)
         now = int(time.time())
 
-        mu_pred_2d = np.clip(self.model.predict(X), MU_MIN, MU_MAX)
+        mu_pred_2d = np.clip(self.model.predict(X_scaled), MU_MIN, MU_MAX)
         mu_pred = mu_pred_2d.reshape(-1)
         delta = now - df['timestamp']
         df['score_pred'] = SimplifiedWickelgren.calculate_retention_rate(mu_pred, delta)
@@ -110,11 +112,9 @@ def engineer_features(X):
 mtr = MTR()
 mtr.load()
 
-db = get_db()
-repo = db[DATAPOINTS]
 
 def predict_scores_for_user(username):
-    datapoints_cursor = repo.find({'user': username})
+    datapoints_cursor = datapoints_collection.find({'user': username})
     datapoints = list(map(lambda entry: {'index': f"{entry['source_language']}_{entry['lemma']}", **(entry['features']), 'timestamp': entry['timestamp']}, datapoints_cursor))
     df = pd.DataFrame(datapoints)
     df.set_index('index', inplace=True)

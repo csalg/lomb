@@ -6,7 +6,7 @@ import csv
 
 import os
 
-from collections import namedtuple
+from db import namedtuple
 from flask import current_app, app
 from operator import itemgetter
 

@@ -12,7 +12,7 @@ class ChunksRepository(IChunksRepository):
         IChunksRepository.__init__(self)
         self._collection = db[LIBRARY_CHUNKS_COLLECTION_NAME]
 
-    def find_chunks(self, lemma, source_language, support_language, textfile_ids=None):
+    def find_chunks(self, lemma, source_language, support_language=None, textfile_ids=None):
         query = {'lemmas._id': lemma,
                  'source_language': source_language}
         if textfile_ids:
