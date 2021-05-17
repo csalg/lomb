@@ -15,7 +15,8 @@ import {
     PlayCircleOutlined,
     ReadOutlined,
     ReconciliationOutlined,
-    UploadOutlined
+    UploadOutlined,
+    CoffeeOutlined,
 } from "@ant-design/icons/lib/icons";
 import {Brain} from '@styled-icons/boxicons-regular/Brain'
 import Admin from './Admin'
@@ -146,7 +147,7 @@ const UserAreaContainer = ({match, history}) => (
                 <Menu.Item key="admin">
                     <AdminOnlyContainer>
                         <Link to={`${match.url}/admin`}>
-                            <ReconciliationOutlined
+                            <CoffeeOutlined
                                 style={{
                                     marginRight: '3px',
                                     position: 'relative',

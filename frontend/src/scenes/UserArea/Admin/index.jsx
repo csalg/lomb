@@ -2,15 +2,13 @@ import React from 'react'
 import {List, Avatar} from 'antd';
 import {
     SearchOutlined,
-    DiffOutlined,
-    LineChartOutlined,
-    DownloadOutlined
+    DotChartOutlined,
+    DownloadOutlined,
+    ExperimentOutlined
 } from '@ant-design/icons'
 import {
+    ADD_METADATA_URL,
     ETL_FROM_SCRATCH_URL, GET_DATASET_URL,
-    MAKE_DATASET_URL,
-    UPDATE_LEMMA_RANKS_URL,
-    UPDATE_TEXT_DIFFICULTIES
 } from "../../../endpoints";
 import AuthService from '../../../services/auth'
 import {toast} from "react-toastify";
@@ -58,15 +56,20 @@ const data = [
                 .catch(error => toast(parseErrorMessage(error)))
         },
         last_performed: '2020/08/01',
-        Icon: LineChartOutlined
+        Icon: DotChartOutlined
     },
-    // {
-    //     command: 'Make dataset',
-    //     description: "Make dataset from scratch",
-    //     action: () => AuthService.jwt_get(MAKE_DATASET_URL),
-    //     last_performed: '2020/08/01',
-    //     Icon: LineChartOutlined
-    // },
+    {
+        command: 'Add metadata to data interpretations.',
+        description: "Add support language and frequency to the datapoints table.",
+        action: () => {
+            AuthService
+                .jwt_get(ADD_METADATA_URL)
+                .then(()=> toast('ETL from scratch completed'))
+                .catch(error => toast(parseErrorMessage(error)))
+        },
+        last_performed: '2020/08/01',
+        Icon: ExperimentOutlined
+    },
 ];
 
 export default props => {

@@ -1,8 +1,6 @@
 # Adds frequencies and support language to datapoints.
 from typing import Iterable
 
-from flask import current_app
-
 from db import datapoint_collection, user_collection, chunks_collection
 from types_ import User, Datapoint
 
@@ -14,7 +12,7 @@ def add_frequency_and_support_language_to_datapoints():
     for datapoint in datapoints:
         if 'support_language' not in datapoint:
             username = datapoint['user']
-            user : User = user_collection.find({'_id': username})
+            user: User = user_collection.find({'_id': username})
             datapoint_collection.update_many({'user': username},
                                              {'$set':
                                                   {'support_language': user['known_languages'][0]}

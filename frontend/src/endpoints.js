@@ -25,5 +25,6 @@ export const INTERACTION_TRACKING_URL = API_URL+ '/tracking/'
 export const BOOK_DRILL_URL = textfileId => API_URL + "/slices/drill_book/" + textfileId
 export const STATS_URL = API_URL + "/slices/stats"
 export const ETL_FROM_SCRATCH_URL = API_URL + "/slices/etl_from_scratch"
+export const ADD_METADATA_URL = API_URL + "/slices/add_frequency_and_support_language_to_datapoints"
 export const MAKE_DATASET_URL = API_URL + "/slices/make_dataset"
 export const GET_DATASET_URL = API_URL + "/slices/data.csv"
