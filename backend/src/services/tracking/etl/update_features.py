@@ -70,7 +70,6 @@ def __calculate_streaks(current_message, current_timestamp, datapoint):
         if datapoint['ALL_longest_leading_recalls_seconds'] < datapoint['ALL_leading_recalls_seconds']:
             datapoint['ALL_longest_leading_recalls_seconds'] = datapoint['ALL_leading_recalls_seconds']
 
-
     elif current_streak == FAILURE and current_message in FAILURE_MESSAGES:
         datapoint['ALL_leading_failures_amount'] += 1
         datapoint['ALL_leading_failures_seconds'] = current_timestamp - datapoint['__first_timestamp_in_streak']

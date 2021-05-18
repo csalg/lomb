@@ -37,6 +37,7 @@ class MTR:
         mu_pred_2d = np.clip(self.model.predict(X_scaled), MU_MIN, MU_MAX)
         mu_pred = mu_pred_2d.reshape(-1)
         delta = now - df['timestamp']
+
         df['score_pred'] = SimplifiedWickelgren.calculate_retention_rate(mu_pred, delta)
 
         return df

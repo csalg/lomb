@@ -81,8 +81,20 @@ class Controllers:
     def learning_lemmas_with_probability_smart_fetch(self, query: ReviseQueryDTO):
         lemmas = self.learning_lemmas(query.username, query.minimum_frequency)
         probabilities = predict_scores_for_user(query.username)
-        lemmas.sort(key=calculate_lemma_frequency, reverse=True)
-        now = now_timestamp()
+        probabilities_filtered = probabilities.loc[probabilities['delta'] <= query.maximum_days_elapsed*24*60*60 & probabilities['score_pred'] <= query.maximum_por]
+        probabilities_filtered_sorted = probabilities_filtered.sort_values('frequency', ascending=False)
+        result = []
+        for i in range(min(len(probabilities), query.fetch_amount)):
+            row = probabilities_filtered_sorted[i]
+            lemma_key, por, = row['lemma'], row['score']
+
+            lemma['probability_of_recall'] = por
+
+            if len(result) == query.fetch_amount:
+                return result
+
+        # lemmas.sort(key=calculate_lemma_frequency, reverse=True)
+        # now = now_timestamp()
         result = []
         for lemma in lemmas:
             if len(result) == query.fetch_amount:

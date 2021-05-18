@@ -64,7 +64,7 @@ const data = [
         action: () => {
             AuthService
                 .jwt_get(ADD_METADATA_URL)
-                .then(()=> toast('ETL from scratch completed'))
+                .then(()=> toast('Metadata successfully generated'))
                 .catch(error => toast(parseErrorMessage(error)))
         },
         last_performed: '2020/08/01',
