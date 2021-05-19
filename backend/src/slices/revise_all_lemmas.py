@@ -11,7 +11,7 @@ from lib.db import get_db
 from lib.json import JSONEncoder
 from services.library.repositories import ChunksRepository
 from slices.probabilities import predict_scores_for_user
-from types_ import User, DataRow, RevisionItem, RevisionList, RevisionExample
+from types_ import User, DataRow, RevisionItem, RevisionItem, RevisionExample
 
 chunks_repo = ChunksRepository(get_db())
 
