@@ -36,6 +36,7 @@ VOCABULARY_LOGS_COLLECTION_NAME     = 'vocabulary_logs'
 IGNORE_LEMMAS_COLLECTION_NAME       = 'vocabulary_ignore'
 LEARNING_LEMMAS_COLLECTION_NAME     = 'learning_lemmas'
 LEARNING_LEMMAS_EXAMPLES_CACHE = 'lemmas__learning'
+EXAMPLES_CACHE = 'examples_cache'
 
 BOOK_DRILLS_CACHE = 'book_drills'
 

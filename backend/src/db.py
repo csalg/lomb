@@ -1,5 +1,5 @@
 from config import DATAPOINTS, USERS_COLLECTION_NAME, LIBRARY_CHUNKS_COLLECTION_NAME, USER_PREFERENCES_COLLECTION_NAME, \
-    IGNORE_LEMMAS_COLLECTION_NAME
+    IGNORE_LEMMAS_COLLECTION_NAME, EXAMPLES_CACHE
 from lib.db import get_db
 
 # Naming convention:
@@ -19,4 +19,5 @@ user_collection = db[USERS_COLLECTION_NAME]
 user_preferences_collection = db[USER_PREFERENCES_COLLECTION_NAME]
 chunks_collection = db[LIBRARY_CHUNKS_COLLECTION_NAME]
 ignored_set = db[IGNORE_LEMMAS_COLLECTION_NAME]
+examples_cache = db[EXAMPLES_CACHE]
 
