@@ -4,6 +4,7 @@ import {
     SearchOutlined,
     DotChartOutlined,
     DownloadOutlined,
+    DeleteOutlined,
     ExperimentOutlined
 } from '@ant-design/icons'
 import {
@@ -80,7 +81,7 @@ const data = [
                 .catch(error => toast(parseErrorMessage(error)))
         },
         last_performed: '2020/08/01',
-        Icon: ExperimentOutlined
+        Icon: DeleteOutlined
     },
 ];
 
