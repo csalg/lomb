@@ -6,7 +6,7 @@ from typing import List, Iterable
 from flask import request, current_app
 from flask_jwt_extended import get_jwt_identity
 
-from db import user_collection
+from db import user_collection, user_preferences_collection
 from lib.db import get_db
 from lib.json import JSONEncoder
 from services.library.repositories import ChunksRepository
@@ -47,7 +47,7 @@ def endpoint():
 
 def revise_all_lemmas(query: ReviseQueryDTO) -> List[RevisionItem]:
     # Get source and support language for the user.
-    user: User = user_collection.find_one({'_id': query.username})
+    user: User = user_preferences_collection.find_one({'_id': query.username})
     if not user:
         raise Exception(f"User '{query.username}' does not exist!")
     if not user['learning_languages'] or not user['known_languages']:

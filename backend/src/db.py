@@ -1,4 +1,4 @@
-from config import DATAPOINTS, USERS_COLLECTION_NAME, LIBRARY_CHUNKS_COLLECTION_NAME
+from config import DATAPOINTS, USERS_COLLECTION_NAME, LIBRARY_CHUNKS_COLLECTION_NAME, USER_PREFERENCES_COLLECTION_NAME
 from lib.db import get_db
 
 # Naming convention:
@@ -15,4 +15,5 @@ from lib.db import get_db
 db = get_db()
 datapoint_collection = db[DATAPOINTS]
 user_collection = db[USERS_COLLECTION_NAME]
+user_preferences_collection = db[USER_PREFERENCES_COLLECTION_NAME]
 chunks_collection = db[LIBRARY_CHUNKS_COLLECTION_NAME]
