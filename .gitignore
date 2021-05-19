@@ -1,0 +1,14 @@
+venv
+*_pycache_*
+.vscode
+notebooks
+*.pytest_cache*
+frontend/old_templates
+frontend/build
+env
+.env
+*api_endpoint.js
+notebooks/*
+docker-compose.jupyter.yml
+*.idea/*
+*.pyc

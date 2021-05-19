@@ -88,6 +88,7 @@ class Controllers:
             row = probabilities_filtered_sorted[i]
             lemma_key, por, = row['lemma'], row['score']
 
+
             lemma['probability_of_recall'] = por
 
             if len(result) == query.fetch_amount:

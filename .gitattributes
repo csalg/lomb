@@ -1,0 +1,2 @@
+docker-compose.yml merge=ours
+frontend/Dockerfile merge=ours

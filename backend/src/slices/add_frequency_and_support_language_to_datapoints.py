@@ -4,12 +4,12 @@ from typing import Iterable
 from flask import current_app
 
 from db import datapoint_collection, user_collection, chunks_collection
-from types_ import User, Datapoint
+from types_ import User, DataInterpretation
 
 
 def add_frequency_and_support_language_to_datapoints():
     # Get a cursor for all datapoints
-    datapoints: Iterable[Datapoint] = datapoint_collection.find({})
+    datapoints: Iterable[DataInterpretation] = datapoint_collection.find({})
     # Iterate over the datapoints
     for datapoint in datapoints:
         if 'support_language' not in datapoint:

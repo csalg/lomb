@@ -1,3 +1,4 @@
-from .Chunk import Chunk
-from .Datapoint import Datapoint
+from .Chunk import ChunkDTO
+from .DataInterpretation import *
 from .User import User
+from .RevisionList import *

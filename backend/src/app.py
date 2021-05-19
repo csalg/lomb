@@ -12,12 +12,12 @@ from slices.add_frequency_and_support_language_to_datapoints import add_frequenc
 from slices.drill_from_book import drill_from_book_slice
 from services.tracking.etl import etl_from_scratch
 from slices.probabilities import predict_scores_for_user
+from slices.revise_all_lemmas import endpoint
 from slices.stats import stats
 
 app = Flask(__name__)
 app.register_blueprint(tracking, url_prefix='/tracking')
 app.register_blueprint(library_blueprint, url_prefix='/library')
-app.register_blueprint(vocabulary, url_prefix='/vocabulary')
 app.register_blueprint(user_blueprint, url_prefix='/user')
 # CORS(app, resources={r'*': {'origins': ['http://localhost:3000', 'http://127.0.0.1:3000']}}, supports_credentials=True)
 CORS(app)
@@ -76,3 +76,8 @@ def get_dataset():
 def add_frequency_and_support_language_to_datapoints_endpoint():
     add_frequency_and_support_language_to_datapoints()
     return 'ok'
+
+@app.route('/vocabulary/revise', methods=['POST'])
+@jwt_required
+def revise():
+    return endpoint()
