@@ -19,12 +19,13 @@ export const UPDATE_TEXT_DIFFICULTIES = LIBRARY_ADMIN + '/update_text_difficulty
 
 export const VOCABULARY = API_URL + "/vocabulary"
 export const REVISE_URL = VOCABULARY + '/revise'
-export const DELETE_URL = VOCABULARY + '/delete_word'
+
 export const INTERACTION_TRACKING_URL = API_URL+ '/tracking/'
+export const DELETE_URL = INTERACTION_TRACKING_URL + 'delete_word'
 
 export const BOOK_DRILL_URL = textfileId => API_URL + "/slices/drill_book/" + textfileId
 export const STATS_URL = API_URL + "/slices/stats"
 export const ETL_FROM_SCRATCH_URL = API_URL + "/slices/etl_from_scratch"
 export const ADD_METADATA_URL = API_URL + "/slices/add_frequency_and_support_language_to_datapoints"
-export const REMOVE_IGNORED_DATASET = API_URL + "/slice/remove_ignored_datapoints"
+export const REMOVE_IGNORED_DATAPOINTS = API_URL + "/slices/remove_ignored_datapoints"
 export const GET_DATASET_URL = API_URL + "/slices/data.csv"

@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons'
 import {
     ADD_METADATA_URL,
-    ETL_FROM_SCRATCH_URL, GET_DATASET_URL,
+    ETL_FROM_SCRATCH_URL, GET_DATASET_URL, REMOVE_IGNORED_DATAPOINTS,
 } from "../../../endpoints";
 import AuthService from '../../../services/auth'
 import {toast} from "react-toastify";
@@ -75,8 +75,8 @@ const data = [
         description: "Deletes all datapoints in the ignored set.",
         action: () => {
             AuthService
-                .jwt_get(ADD_METADATA_URL)
-                .then(()=> toast('Metadata successfully generated'))
+                .jwt_get(REMOVE_IGNORED_DATAPOINTS)
+                .then(()=> toast('Removed ignored datapoints'))
                 .catch(error => toast(parseErrorMessage(error)))
         },
         last_performed: '2020/08/01',

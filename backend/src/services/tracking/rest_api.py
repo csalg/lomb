@@ -2,7 +2,7 @@ from operator import itemgetter
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request, current_app, jsonify
 from jsonschema import validate
 
 from lib.db import get_db
@@ -55,3 +55,15 @@ tracking_event_schema = {
     },
     "required": ["message", "lemmas", "source_language"]
 }
+@tracking.route('/delete_word', methods=['POST'])
+@jwt_required
+def delete():
+    try:
+        username = get_jwt_identity()['username']
+        lemma = request.json['lemma']
+        language = request.json['source_language']
+        StopLearningLemmaEvent(username, lemma, language).dispatch()
+        return f'Deleted {lemma}', 200
+    except Exception as e:
+        current_app.logger.info(str(e))
+        return jsonify({'error': str(e)}), 400

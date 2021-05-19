@@ -1,6 +1,4 @@
 from copy import deepcopy, copy
-from dataclasses import dataclass
-from io import StringIO, BytesIO
 
 import csv
 
@@ -11,12 +9,13 @@ from flask import current_app, app
 from operator import itemgetter
 
 from config import DATAPOINTS, VOCABULARY_LOGS_COLLECTION_NAME
+from db import datapoint_collection
 from lib.db import get_db
+from mq.signals import StopLearningLemmaEvent
 from .update_features import update_features, create_features
 from .update_score import update_score, create_score, are_we_in_a_new_time_window
 
 db = get_db()
-datapoint_repository = db[DATAPOINTS]
 logs_repository = db[VOCABULARY_LOGS_COLLECTION_NAME]
 
 
@@ -32,7 +31,7 @@ def etl(user, language, lemma, message, timestamp):
         'lemma': lemma
     }
 
-    datapoint_record = datapoint_repository.find_one(query)
+    datapoint_record = datapoint_collection.find_one(query)
 
     features = datapoint_record['features'] if datapoint_record else create_features()
     score = datapoint_record['score'] if datapoint_record else create_score()
@@ -49,7 +48,17 @@ def etl(user, language, lemma, message, timestamp):
         'score': score,
         'timestamp': timestamp
     }}
-    datapoint_repository.update_one(query, update, upsert=True)
+    datapoint_collection.update_one(query, update, upsert=True)
+
+
+def stop_learning_lemma_handler(stop_learning_lemma_event):
+    datapoint_collection.delete_many({
+        'lemma': stop_learning_lemma_event.lemma,
+        'user': stop_learning_lemma_event.username,
+        'source_language': stop_learning_lemma_event.source_language
+    })
+StopLearningLemmaEvent.addEventListener(stop_learning_lemma_handler)
+
 
 Interpretation = namedtuple('Interpretation', [
     'features',
@@ -95,8 +104,8 @@ def etl_from_scratch():
 
 
 def __wipe_and_persist_to_repo(interpretations):
-    datapoint_repository.delete_many({})
-    datapoint_repository.insert_many(map(lambda interpretation : interpretation._asdict(), interpretations))
+    datapoint_collection.delete_many({})
+    datapoint_collection.insert_many(map(lambda interpretation : interpretation._asdict(), interpretations))
 
 
 def __update_interpretation(interpretation, event):
