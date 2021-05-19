@@ -3,9 +3,9 @@ import sys
 sys.path.append('../src')
 from lib.db import get_db
 from config import USERS_COLLECTION_NAME
-from services.user.db import CredentialsRepository, UserPreferencesRepository
-from services.user.domain.credentials import CredentialsWriteModel
-from services.user.domain.user_preferences import UserPreferences
+from bounded_contexts.user.db import CredentialsRepository, UserPreferencesRepository
+from bounded_contexts.user.domain.credentials import CredentialsWriteModel
+from bounded_contexts.user.domain.user_preferences import UserPreferences
 
 db = get_db()
 users = db[USERS_COLLECTION_NAME].find({})

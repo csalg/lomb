@@ -1,16 +1,14 @@
 import math
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import List, Dict
 
 from bson import ObjectId
-from flask import current_app
 
-from config import MAXIMUM_EXAMPLES_PER_LEMMA, IGNORE_LEMMAS_COLLECTION_NAME, BOOK_DRILLS_CACHE, \
-    LIBRARY_CHUNKS_COLLECTION_NAME, MAX_ELAPSED
+from config import MAXIMUM_EXAMPLES_PER_LEMMA, IGNORE_LEMMAS_COLLECTION_NAME, LIBRARY_CHUNKS_COLLECTION_NAME, MAX_ELAPSED
 from lib.db import get_db
-from services.library.repositories import ChunksRepository, TextfileRepository
-from services.vocabulary.controllers import Controllers
-from slices.probabilities import predict_scores_for_user
+from bounded_contexts.library.repositories import ChunksRepository, TextfileRepository
+from bounded_contexts.vocabulary.controllers import Controllers
+from services.probabilities import predict_scores_for_user
 
 db = get_db()
 textfile_repository = TextfileRepository(db)

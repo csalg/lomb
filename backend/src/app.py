@@ -4,14 +4,13 @@ from flask import Flask, jsonify, request, send_from_directory, current_app
 from flask_cors import CORS
 
 from config import LANGUAGE_NAMES
-from services.library.controllers_rest_handlers import library_blueprint
-from services.tracking.rest_api import tracking
-from services.user.rest_api import user_blueprint
-from services.vocabulary.rest_api import vocabulary
+from bounded_contexts.library.controllers_rest_handlers import library_blueprint
+from slices.tracking.rest_api import tracking
+from bounded_contexts.user.rest_api import user_blueprint
 from slices.add_frequency_and_support_language_to_datapoints import add_frequency_and_support_language_to_datapoints
 from slices.drill_from_book import drill_from_book_slice
-from services.tracking.etl import etl_from_scratch
-from slices.probabilities import predict_scores_for_user
+from services.etl import etl_from_scratch
+from services.probabilities import predict_scores_for_user
 from slices.remove_ignored_datapoints import remove_ignored_datapoints
 from slices.revise_all_lemmas import endpoint
 from slices.stats import stats
