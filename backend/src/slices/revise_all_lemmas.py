@@ -45,9 +45,11 @@ def endpoint():
     return payload, 200
 
 
-def revise_all_lemmas(query: ReviseQueryDTO) -> RevisionList:
+def revise_all_lemmas(query: ReviseQueryDTO) -> List[RevisionItem]:
     # Get source and support language for the user.
     user: User = user_collection.find_one({'_id': query.username})
+    if not user:
+        raise Exception(f"User '{user}' does not exist!")
     if not user['learning_languages'] or not user['known_languages']:
         raise Exception(f'User {query.username} has no known or learning languages.')
     source_language, support_language = user['learning_languages'][0], user['known_languages'][0]
@@ -56,11 +58,6 @@ def revise_all_lemmas(query: ReviseQueryDTO) -> RevisionList:
     current_app.logger.info(probabilities)
     revision_items = make_revision_items(probabilities, source_language, support_language)
 
-    result : RevisionList = {
-        'source_language': source_language,
-        'support_language': support_language,
-        'lemmas': revision_items
-    }
     return revision_items
 
 
@@ -84,7 +81,6 @@ def make_revision_items(probabilities: Iterable[DataRow], source_language: str, 
         }
         revision_items.append(result)
 
-    # current_app.logger.info(revision_items)
     return revision_items
 
 

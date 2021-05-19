@@ -12,11 +12,8 @@ class RevisionExample(TypedDict):
 
 class RevisionItem(TypedDict):
     lemma: str
-    examples: List[RevisionExample]
-    frequency: int
-    probability_of_recall: float
-
-class RevisionList(TypedDict):
     source_language: str
     support_language: str
-    lemmas: List[RevisionItem]
+    probability_of_recall: float
+    frequency: int
+    examples: List[RevisionExample]
