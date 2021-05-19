@@ -65,11 +65,12 @@ def make_revision_items(probabilities: Iterable[DataRow], source_language: str, 
     revision_items: List[RevisionItem] = []
     for index, row in probabilities.iterrows():
         lemma, frequency, por = row['lemma'], row['frequency'], row['score_pred']
-        chunks, _ = chunks_repo.find_chunks(lemma, source_language, support_language=support_language)
-        examples: List[RevisionExample] = list(map(lambda chunk : {
-            'support_text': chunk['support_text'],
-            'text': chunk['text']
-        }, chunks))
+        # chunks, _ = chunks_repo.find_chunks(lemma, source_language, support_language=support_language)
+        # examples: List[RevisionExample] = list(map(lambda chunk : {
+        #     'support_text': chunk['support_text'],
+        #     'text': chunk['text']
+        # }, chunks))
+        examples = []
 
         result: RevisionItem = {
             'lemma': lemma,
