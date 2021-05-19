@@ -70,6 +70,18 @@ const data = [
         last_performed: '2020/08/01',
         Icon: ExperimentOutlined
     },
+    {
+        command: 'Remove ignored datapoints.',
+        description: "Deletes all datapoints in the ignored set.",
+        action: () => {
+            AuthService
+                .jwt_get(ADD_METADATA_URL)
+                .then(()=> toast('Metadata successfully generated'))
+                .catch(error => toast(parseErrorMessage(error)))
+        },
+        last_performed: '2020/08/01',
+        Icon: ExperimentOutlined
+    },
 ];
 
 export default props => {

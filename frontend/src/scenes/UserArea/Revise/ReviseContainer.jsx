@@ -92,7 +92,7 @@ class ReviseContainer extends React.Component {
             })
             const lemmasToExamples = {}
             for (let i = 0; i < lemmas.length; i++) {
-                const sourceLanguage = data.data[i].language
+                const sourceLanguage = data.data[i].source_language
                 const lemma = data.data[i].lemma
                 const examples = data.data[i].examples
                 if (!(sourceLanguage in lemmasToExamples)) {
@@ -121,7 +121,7 @@ class ReviseContainer extends React.Component {
                     currentLemma: newLemma,
                     sourceLanguage: newSourceLanguage,
                     currentExamples: this.state.lemmasToExamples[newSourceLanguage][newLemma],
-                    supportLanguage: this.state.lemmasToExamples[newSourceLanguage][newLemma][0]['support_language']
+                    supportLanguage: this.state.lemmasToExamples[newSourceLanguage][newLemma] ? this.state.lemmasToExamples[newSourceLanguage][newLemma]['support_language'] : 'en'
                 })
             })
         )

@@ -12,6 +12,7 @@ from slices.add_frequency_and_support_language_to_datapoints import add_frequenc
 from slices.drill_from_book import drill_from_book_slice
 from services.tracking.etl import etl_from_scratch
 from slices.probabilities import predict_scores_for_user
+from slices.remove_ignored_datapoints import remove_ignored_datapoints
 from slices.revise_all_lemmas import endpoint
 from slices.stats import stats
 
@@ -81,3 +82,8 @@ def add_frequency_and_support_language_to_datapoints_endpoint():
 @jwt_required
 def revise():
     return endpoint()
+
+@app.route('/slices/remove_ignored_datapoints')
+def remove_ignored_datapoints_endpoint():
+    remove_ignored_datapoints()
+    return 'ok'
