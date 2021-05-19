@@ -3,14 +3,15 @@ from dataclasses import dataclass
 from enforce_typing import enforce_types
 from typing import List, Iterable
 
-from flask import request
+from flask import request, current_app
 from flask_jwt_extended import get_jwt_identity
 
 from db import user_collection
 from lib.db import get_db
+from lib.json import JSONEncoder
 from services.library.repositories import ChunksRepository
 from slices.probabilities import predict_scores_for_user
-from types_ import User, DataRow, RevisionItem, RevisionList
+from types_ import User, DataRow, RevisionItem, RevisionList, RevisionExample
 
 chunks_repo = ChunksRepository(get_db())
 
@@ -39,7 +40,9 @@ def endpoint():
         maximum_days_elapsed = request.json['maximum_days_elapsed'],
         fetch_amount = request.json['fetch_amount'],
     )
-    return revise_all_lemmas(query)
+    result = revise_all_lemmas(query)
+    payload = JSONEncoder().encode(list(result))
+    return payload, 200
 
 
 def revise_all_lemmas(query: ReviseQueryDTO) -> RevisionList:
@@ -50,28 +53,38 @@ def revise_all_lemmas(query: ReviseQueryDTO) -> RevisionList:
     source_language, support_language = user['learning_languages'][0], user['known_languages'][0]
 
     probabilities = process_query(query)
-    revision_items = make_revision_items(probabilities, source_language)
+    current_app.logger.info(probabilities)
+    revision_items = make_revision_items(probabilities, source_language, support_language)
 
     result : RevisionList = {
         'source_language': source_language,
         'support_language': support_language,
-        'items': revision_items
+        'lemmas': revision_items
     }
-    return result
+    return revision_items
 
 
-def make_revision_items(probabilities: Iterable[DataRow], source_language: str):
+def make_revision_items(probabilities: Iterable[DataRow], source_language: str, support_language: str):
     revision_items: List[RevisionItem] = []
-    for row in probabilities:
+    for index, row in probabilities.iterrows():
         lemma, frequency, por = row['lemma'], row['frequency'], row['score_pred']
-        examples = chunks_repo.find_chunks(lemma, source_language)
+        chunks, _ = chunks_repo.find_chunks(lemma, source_language, support_language=support_language)
+        examples: List[RevisionExample] = list(map(lambda chunk : {
+            'support_text': chunk['support_text'],
+            'text': chunk['text']
+        }, chunks))
+
         result: RevisionItem = {
             'lemma': lemma,
             'frequency': frequency,
             'probability_of_recall': por,
-            'examples': examples
+            'examples': examples,
+            'source_language': source_language,
+            'support_language': support_language
         }
         revision_items.append(result)
+
+    # current_app.logger.info(revision_items)
     return revision_items
 
 
@@ -81,10 +94,9 @@ def process_query(query):
     not_too_easy = probabilities['score_pred'] <= query.maximum_por
     not_too_old = probabilities['delta'] <= query.maximum_days_elapsed * 24 * 60 * 60
 
-    if (query.maximum_days_elapsed != 0):
+    if (query.maximum_days_elapsed == 0):
         probabilities_filtered = probabilities.loc[not_too_easy]
     else:
         probabilities_filtered = probabilities.loc[not_too_easy & not_too_old]
 
-    probabilities_filtered_sorted = probabilities_filtered.sort_values('frequency', ascending=False)
-    return probabilities_filtered_sorted.loc[0:query.fetch_amount]
+    return probabilities_filtered.nlargest(query.fetch_amount, 'frequency')

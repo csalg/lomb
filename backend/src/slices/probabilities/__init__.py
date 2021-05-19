@@ -2,12 +2,15 @@ import time
 
 import numpy as np
 import pandas as pd
+from flask import current_app
 from sklearn.linear_model import LinearRegression
 import tensorflow.keras as keras
 import pickle
 
 from config import MAX_ELAPSED
 from db import datapoint_collection
+
+pd.options.mode.chained_assignment = None  # default='warn'
 
 MU_MAX = 10e10
 MU_MIN = 10e-10
@@ -29,8 +32,8 @@ class MTR:
             self.scaler = pickle.load(file)
 
     def predict_to_df(self, df):
-        X = df[self.column_names]
-        X = engineer_features(X)
+        X_ = df[self.column_names]
+        X = engineer_features(X_)
         X_scaled = self.scaler.transform(X)
         now = int(time.time())
 
@@ -91,20 +94,20 @@ def engineer_features(X):
             mask = X[feature_name].where((0 < X[feature_name]) & (X[feature_name] < MAX_ELAPSED))
 
             sqrt = np.sqrt(mask)
-            X[feature_name + "_sqrt"] = np.nan_to_num(sqrt)
+            X.loc[:,feature_name + "_sqrt"] = np.nan_to_num(sqrt)
 
             inverse = np.clip(np.divide(1.0, mask), 10e-10, 10e-6)
-            X[feature_name + "_inverse"] = np.nan_to_num(inverse)
+            X.loc[:,feature_name + "_inverse"] = np.nan_to_num(inverse)
 
             log_inverse = np.sqrt(inverse)
-            X[feature_name + "_sqrt_inverse"] = np.nan_to_num(log_inverse)
+            X.loc[:,feature_name + "_sqrt_inverse"] = np.nan_to_num(log_inverse)
 
             if 'FIRST_EXPOSURE' in feature_name:
                 continue
 
             X.drop(feature_name, axis=1, inplace=True)
         if 'amount' in feature_name:
-            X[feature_name + "_sqrt"] = np.sqrt(X[feature_name])
+            X.loc[:,feature_name + "_sqrt"] = np.sqrt(X[feature_name])
             X.drop(feature_name, axis=1, inplace=True)
 
     return X
@@ -116,6 +119,18 @@ mtr.load()
 
 def predict_scores_for_user(username):
     datapoints_cursor = datapoint_collection.find({'user': username})
+    datapoints = list(map(lambda entry: {
+        'index': f"{entry['source_language']}_{entry['lemma']}",
+        'lemma': entry['lemma'],
+        'frequency': entry['frequency'] if 'frequency' in entry else 0,
+        **(entry['features']),
+        'timestamp': entry['timestamp']},
+                          datapoints_cursor))
+    df = pd.DataFrame(datapoints)
+    df.set_index('index', inplace=True)
+    current_app.logger.info(df.head())
+    return mtr.predict_to_df(df)
+
 
 
 

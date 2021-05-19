@@ -85,7 +85,7 @@ class ReviseContainer extends React.Component {
                 }
                 return {
                     _id: record.lemma,
-                    sourceLanguage: record.language,
+                    sourceLanguage: record.source_language,
                     frequency: frequency,
                     probability: record.probability_of_recall,
                 }

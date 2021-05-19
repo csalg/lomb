@@ -63,7 +63,6 @@ export default class Lemmas extends React.Component {
     }
 
     clickCallback(target, lemma, sourceLanguage) {
-        console.log(`clickCallback: ${target}, ${lemma}, ${sourceLanguage}`)
         if (!this.__isLemmaSeen(target)) {
             target.classList.add('looked-up');
             AuthService
@@ -76,7 +75,6 @@ export default class Lemmas extends React.Component {
     }
 
     __lemma_was_clicked_message(lemma, sourceLanguage) {
-        console.log(lemma)
         return {
             message: this.props.clickEventType,
             lemmas: new Array(lemma,),
@@ -136,8 +134,6 @@ class Lemma extends React.Component {
 
     render() {
         const {_id: lemma_, sourceLanguage, frequency, probability} = this.props.row
-        console.log(`rendering lemma: ${lemma_}`)
-        console.log(this.props.row)
         if (this.state.isVisible) {
             return (
                 <tr
