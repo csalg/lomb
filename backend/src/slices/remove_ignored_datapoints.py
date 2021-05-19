@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("..")
-from db import ignored_set, datapoint_collection
+from db.collections import ignored_set, datapoint_collection
 from types_.IgnoredLemma import IgnoredLemma
 
 

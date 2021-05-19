@@ -8,7 +8,7 @@ import tensorflow.keras as keras
 import pickle
 
 from config import MAX_ELAPSED
-from db import datapoint_collection
+from db.collections import datapoint_collection
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -21,14 +21,12 @@ class MTR:
         self.column_names = []
 
     def load(self):
-        # with open('src/slices/probabilities/model.pkl', 'rb') as file:
-        #     self.model = pickle.load(file)
-        self.model = keras.models.load_model('src/slices/probabilities/keras_model')
+        self.model = keras.models.load_model('src/services/probabilities/keras_model')
 
-        with open('src/slices/probabilities/column_names.pkl', 'rb') as file:
+        with open('src/services/probabilities/column_names.pkl', 'rb') as file:
             self.column_names = pickle.load(file)
 
-        with open('src/slices/probabilities/scaler.pkl', 'rb') as file:
+        with open('src/services/probabilities/scaler.pkl', 'rb') as file:
             self.scaler = pickle.load(file)
 
     def predict_to_df(self, df):
@@ -128,7 +126,6 @@ def predict_scores_for_user(username):
                           datapoints_cursor))
     df = pd.DataFrame(datapoints)
     df.set_index('index', inplace=True)
-    current_app.logger.info(df.head())
     return mtr.predict_to_df(df)
 
 

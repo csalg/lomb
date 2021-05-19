@@ -3,7 +3,7 @@ from typing import Iterable
 
 from flask import current_app
 
-from db import datapoint_collection, user_collection, chunks_collection
+from db.collections import datapoint_collection, user_collection, chunks_collection
 from types_ import User, DataInterpretation
 
 
