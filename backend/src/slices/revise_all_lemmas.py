@@ -49,7 +49,7 @@ def revise_all_lemmas(query: ReviseQueryDTO) -> List[RevisionItem]:
     # Get source and support language for the user.
     user: User = user_collection.find_one({'_id': query.username})
     if not user:
-        raise Exception(f"User '{user}' does not exist!")
+        raise Exception(f"User '{query.username}' does not exist!")
     if not user['learning_languages'] or not user['known_languages']:
         raise Exception(f'User {query.username} has no known or learning languages.')
     source_language, support_language = user['learning_languages'][0], user['known_languages'][0]
