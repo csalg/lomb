@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append("..")
 from db import ignored_set, datapoint_collection
 from types_.IgnoredLemma import IgnoredLemma
 
@@ -10,3 +13,6 @@ def remove_ignored_datapoints():
             'user': ignored_lemma['user'],
             'source_language': ignored_lemma['source_language']
         })
+
+if __name__ == '__main__':
+    remove_ignored_datapoints()
