@@ -1,6 +1,6 @@
 import sys
 
-from slices.revise_all_lemmas import chunks_repo
+from .revise_all_lemmas import chunks_repo
 
 sys.path.append("..")
 
