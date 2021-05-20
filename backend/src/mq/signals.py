@@ -23,7 +23,7 @@ class Event:
 
 @enforce_types
 @dataclass
-class NewLemmaToLearnEvent(Event):
+class LemmaShouldBeLearntEvent(Event):
     signal: ClassVar[any] = signals.signal('new_lemma_to_learn_was_added')
     user: str
     lemma: str

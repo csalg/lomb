@@ -4,17 +4,17 @@ from jsonschema import validate
 
 
 from lib.db import get_db
-from mq.signals import NewLemmaToLearnEvent
+from mq.signals import LemmaShouldBeLearntEvent
 from config import UPLOADS_FOLDER
 from lib.json import JSONEncoder
 from bounded_contexts.library.controllers import Controllers, AddTextMetadataDTO, create_controllers_with_mongo_repositories
-from bounded_contexts.library.domain.entities import UserCredentials
-from bounded_contexts.library.event_handlers import new_lemma_was_added_handler
+# from bounded_contexts.library.domain.entities import UserCredentials
+# from bounded_contexts.library.event_handlers import new_lemma_was_added_handler
 import bounded_contexts.library.controllers_rest_lib as lib
 
 library_blueprint = Blueprint('library', __name__, template_folder='templates')
 # new_lemma_to_learn_was_added.connect(new_lemma_was_added_handler)
-NewLemmaToLearnEvent.addEventListener(new_lemma_was_added_handler)
+# LemmaShouldBeLearnt.addEventListener(new_lemma_was_added_handler)
 
 db = get_db()
 controllers = create_controllers_with_mongo_repositories(db)

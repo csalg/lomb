@@ -7,7 +7,7 @@ from config import LANGUAGE_NAMES
 from bounded_contexts.library.controllers_rest_handlers import library_blueprint
 from slices.tracking.rest_api import tracking
 from bounded_contexts.user.rest_api import user_blueprint
-from slices.caching import add_frequency_and_support_language_to_datapoints
+from slices.caching import ensure_datapoints_have_frequency_and_languages
 from slices.drill_from_book import drill_from_book_slice
 from services.etl import etl_from_scratch
 from services.probabilities import predict_scores_for_user
@@ -74,7 +74,7 @@ def get_dataset():
 
 @app.route('/slices/add_frequency_and_support_language_to_datapoints')
 def add_frequency_and_support_language_to_datapoints_endpoint():
-    add_frequency_and_support_language_to_datapoints()
+    ensure_datapoints_have_frequency_and_languages()
     return 'ok'
 
 @app.route('/vocabulary/revise', methods=['POST'])

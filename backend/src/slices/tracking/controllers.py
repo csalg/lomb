@@ -2,7 +2,7 @@ import time
 
 from flask import current_app
 
-from mq.signals import NewLemmaToLearnEvent
+from mq.signals import LemmaShouldBeLearntEvent
 from types_.constants import VALID_MESSAGES, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_CLICK, \
     VIDEO__TRANSLATION_WAS_REVEALED
 from db.tracking import LogCollection, IgnoreSet, LearningSet
@@ -64,10 +64,10 @@ class Controllers:
     def __learn(self, user, lemma, source_language, support_language):
         self.__ignore_repository.delete(user, lemma, source_language)
         self.__learning_repository.add(user, lemma, source_language)
-        self.__publish_new_learning_word(user, lemma, source_language, support_language)
+        self.__emit_lemma_should_be_learnt_event(user, lemma, source_language, support_language)
 
-    def __publish_new_learning_word(self, user, lemma, source_language, support_language):
-        NewLemmaToLearnEvent(user, lemma, source_language, support_language).dispatch()
+    def __emit_lemma_should_be_learnt_event(self, user, lemma, source_language, support_language):
+        LemmaShouldBeLearntEvent(user, lemma, source_language, support_language).dispatch()
 
     def __is_learning(self, user, lemma):
         return self.__learning_repository.contains(user, lemma)
