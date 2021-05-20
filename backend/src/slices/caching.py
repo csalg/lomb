@@ -1,9 +1,9 @@
 import sys
 
+sys.path.append("..")
 from bounded_contexts.library.repositories import ChunksRepository
 from lib.db import get_db
 
-sys.path.append("..")
 
 from typing import Iterable, List
 from operator import itemgetter
