@@ -48,7 +48,7 @@ def ensure_examples_cache_is_consistent_with_learning_set():
     for learning_lemma in learning_set.find():
         if 'key' not in learning_lemma or 'source_language' not in learning_lemma:
             continue
-        source_language, lemma, user = itemgetter('source_language', 'lemma', 'user')(learning_lemma)
+        source_language, lemma, user = itemgetter('source_language', 'key', 'user')(learning_lemma)
 
         if user not in user_to_support_language:
             user_to_support_language[user] = users_collection.find_support_language_for_user(user)
