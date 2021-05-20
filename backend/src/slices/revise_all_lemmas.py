@@ -12,6 +12,7 @@ from lib.json import JSONEncoder
 from bounded_contexts.library.repositories import ChunksRepository
 from mq.signals import LemmaExamplesWereFoundEvent
 from services.probabilities import predict_scores_for_user
+from slices.caching import get_examples
 from types_ import User, DataRow, RevisionItem, RevisionExample, CachedExamples
 
 chunks_repo = ChunksRepository(get_db())
@@ -80,8 +81,7 @@ def __make_revision_items(probabilities: Iterable[DataRow], source_language: str
     revision_items: List[RevisionItem] = []
     for index, row in probabilities.iterrows():
         lemma, frequency, por = row['lemma'], row['frequency'], row['score_pred']
-        examples = __get_examples(source_language, support_language, lemma)
-        examples = []
+        examples = get_examples(source_language, support_language, lemma)
 
         result: RevisionItem = {
             'lemma': lemma,
