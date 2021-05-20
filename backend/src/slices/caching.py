@@ -1,4 +1,8 @@
 import sys
+
+from bounded_contexts.library.repositories import ChunksRepository
+from lib.db import get_db
+
 sys.path.append("..")
 
 from typing import Iterable, List
@@ -9,7 +13,9 @@ from db.collections import datapoint_collection, chunks_collection, examples_cac
 import db.users as users_collection
 from mq.signals import LemmaShouldBeLearntEvent
 from types_ import DataInterpretation, CachedExamples, RevisionExample
-from slices.revise_all_lemmas import chunks_repo
+
+
+chunks_repo = ChunksRepository(get_db())
 
 
 def ensure_datapoints_have_frequency_and_languages():
