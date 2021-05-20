@@ -1,7 +1,4 @@
 import sys
-
-from .revise_all_lemmas import chunks_repo
-
 sys.path.append("..")
 
 from typing import Iterable, List
@@ -12,6 +9,7 @@ from db.collections import datapoint_collection, chunks_collection, examples_cac
 import db.users as users_collection
 from mq.signals import LemmaShouldBeLearntEvent
 from types_ import DataInterpretation, CachedExamples, RevisionExample
+from slices.revise_all_lemmas import chunks_repo
 
 
 def ensure_datapoints_have_frequency_and_languages():
