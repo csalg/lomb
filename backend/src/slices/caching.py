@@ -1,9 +1,5 @@
 import sys
-
 sys.path.append("..")
-from bounded_contexts.library.repositories import ChunksRepository
-from lib.db import get_db
-
 
 from typing import Iterable, List
 from operator import itemgetter
@@ -13,7 +9,8 @@ from db.collections import datapoint_collection, chunks_collection, examples_cac
 import db.users as users_collection
 from mq.signals import LemmaShouldBeLearntEvent
 from types_ import DataInterpretation, CachedExamples, RevisionExample
-
+from bounded_contexts.library.repositories import ChunksRepository
+from lib.db import get_db
 
 chunks_repo = ChunksRepository(get_db())
 
@@ -74,13 +71,16 @@ def get_examples(source_language, support_language, lemma) -> List[RevisionExamp
     if examples_from_cache:
         return examples_from_cache['examples']
 
-    chunks, _ = chunks_repo.find_chunks(lemma, source_language, support_language=support_language)
-    examples: List[RevisionExample] = list(map(chunkDTOtoRevisionExample, chunks))
-    entry: CachedExamples = {
-        '_id': toCachedExamplesId(source_language, support_language, lemma),
-        'examples': examples
-    }
-    examples_cache.insert_one(entry)
+    try:
+        chunks, _ = chunks_repo.find_chunks(lemma, source_language, support_language=support_language)
+        examples: List[RevisionExample] = list(map(chunkDTOtoRevisionExample, chunks))
+        entry: CachedExamples = {
+            '_id': toCachedExamplesId(source_language, support_language, lemma),
+            'examples': examples
+        }
+        examples_cache.insert_one(entry)
+    except:
+        return []
     return examples
 
 
