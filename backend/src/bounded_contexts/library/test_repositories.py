@@ -4,7 +4,7 @@ import mongomock
 import pytest
 from bson import ObjectId
 
-from config import LIBRARY_CHUNKS_COLLECTION_NAME
+from config import CHUNKS_COLLECTION
 from bounded_contexts.library.domain.entities import Chunk, Textfile
 from bounded_contexts.library.repositories import ChunksRepository, TextfileRepository
 
@@ -25,7 +25,7 @@ def test_ChunksRepository(db):
 
     # add
     repository.add(chunks)
-    assert len(list(db[LIBRARY_CHUNKS_COLLECTION_NAME].find({}))) == 3
+    assert len(list(db[CHUNKS_COLLECTION].find({}))) == 3
 
     # find_chunks
     assert len(list(repository.find_chunks('a', 'en', 'es'))) == 1

@@ -3,11 +3,11 @@ from abc import abstractmethod, ABC
 
 from flask import current_app
 
-from config import VOCABULARY_LOGS_COLLECTION_NAME, IGNORE_LEMMAS_COLLECTION_NAME, LEARNING_LEMMAS_COLLECTION_NAME
+from config import TRACKING_LOGS, IGNORED_LEMMAS_SET, LEARNING_LEMMAS_SET
 
 class LogCollection:
     def __init__(self, db):
-        self._collection               = db[VOCABULARY_LOGS_COLLECTION_NAME]
+        self._collection               = db[TRACKING_LOGS]
         self._collection.create_index([('user',1), ('lemma',1)])
 
     def log(self, user, message, lemma, source_language):
@@ -51,9 +51,9 @@ class SetCollection(ABC):
 class IgnoreSet(SetCollection):
     def __init__(self,
                  db):
-       super().__init__(IGNORE_LEMMAS_COLLECTION_NAME, db)
+       super().__init__(IGNORED_LEMMAS_SET, db)
 
 class LearningSet(SetCollection):
     def __init__(self,
                  db):
-        super().__init__(LEARNING_LEMMAS_COLLECTION_NAME, db)
+        super().__init__(LEARNING_LEMMAS_SET, db)

@@ -1,11 +1,11 @@
 import pickle
 import sys
 sys.path.append('../')
-from src.config import VOCABULARY_LOGS_COLLECTION_NAME
+from src.config import TRACKING_LOGS
 from src.lib.db import get_db
 
 db = get_db()
-col = db[VOCABULARY_LOGS_COLLECTION_NAME]
+col = db[TRACKING_LOGS]
 
 entries = list(col.find({}))
 

@@ -1,22 +1,22 @@
 import time
 
-from config import VOCABULARY_LOGS_COLLECTION_NAME, IGNORE_LEMMAS_COLLECTION_NAME, LEARNING_LEMMAS_COLLECTION_NAME
+from config import TRACKING_LOGS, IGNORED_LEMMAS_SET, LEARNING_LEMMAS_SET
 from lib.db import get_db
 
 db = get_db()
 
 def stats(username):
-    ignored_lemmas = db[IGNORE_LEMMAS_COLLECTION_NAME]\
+    ignored_lemmas = db[IGNORED_LEMMAS_SET]\
                         .find({'user': username})\
                         .count()
     current_timestamp = int(time.time())
 
-    seen_last = lambda when: db[VOCABULARY_LOGS_COLLECTION_NAME] \
+    seen_last = lambda when: db[TRACKING_LOGS] \
         .find({'user': username, 'timestamp': {"$gte": when}}) \
         .count()
 
     def seen_last_unique(when):
-        result = list(db[VOCABULARY_LOGS_COLLECTION_NAME] \
+        result = list(db[TRACKING_LOGS] \
                 .aggregate([{'$match': {'user': username,
                                'timestamp': {"$gte": when}}
                      },
@@ -27,7 +27,7 @@ def stats(username):
             return result[0]['count']
         return 0
 
-    learning_lemmas = db[LEARNING_LEMMAS_COLLECTION_NAME]\
+    learning_lemmas = db[LEARNING_LEMMAS_SET]\
                         .find({'user': username})\
                         .count()
 

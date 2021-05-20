@@ -3,13 +3,14 @@ from dataclasses import dataclass
 from enforce_typing import enforce_types
 from typing import List, Iterable
 
-from flask import request, current_app
+from flask import request
 from flask_jwt_extended import get_jwt_identity
 
 from db.collections import user_preferences_collection, examples_cache
 from lib.db import get_db
 from lib.json import JSONEncoder
 from bounded_contexts.library.repositories import ChunksRepository
+from mq.signals import LemmaExamplesWereFoundEvent
 from services.probabilities import predict_scores_for_user
 from types_ import User, DataRow, RevisionItem, RevisionExample, CachedExamples
 
@@ -115,3 +116,17 @@ def __get_examples(source_language, support_language, lemma):
 
 def toCachedExamplesId(source_language, support_language, lemma):
     return f"{source_language}_{support_language}_{lemma}"
+
+
+def lemma_examples_were_found_handler(lemma_examples: LemmaExamplesWereFoundEvent):
+    entry: CachedExamples = {
+        '_id': toCachedExamplesId(lemma_examples.source_language, lemma_examples.examples[0]['support_language'], lemma_examples.lemma),
+        'examples': lemma_examples.examples
+    }
+    examples_cache.insert_one(entry)
+
+LemmaExamplesWereFoundEvent.addEventListener(lemma_examples_were_found_handler)
+
+def migrate_examples():
+    # migrate examples from old cache system to new one
+    pass

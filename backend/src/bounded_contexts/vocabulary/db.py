@@ -3,14 +3,14 @@ import random
 
 from flask import current_app
 
-from config import VOCABULARY_LOGS_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA, LEARNING_LEMMAS_EXAMPLES_CACHE
+from config import TRACKING_LOGS, MAXIMUM_EXAMPLES_PER_LEMMA, EXAMPLES_CACHE_DEPRECATED
 from lib.db import get_db
 
 
 class LemmaExamplesRepository:
     def __init__(self,
-                 lemmas_learning_collection_name=LEARNING_LEMMAS_EXAMPLES_CACHE,
-                 tracking_logs_collection_name=VOCABULARY_LOGS_COLLECTION_NAME,
+                 lemmas_learning_collection_name=EXAMPLES_CACHE_DEPRECATED,
+                 tracking_logs_collection_name=TRACKING_LOGS,
                  db=get_db()):
         self.lemmas_learning = db[lemmas_learning_collection_name]
         self.tracking_logs = db[tracking_logs_collection_name]

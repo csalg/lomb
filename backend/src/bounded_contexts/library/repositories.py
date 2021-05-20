@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-from config import LIBRARY_CHUNKS_COLLECTION_NAME, LIBRARY_TEXTFILE_COLLECTION_NAME, MAXIMUM_EXAMPLES_PER_LEMMA
+from config import CHUNKS_COLLECTION, TEXTFILE_COLLECTION, MAXIMUM_EXAMPLES_PER_LEMMA
 from lib.db import MongoWriteRepository
 from bounded_contexts.library.domain.entities import PERMISSION_ENUM, PERMISSION_PUBLIC
 from bounded_contexts.library.domain.repositories import IChunksRepository, ITextfileRepository
@@ -10,7 +10,7 @@ class ChunksRepository(IChunksRepository):
 
     def __init__(self, db):
         IChunksRepository.__init__(self)
-        self._collection = db[LIBRARY_CHUNKS_COLLECTION_NAME]
+        self._collection = db[CHUNKS_COLLECTION]
 
     def find_chunks(self, lemma, source_language, support_language=None, textfile_ids=None):
         query = {'lemmas._id': lemma,
@@ -46,7 +46,7 @@ class ChunksRepository(IChunksRepository):
 class TextfileRepository(MongoWriteRepository, ITextfileRepository):
 
     def __init__(self, db):
-        MongoWriteRepository.__init__(self, LIBRARY_TEXTFILE_COLLECTION_NAME, db, key_field_name='id')
+        MongoWriteRepository.__init__(self, TEXTFILE_COLLECTION, db, key_field_name='id')
         ITextfileRepository.__init__(self)
 
     def find(self, credentials, id):

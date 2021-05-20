@@ -7,7 +7,7 @@ from config import LANGUAGE_NAMES
 from bounded_contexts.library.controllers_rest_handlers import library_blueprint
 from slices.tracking.rest_api import tracking
 from bounded_contexts.user.rest_api import user_blueprint
-from slices.add_frequency_and_support_language_to_datapoints import add_frequency_and_support_language_to_datapoints
+from slices.caching import add_frequency_and_support_language_to_datapoints
 from slices.drill_from_book import drill_from_book_slice
 from services.etl import etl_from_scratch
 from services.probabilities import predict_scores_for_user

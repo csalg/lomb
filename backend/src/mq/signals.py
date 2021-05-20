@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import ClassVar, List
 
 from blinker import Namespace
 from enforce_typing import enforce_types
 
 from config import LEARNING_LANGUAGES, KNOWN_LANGUAGES
-
+from types_ import ChunkDTO
 
 signals = Namespace()
 
@@ -56,7 +56,7 @@ class LemmaExamplesWereFoundEvent(Event):
     source_language: str
     support_language: str
     frequency: int
-    examples: list
+    examples: List[ChunkDTO]
 
     def __post_init__(self):
         assert self.source_language in LEARNING_LANGUAGES

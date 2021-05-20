@@ -4,7 +4,7 @@ from typing import List, Dict
 
 from bson import ObjectId
 
-from config import MAXIMUM_EXAMPLES_PER_LEMMA, IGNORE_LEMMAS_COLLECTION_NAME, LIBRARY_CHUNKS_COLLECTION_NAME, MAX_ELAPSED
+from config import MAXIMUM_EXAMPLES_PER_LEMMA, IGNORED_LEMMAS_SET, CHUNKS_COLLECTION, MAX_ELAPSED
 from lib.db import get_db
 from bounded_contexts.library.repositories import ChunksRepository, TextfileRepository
 from bounded_contexts.vocabulary.controllers import Controllers
@@ -35,7 +35,7 @@ def drill_from_book_slice(username, textfile_id, maximum_por):
         raise Exception(f"No chunks found for text file with id {textfile_id}")
 
     # Find out all the frequencies, store them
-    ignore_list = list(db[IGNORE_LEMMAS_COLLECTION_NAME].find({'user':username}))
+    ignore_list = list(db[IGNORED_LEMMAS_SET].find({'user':username}))
     ignore_set = set(list(map(lambda record: record['key'], ignore_list)))
     lemmas: Dict[str, LemmaAndExamples] = {}
     for chunk in chunks:
@@ -57,7 +57,7 @@ def drill_from_book_slice(username, textfile_id, maximum_por):
                                         reverse=True)
 
     # Go over the frequencies calculating the PoR
-    chunk = db[LIBRARY_CHUNKS_COLLECTION_NAME].find_one({'textfile_id': ObjectId(textfile_id)})
+    chunk = db[CHUNKS_COLLECTION].find_one({'textfile_id': ObjectId(textfile_id)})
     source_language, support_language = chunk['source_language'], chunk['support_language']
     probabilities = predict_scores_for_user(username)
     result = []
