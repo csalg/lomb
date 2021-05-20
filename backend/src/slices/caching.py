@@ -1,4 +1,7 @@
 import sys
+
+from slices.revise_all_lemmas import chunks_repo
+
 sys.path.append("..")
 
 from typing import Iterable, List
@@ -67,7 +70,7 @@ def get_examples(source_language, support_language, lemma) -> List[RevisionExamp
     if examples_from_cache:
         return examples_from_cache['examples']
 
-    chunks, _ = chunks_collection.find_chunks(lemma, source_language, support_language=support_language)
+    chunks, _ = chunks_repo.find_chunks(lemma, source_language, support_language=support_language)
     examples: List[RevisionExample] = list(map(chunkDTOtoRevisionExample, chunks))
     entry: CachedExamples = {
         '_id': toCachedExamplesId(source_language, support_language, lemma),
