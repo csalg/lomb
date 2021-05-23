@@ -12,7 +12,7 @@ from flask import current_app
 from pymongo import HASHED, ASCENDING
 
 from config import TRACKING_LOGS
-from db.collections import datapoint_collection
+from db.collections import datapoint_collection, ignored_set
 from lib.db import get_db
 from mq.signals import StopLearningLemmaEvent
 
@@ -74,10 +74,25 @@ Interpretation = namedtuple('Interpretation', [
     'source_language'
 ])
 
+
+def fetch_ignored_lemmas():
+    cursor = ignored_set.find({})
+    result = set()
+    for ignored_lemma in cursor:
+        if 'source_language' not in ignored_lemma or 'user' not in ignored_lemma:
+            continue
+
+        lemma, user, source_language = ignored_lemma['key'], ignored_lemma['user'], ignored_lemma['source_language']
+        key = f"{lemma}_{user}_{source_language}"
+        result.add(key)
+    return result
+
+
 def etl_from_scratch():
     events = logs_repository.find({}, no_cursor_timeout=True)
     interpretations= {}
     datapoints = []
+    ignored_lemmas = fetch_ignored_lemmas()
 
     for event in events:
         if 'source_language' not in event or 'timestamp' not in event:
@@ -85,6 +100,8 @@ def etl_from_scratch():
 
         lemma, user, source_language = event['lemma'], event['user'], event['source_language']
         key = f"{lemma}_{user}_{source_language}"
+        if key in ignored_lemmas:
+            continue
         if key in interpretations:
             interpretation = interpretations[key]
         else:
