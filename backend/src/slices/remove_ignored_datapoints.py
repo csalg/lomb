@@ -1,17 +1,19 @@
 import sys
 sys.path.append("..")
 
-from db.collections import ignored_set, datapoint_collection
+from db.collections import ignored_set, datapoint_collection, user_collection
 from types_.IgnoredLemma import IgnoredLemma
 
 
 def remove_ignored_datapoints():
     ignored_lemma : IgnoredLemma
-    for ignored_lemma in ignored_set.find():
+    for user in user_collection.find({}):
+        username = user['_id']
+        ignored_lemmas_cursor = ignored_set.find({'user': username})
+        ignored_lemmas = list(map(lambda item : item['key'], ignored_lemmas_cursor))
         datapoint_collection.delete_many({
-            'lemma': ignored_lemma['key'],
-            'user': ignored_lemma['user'],
-            'source_language': ignored_lemma['source_language']
+            'lemma': {'$in': ignored_lemmas},
+            'user': username,
         })
 
 if __name__ == '__main__':
