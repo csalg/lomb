@@ -111,7 +111,7 @@ def etl_from_scratch():
 
 
 def __wipe_and_persist_to_repo(interpretations):
-    datapoint_collection.delete_many({})
+    datapoint_collection.drop()
     datapoint_collection.insert_many(map(lambda interpretation : interpretation._asdict(), interpretations))
 
 
