@@ -21,7 +21,7 @@ def ensure_datapoints_have_frequency_and_languages():
     and language fields.
     """
     # Get a cursor for all datapoints
-    datapoints: Iterable[DataInterpretation] = datapoint_collection.find({})
+    datapoints: Iterable[DataInterpretation] = datapoint_collection.find({}, no_cursor_timeout=True)
 
     # Iterate over the datapoints
     user_to_support_language = {}
@@ -41,6 +41,8 @@ def ensure_datapoints_have_frequency_and_languages():
         if 'frequency' not in datapoint:
             lemma, source_language = datapoint['lemma'], datapoint['source_language']
             insert_frequency_in_datapoint(lemma, source_language)
+
+    datapoints.close()
 
 
 def ensure_examples_cache_is_consistent_with_learning_set():
