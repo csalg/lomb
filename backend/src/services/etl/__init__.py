@@ -3,14 +3,13 @@ import sys
 sys.path.append("../..")
 
 from copy import deepcopy, copy
-
 import csv
-
 import os
-
 from collections import namedtuple
-from flask import current_app
 from operator import itemgetter
+
+from flask import current_app
+from pymongo import HASHED, ASCENDING
 
 from config import TRACKING_LOGS
 from db.collections import datapoint_collection
@@ -79,6 +78,7 @@ def etl_from_scratch():
     events = logs_repository.find({}, no_cursor_timeout=True)
     interpretations= {}
     datapoints = []
+
     for event in events:
         if 'source_language' not in event or 'timestamp' not in event:
             continue
@@ -112,6 +112,7 @@ def etl_from_scratch():
 
 def __wipe_and_persist_to_repo(interpretations):
     datapoint_collection.drop()
+    datapoint_collection.create_index([("lemma", ASCENDING), ("source_language", ASCENDING)])
     datapoint_collection.insert_many(map(lambda interpretation : interpretation._asdict(), interpretations))
 
 

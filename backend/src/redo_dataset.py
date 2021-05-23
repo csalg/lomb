@@ -1,8 +1,8 @@
 import time
 
 from services.etl import etl_from_scratch
-from slices.caching import ensure_datapoints_have_frequency_and_languages
-from slices.remove_ignored_datapoints import remove_ignored_datapoints
+from services.etl.frequency_support_languages import ensure_datapoints_have_frequency_and_languages
+from services.etl.remove_ignored_datapoints import remove_ignored_datapoints
 
 if __name__ == '__main__':
     print('Starting ETL from scratch.')

@@ -7,11 +7,11 @@ from config import LANGUAGE_NAMES
 from bounded_contexts.library.controllers_rest_handlers import library_blueprint
 from slices.tracking.rest_api import tracking
 from bounded_contexts.user.rest_api import user_blueprint
-from slices.caching import ensure_datapoints_have_frequency_and_languages
+from services.etl.frequency_support_languages import ensure_datapoints_have_frequency_and_languages
 from slices.drill_from_book import drill_from_book_slice
 from services.etl import etl_from_scratch
 from services.probabilities import predict_scores_for_user
-from slices.remove_ignored_datapoints import remove_ignored_datapoints
+from services.etl.remove_ignored_datapoints import remove_ignored_datapoints
 from slices.revise_all_lemmas import endpoint
 from slices.stats import stats
 

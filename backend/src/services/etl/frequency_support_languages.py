@@ -1,5 +1,5 @@
 import sys
-sys.path.append("..")
+sys.path.append("../..")
 
 from typing import Iterable, List
 from operator import itemgetter
@@ -26,6 +26,7 @@ def ensure_datapoints_have_frequency_and_languages():
     # Iterate over the datapoints
     user_to_support_language = {}
     for datapoint in datapoints:
+        id = datapoint['_id']
 
         if 'support_language' not in datapoint:
             user = datapoint['user']
@@ -33,14 +34,14 @@ def ensure_datapoints_have_frequency_and_languages():
                 user_to_support_language[user] = users_collection.find_support_language_for_user(user)
             support_language = user_to_support_language[user]
 
-            datapoint_collection.update_many({'user': user},
+            datapoint_collection.update_one({'_id': id},
                                              {'$set':
                                                   {'support_language': support_language }
                                               })
 
         if 'frequency' not in datapoint:
             lemma, source_language = datapoint['lemma'], datapoint['source_language']
-            insert_frequency_in_datapoint(lemma, source_language)
+            insert_frequency_in_datapoint(id, lemma, source_language)
 
     datapoints.close()
 
@@ -103,11 +104,12 @@ def lemma_should_be_learnt_event_handler(event: LemmaShouldBeLearntEvent):
     insert_frequency_in_datapoint(event.lemma, event.source_language)
 
 
-def insert_frequency_in_datapoint(lemma, source_language):
+def insert_frequency_in_datapoint(lemma, source_language, id=None):
     query = {'lemmas._id': lemma, 'source_language': source_language}
     frequency = chunks_collection.find(query).count()
     datapoint_collection.update_many({'lemma': lemma, 'source_language': source_language},
                                      {'$set': {'frequency': frequency}})
+    # print(datapoint_collection.find({'lemma': lemma, 'source_language': source_language}).explain())
 
 
 def toCachedExamplesId(source_language, support_language, lemma) -> str:

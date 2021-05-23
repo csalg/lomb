@@ -1,5 +1,5 @@
 import sys
-sys.path.append("..")
+sys.path.append("../..")
 
 from db.collections import ignored_set, datapoint_collection, user_collection
 from types_.IgnoredLemma import IgnoredLemma
