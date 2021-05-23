@@ -41,7 +41,7 @@ def ensure_datapoints_have_frequency_and_languages():
 
         if 'frequency' not in datapoint:
             lemma, source_language = datapoint['lemma'], datapoint['source_language']
-            insert_frequency_in_datapoint(id, lemma, source_language)
+            insert_frequency_in_datapoint(lemma, source_language)
 
     datapoints.close()
 
