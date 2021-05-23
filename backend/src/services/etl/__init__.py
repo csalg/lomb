@@ -24,7 +24,7 @@ def etl(user, language, lemma, message, timestamp):
     Gets called whenever an event is received.
     """
 
-    current_app.logger.info(message)
+    current_app.logger.info(f'ETL for lemma {lemma}')
     query = {
         'user': user,
         'source_language': language,

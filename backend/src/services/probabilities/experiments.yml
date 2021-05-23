@@ -1,0 +1,49 @@
+#  How to store results:
+#    `population-offline` is evaluated using 5-fold CV. I already have the code,
+#    so this is no concern. The evaluation metrics are calculated an stored in
+#    a `metrics_df` pandas dataframe. The relevant columns will be:
+#      `population-offline-{name-of-model}`.
+#    Finally, do a fit using the whole population and save predicted scores and
+#    mu in the main df using:
+#      `population-offline-{name-of-model}-{score|mu}`.
+#
+#    `excluded-user` and `individual-fits` are evaluated according to the user dataset,
+#    so this is clear. Evaluation metrics stored similar to above, as are the results
+#    of the predictions
+#
+#    `lifelong` is evaluated on a predict-then-fit basis, using batches. This is the
+#    most important experiment, and I would like the most detailed tables, plots,
+#    perhaps videos, etc.
+#    The results of the predictions are stored in the df and then used to plot graphs
+#    of evaluation metrics agains time. This would be a moving average.
+#    So to do this I guess I would first calculate a few df's, one for each metric.
+#    What results could I show?
+#      - Evaluation metrics table.
+#      - Evaluation metrics charts against time.
+#      - Correlation charts and historgrams of relationship between
+#        `\mu` and `\tilde \mu` and between `s` and `\tilde s`
+#
+#    Metrics:
+#      CV metrics cannot be calculated later, so these go on their own df.
+
+#      Final model evaluation table summarizing all experiments and fitted models
+#      can be calculated from scores in main_df.
+
+
+experiments:
+  # Population fits as in CSCWD 2021
+  - key: population-offline
+    description: 'As in the CSCWD 2021 paper.'
+
+  # Excluded-user
+  - key: excluded-user
+    description: 'Offline population fits of all users except one. Evaluate using excluded user.'
+
+  # Individual fits
+  - key: individual-fits
+    description: 'Offline fits to each individual user, assess on their own model using 5-fold CV. Commit to df fit on all samples for user.'
+
+  # Individual lifelong learning model
+  - key: lifelong
+    description: 'Test, then fit in batches for each user using LwF model.'
+
