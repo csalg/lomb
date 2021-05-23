@@ -1,3 +1,7 @@
+
+import sys
+sys.path.append("../..")
+
 from copy import deepcopy, copy
 
 import csv
@@ -12,8 +16,9 @@ from config import TRACKING_LOGS
 from db.collections import datapoint_collection
 from lib.db import get_db
 from mq.signals import StopLearningLemmaEvent
-from .update_features import update_features, create_features
-from .update_score import update_score, create_score, are_we_in_a_new_time_window
+
+from services.etl.update_features import update_features, create_features
+from services.etl.update_score import update_score, create_score, are_we_in_a_new_time_window
 
 db = get_db()
 logs_repository = db[TRACKING_LOGS]
