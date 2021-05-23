@@ -76,7 +76,7 @@ Interpretation = namedtuple('Interpretation', [
 ])
 
 def etl_from_scratch():
-    events = logs_repository.find({})
+    events = logs_repository.find({}, no_cursor_timeout=True)
     interpretations= {}
     datapoints = []
     for event in events:
@@ -103,6 +103,8 @@ def etl_from_scratch():
 
         if datapoint is not None:
             datapoints.append(datapoint)
+
+    events.close()
 
     __persist_to_csv_in_static_folder(datapoints)
     __wipe_and_persist_to_repo(interpretations.values())
