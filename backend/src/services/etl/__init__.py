@@ -168,3 +168,5 @@ def __remove_unnecessary_features(features):
                 or ('FIRST_EXPOSURE_timestamp' == key):
             features.pop(key)
 
+if __name__ == '__main__':
+    etl_from_scratch()
