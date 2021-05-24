@@ -30,15 +30,15 @@ def etl(user, language, lemma, message, timestamp):
     """
     Gets called whenever an event is received.
     """
-    start = int(time.time()*1000)
-    current_app.logger.info(f'ETL for lemma {lemma}')
+    # start = int(time.time()*1000)
+    # current_app.logger.info(f'ETL for lemma {lemma}')
     query = {
         'user': user,
         'source_language': language,
         'lemma': lemma
     }
 
-    timestamp_ = int(time.time()*1000)
+    # timestamp_ = int(time.time()*1000)
     datapoint_record = datapoint_collection.find_one(query)
     # current_app.logger.info(f'Retrieving record took {int(time.time()*1000) - timestamp_}')
 
@@ -47,7 +47,7 @@ def etl(user, language, lemma, message, timestamp):
 
     # Perform update operations
 
-    timestamp_ = int(time.time()*1000)
+    # timestamp_ = int(time.time()*1000)
     update_features(features, message, timestamp)
     update_score(score, message, timestamp)
     # current_app.logger.info(f'Update operations took {int(time.time()*1000) - timestamp_}')
@@ -61,7 +61,7 @@ def etl(user, language, lemma, message, timestamp):
         'timestamp': timestamp
     }}
 
-    timestamp_ = int(time.time()*1000)
+    # timestamp_ = int(time.time()*1000)
     datapoint_collection.update_one(query, update, upsert=True)
     # current_app.logger.info(f'Update record took {int(time.time()*1000) - timestamp_}')
     # current_app.logger.info(f'ETL took {int(time.time()*1000) - start}')

@@ -38,7 +38,7 @@ class SetCollection(ABC):
 
 
     def delete(self,user,key, source_language):
-        current_app.logger.info('Deleting from collection')
+        # current_app.logger.info('Deleting from collection')
         self._collection.delete_many({"key":key, 'user':user, 'source_language': source_language})
 
     def find(self,user,key, source_language):
