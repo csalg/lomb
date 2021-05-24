@@ -40,7 +40,7 @@ def etl(user, language, lemma, message, timestamp):
 
     timestamp = int(time.time())
     datapoint_record = datapoint_collection.find_one(query)
-    print(f'Retrieving record took {int(time.time()) - timestamp}')
+    current_app.logger.info(f'Retrieving record took {int(time.time()) - timestamp}')
 
     features = datapoint_record['features'] if datapoint_record else create_features()
     score = datapoint_record['score'] if datapoint_record else create_score()
@@ -50,7 +50,7 @@ def etl(user, language, lemma, message, timestamp):
     timestamp = int(time.time())
     update_features(features, message, timestamp)
     update_score(score, message, timestamp)
-    print(f'Update operations took {int(time.time()) - timestamp}')
+    current_app.logger.info(f'Update operations took {int(time.time()) - timestamp}')
 
     update = {"$set":{
         'lemma': lemma,
@@ -63,8 +63,8 @@ def etl(user, language, lemma, message, timestamp):
 
     timestamp = int(time.time())
     datapoint_collection.update_one(query, update, upsert=True)
-    print(f'Update record took {int(time.time()) - timestamp}')
-    print(f'ETL took {int(time.time()) - start}')
+    current_app.logger.info(f'Update record took {int(time.time()) - timestamp}')
+    current_app.logger.info(f'ETL took {int(time.time()) - start}')
 
 
 def on_stop_learning_remove_datapoint_from_datapoint_collection(stop_learning_lemma_event):
