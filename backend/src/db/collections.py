@@ -18,6 +18,8 @@ from lib.db import get_db
 
 db = get_db()
 datapoint_collection: MongoCollection   = db[DATAPOINTS]
+datapoint_collection.create_index([("lemma", ASCENDING), ("source_language", ASCENDING)])
+
 user_collection: MongoCollection        = db[USERS_COLLECTION_NAME]
 user_preferences_collection: MongoCollection = db[USER_PREFERENCES_COLLECTION_NAME]
 chunks_collection: MongoCollection      = db[CHUNKS_COLLECTION]
