@@ -22,9 +22,11 @@ user_collection: MongoCollection        = db[USERS_COLLECTION_NAME]
 user_preferences_collection: MongoCollection = db[USER_PREFERENCES_COLLECTION_NAME]
 chunks_collection: MongoCollection      = db[CHUNKS_COLLECTION]
 ignored_set: MongoCollection            = db[IGNORED_LEMMAS_SET]
-
 ignored_set.create_index([("key", ASCENDING), ("source_language", ASCENDING)])
+
 learning_set: MongoCollection           = db[LEARNING_LEMMAS_SET]
+ignored_set.create_index([("key", ASCENDING), ("source_language", ASCENDING)])
+
 examples_cache: MongoCollection         = db[EXAMPLES_CACHE]
 examples_cache_deprecated: MongoCollection = db[EXAMPLES_CACHE_DEPRECATED]
 
