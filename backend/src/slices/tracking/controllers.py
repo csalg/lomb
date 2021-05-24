@@ -20,10 +20,10 @@ class Controllers:
         # current_app.logger.info(f"Ignoring {user, lemma, source_language}")
         # start = int(time.time()*1000)
         # timestamp = int(time.time()*1000)
-        # self.__learning_repository.delete(user, lemma, source_language)
+        self.__learning_repository.delete(user, lemma, source_language)
         # current_app.logger.info(f'Deleting from learning collection took {(int(time.time()*1000))-timestamp}')
         # timestamp = int(time.time()*1000)
-        # self.__ignore_repository.add(user, lemma, source_language)
+        self.__ignore_repository.add(user, lemma, source_language)
         # current_app.logger.info(f'Adding to ignore collection took {(int(time.time()*1000))-timestamp}')
         # current_app.logger.info(f'Ignoring took {(int(time.time()*1000))-start}')
         pass
@@ -44,13 +44,13 @@ class Controllers:
 
     def __add_revision_log(self, user, message, lemma, source_language, support_language):
         self.__log_repository.log(user, message, lemma, source_language)
-        # etl(user, source_language, lemma, message, int(time.time()))
+        etl(user, source_language, lemma, message, int(time.time()))
 
     def __add_text_log(self, user, message, lemma, source_language, support_language):
         if message == TEXT__WORD_HIGHLIGHTED or self.__is_learning(user, lemma):
             self.__log_repository.log(user, message, lemma, source_language)
             self.__learn(user, lemma, source_language, support_language)
-            # etl(user, source_language, lemma, message, int(time.time()))
+            etl(user, source_language, lemma, message, int(time.time()))
         else:
             self.ignore_lemma(user, lemma, source_language)
 
@@ -58,7 +58,7 @@ class Controllers:
         if message == VIDEO__TRANSLATION_WAS_REVEALED or self.__is_learning(user, lemma):
             self.__log_repository.log(user, message, lemma, source_language)
             self.__learn(user, lemma, source_language, support_language)
-            # etl(user, source_language, lemma, message, int(time.time()))
+            etl(user, source_language, lemma, message, int(time.time()))
         else:
             self.ignore_lemma(user, lemma, source_language)
 
@@ -66,7 +66,7 @@ class Controllers:
         if message == BOOK_DRILL_CLICK or self.__is_learning(user, lemma):
             self.__log_repository.log(user, message, lemma, source_language)
             self.__learn(user, lemma, source_language, support_language)
-            # etl(user, source_language, lemma, message, int(time.time()))
+            etl(user, source_language, lemma, message, int(time.time()))
         else:
             self.ignore_lemma(user, lemma, source_language)
 
