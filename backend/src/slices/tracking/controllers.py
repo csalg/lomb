@@ -6,7 +6,7 @@ from mq.signals import LemmaShouldBeLearntEvent
 from types_.constants import VALID_MESSAGES, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_CLICK, \
     VIDEO__TRANSLATION_WAS_REVEALED
 from db.tracking import LogCollection, IgnoreSet, LearningSet
-from slices.data_interpretation import etl
+from slices.data_interpretation import etl, on_lemma_should_be_learnt_cache_examples_and_frequency
 
 
 class Controllers:
@@ -73,6 +73,7 @@ class Controllers:
     def __learn(self, user, lemma, source_language, support_language):
         self.__ignore_repository.delete(user, lemma, source_language)
         self.__learning_repository.add(user, lemma, source_language)
+        on_lemma_should_be_learnt_cache_examples_and_frequency(lemma, source_language, support_language)
         # self.__emit_lemma_should_be_learnt_event(user, lemma, source_language, support_language)
 
 

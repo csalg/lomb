@@ -87,7 +87,7 @@ def get_examples(source_language, support_language, lemma) -> List[RevisionExamp
     return examples
 
 
-def on_lemma_should_be_learnt_cache_examples_and_frequency(event: LemmaShouldBeLearntEvent):
+def on_lemma_should_be_learnt_cache_examples_and_frequency(lemma, source_language, support_language):
     """
     When a lemma that should be learnt is found:
     - Ensure sure example cache has examples.
@@ -96,12 +96,12 @@ def on_lemma_should_be_learnt_cache_examples_and_frequency(event: LemmaShouldBeL
 
     # Do we have cached examples?
     # If not, call getExamples so they get cached
-    cached_examples = examples_cache.find_one({'_id': __to_cached_examples_id(event.source_language, event.support_language, event.lemma)})
+    cached_examples = examples_cache.find_one({'_id': __to_cached_examples_id(source_language, support_language, lemma)})
     if not cached_examples:
-        get_examples(event.source_language, event.support_language, event.lemma)
+        get_examples(source_language, support_language, lemma)
 
     # Update frequency of datapoints
-    __insert_frequency_in_datapoint(event.lemma, event.source_language)
+    __insert_frequency_in_datapoint(lemma, source_language)
 
 
 def __insert_frequency_in_datapoint(lemma, source_language, id=None):
