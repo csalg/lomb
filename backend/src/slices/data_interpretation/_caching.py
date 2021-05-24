@@ -101,13 +101,13 @@ def on_lemma_should_be_learnt_cache_examples_and_frequency(lemma, source_languag
 
     # Do we have cached examples?
     # If not, call getExamples so they get cached
-    start = int(time.time()*1000)
+    # start = int(time.time()*1000)
     cached_examples = examples_cache.find_one({'_id': __to_cached_examples_id(source_language, support_language, lemma)})
-    current_app.logger.info(f'Looking for cached examples took {int(time.time()*1000)-start}ms')
+    # current_app.logger.info(f'Looking for cached examples took {int(time.time()*1000)-start}ms')
     if not cached_examples:
-        timestamp = int(time.time()*1000)
+        # timestamp = int(time.time()*1000)
         get_examples(source_language, support_language, lemma)
-        current_app.logger.info(f'Getting chunks took {int(time.time() * 1000) - timestamp}ms')
+        # current_app.logger.info(f'Getting chunks took {int(time.time() * 1000) - timestamp}ms')
 
         # Update frequency of datapoints can take up to
         # ~200ms, so we use sparingly
