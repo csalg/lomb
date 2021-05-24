@@ -119,10 +119,14 @@ def on_lemma_should_be_learnt_cache_examples_and_frequency(lemma, source_languag
 
 def __insert_frequency_in_datapoint(lemma, source_language, id=None):
     query = {'lemmas._id': lemma, 'source_language': source_language}
+    start = int(time.time()*1000)
     frequency = chunks_collection.find(query).count()
+    current_app.logger.info(f'Looking for frequency took {int(time.time() * 1000) - start}ms')
+    timestamp = int(time.time()*1000)
     datapoint_collection.update_many({'lemma': lemma, 'source_language': source_language},
                                      {'$set': {'frequency': frequency}})
-    # print(datapoint_collection.find({'lemma': lemma, 'source_language': source_language}).explain())
+    current_app.logger.info(f'Update_many took {int(time.time() * 1000) - timestamp}ms')
+    current_app.logger.info(f'Insert frequency frequency took {int(time.time() * 1000) - start}ms')
 
 
 def __to_cached_examples_id(source_language, support_language, lemma) -> str:
