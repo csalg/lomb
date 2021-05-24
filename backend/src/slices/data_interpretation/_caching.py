@@ -109,12 +109,13 @@ def on_lemma_should_be_learnt_cache_examples_and_frequency(lemma, source_languag
         get_examples(source_language, support_language, lemma)
         current_app.logger.info(f'Getting chunks took {int(time.time() * 1000) - timestamp}ms')
 
-    # Update frequency of datapoints
+        # Update frequency of datapoints can take up to
+        # ~200ms, so we use sparingly
 
-    timestamp = int(time.time() * 1000)
-    __insert_frequency_in_datapoint(lemma, source_language)
-    current_app.logger.info(f'Inserting frequency took {int(time.time() * 1000) - timestamp}ms')
-    current_app.logger.info(f'Cache examples update took {int(time.time() * 1000) - start}ms')
+        # timestamp = int(time.time() * 1000)
+        __insert_frequency_in_datapoint(lemma, source_language)
+        # current_app.logger.info(f'Inserting frequency took {int(time.time() * 1000) - timestamp}ms')
+        # current_app.logger.info(f'Cache examples update took {int(time.time() * 1000) - start}ms')
 
 
 def __insert_frequency_in_datapoint(lemma, source_language, id=None):
@@ -126,7 +127,6 @@ def __insert_frequency_in_datapoint(lemma, source_language, id=None):
     datapoint_collection.update_many({'lemma': lemma, 'source_language': source_language},
                                      {'$set': {'frequency': frequency}})
     current_app.logger.info(f'Update_many took {int(time.time() * 1000) - timestamp}ms')
-    current_app.logger.info(f'Insert frequency frequency took {int(time.time() * 1000) - start}ms')
 
 
 def __to_cached_examples_id(source_language, support_language, lemma) -> str:
