@@ -34,16 +34,16 @@ class Controllers:
             if 'BOOK_DRILL' in message:
                 self.__add_book_drill_log(user, message, lemma, source_language, support_language)
 
-            if not self.__is_ignored(user, lemma):
-                etl(user, source_language, lemma, message, int(time.time()))
 
     def __add_revision_log(self, user, message, lemma, source_language, support_language):
         self.__log_repository.log(user, message, lemma, source_language)
+        etl(user, source_language, lemma, message, int(time.time()))
 
     def __add_text_log(self, user, message, lemma, source_language, support_language):
         if message == TEXT__WORD_HIGHLIGHTED or self.__is_learning(user, lemma):
             self.__log_repository.log(user, message, lemma, source_language)
             self.__learn(user, lemma, source_language, support_language)
+            etl(user, source_language, lemma, message, int(time.time()))
         else:
             self.ignore_lemma(user, lemma, source_language)
 
@@ -51,6 +51,7 @@ class Controllers:
         if message == VIDEO__TRANSLATION_WAS_REVEALED or self.__is_learning(user, lemma):
             self.__log_repository.log(user, message, lemma, source_language)
             self.__learn(user, lemma, source_language, support_language)
+            etl(user, source_language, lemma, message, int(time.time()))
         else:
             self.ignore_lemma(user, lemma, source_language)
 
@@ -58,6 +59,7 @@ class Controllers:
         if message == BOOK_DRILL_CLICK or self.__is_learning(user, lemma):
             self.__log_repository.log(user, message, lemma, source_language)
             self.__learn(user, lemma, source_language, support_language)
+            etl(user, source_language, lemma, message, int(time.time()))
         else:
             self.ignore_lemma(user, lemma, source_language)
 
