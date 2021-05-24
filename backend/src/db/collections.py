@@ -27,7 +27,7 @@ ignored_set: MongoCollection            = db[IGNORED_LEMMAS_SET]
 ignored_set.create_index([("key", ASCENDING), ("source_language", ASCENDING)])
 
 learning_set: MongoCollection           = db[LEARNING_LEMMAS_SET]
-ignored_set.create_index([("key", ASCENDING), ("source_language", ASCENDING)])
+learning_set.create_index([("key", ASCENDING), ("source_language", ASCENDING)])
 
 examples_cache: MongoCollection         = db[EXAMPLES_CACHE]
 examples_cache_deprecated: MongoCollection = db[EXAMPLES_CACHE_DEPRECATED]
