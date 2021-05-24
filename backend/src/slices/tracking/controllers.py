@@ -73,7 +73,8 @@ class Controllers:
     def __learn(self, user, lemma, source_language, support_language):
         self.__ignore_repository.delete(user, lemma, source_language)
         self.__learning_repository.add(user, lemma, source_language)
-        self.__emit_lemma_should_be_learnt_event(user, lemma, source_language, support_language)
+        # self.__emit_lemma_should_be_learnt_event(user, lemma, source_language, support_language)
+
 
     def __emit_lemma_should_be_learnt_event(self, user, lemma, source_language, support_language):
         LemmaShouldBeLearntEvent(user, lemma, source_language, support_language).dispatch()
