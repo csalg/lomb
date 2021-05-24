@@ -1,3 +1,4 @@
+import time
 from operator import itemgetter
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -34,8 +35,10 @@ def rest_handler():
 
     message, lemmas, source_language, support_language = itemgetter('message', 'lemmas', 'source_language', 'support_language')(content)
     current_app.logger.info(f"Tracking: {content}")
+    start = int(time.time()*1000)
 
     controllers.add(user, message, lemmas, source_language, support_language)
+    current_app.logger.info(f'Tracking took {int(time.time()*1000 - start)}')
 
     return 'ok',200
 
