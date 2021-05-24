@@ -11,9 +11,9 @@ from lib.db import get_db
 from lib.json import JSONEncoder
 from bounded_contexts.library.repositories import ChunksRepository
 from mq.signals import LemmaExamplesWereFoundEvent, StopLearningLemmaEvent
-from services.probabilities import predict_scores_for_user
-from services.etl.frequency_support_languages import get_examples
-from types_ import User, DataRow, RevisionItem, RevisionExample, CachedExamples
+from slices.score_predictions import predict_scores_for_user
+from slices.data_interpretation import get_examples
+from types_ import User, DataFeatures, RevisionItem, RevisionExample, CachedExamples
 
 chunks_repo = ChunksRepository(get_db())
 
@@ -77,7 +77,7 @@ def __process_query(query):
     return probabilities_filtered.nlargest(query.fetch_amount, 'frequency')
 
 
-def __make_revision_items(probabilities: Iterable[DataRow], source_language, support_language, username):
+def __make_revision_items(probabilities: Iterable[DataFeatures], source_language, support_language, username):
     revision_items: List[RevisionItem] = []
     for index, row in probabilities.iterrows():
         lemma, frequency, por = row['lemma'], row['frequency'], row['score_pred']

@@ -5,7 +5,7 @@ from enforce_typing import enforce_types
 from flask import current_app
 
 from config import MAX_ELAPSED
-from services.probabilities import predict_scores_for_user
+from slices.score_predictions import predict_scores_for_user
 from .data_processing.plotting import heatmap
 
 from .db import LemmaExamplesRepository

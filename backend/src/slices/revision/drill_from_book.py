@@ -8,7 +8,7 @@ from config import MAXIMUM_EXAMPLES_PER_LEMMA, IGNORED_LEMMAS_SET, CHUNKS_COLLEC
 from lib.db import get_db
 from bounded_contexts.library.repositories import ChunksRepository, TextfileRepository
 from bounded_contexts.vocabulary.controllers import Controllers
-from services.probabilities import predict_scores_for_user
+from slices.score_predictions import predict_scores_for_user
 
 db = get_db()
 textfile_repository = TextfileRepository(db)

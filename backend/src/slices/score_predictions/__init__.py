@@ -2,14 +2,12 @@ import time
 
 import numpy as np
 import pandas as pd
-from flask import current_app
 from sklearn.linear_model import LinearRegression
 import tensorflow.keras as keras
 import pickle
 
 from config import MAX_ELAPSED
 from db.collections import datapoint_collection
-from mq.signals import LemmaExamplesWereFoundEvent
 
 pd.options.mode.chained_assignment = None  # default='warn'
 

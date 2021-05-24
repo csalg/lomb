@@ -7,12 +7,12 @@ from config import LANGUAGE_NAMES
 from bounded_contexts.library.controllers_rest_handlers import library_blueprint
 from slices.tracking.rest_api import tracking
 from bounded_contexts.user.rest_api import user_blueprint
-from services.etl.frequency_support_languages import ensure_datapoints_have_frequency_and_languages
-from slices.drill_from_book import drill_from_book_slice
-from services.etl import etl_from_scratch
-from services.probabilities import predict_scores_for_user
-from services.etl.remove_ignored_datapoints import remove_ignored_datapoints
-from slices.revise_all_lemmas import endpoint
+from slices.data_interpretation import ensure_datapoints_have_frequency_and_languages
+from slices.revision.drill_from_book import drill_from_book_slice
+from slices.data_interpretation import etl_from_scratch
+from slices.score_predictions import predict_scores_for_user
+from slices.data_interpretation import remove_ignored_datapoints
+from slices.revision.revise_all_lemmas import endpoint
 from slices.stats import stats
 
 app = Flask(__name__)

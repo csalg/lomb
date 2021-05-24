@@ -6,7 +6,7 @@ from mq.signals import LemmaShouldBeLearntEvent
 from types_.constants import VALID_MESSAGES, TEXT__WORD_HIGHLIGHTED, BOOK_DRILL_CLICK, \
     VIDEO__TRANSLATION_WAS_REVEALED
 from db.tracking import LogCollection, IgnoreSet, LearningSet
-from services.etl import etl
+from slices.data_interpretation import etl
 
 
 class Controllers:

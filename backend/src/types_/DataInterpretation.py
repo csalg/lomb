@@ -20,7 +20,15 @@ class DataInterpretation(TypedDict):
     source_language: str
     support_language: str
 
-class DataRow(TypedDict):
+class Features(TypedDict):
+    pass
+
+class DataFeatures(Features):
+    index: str
+    user: str
     lemma: str
     frequency: int
-    score_pred: float
+    timestamp: int
+
+class PastDatapoint(DataFeatures):
+    score: float
