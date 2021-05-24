@@ -17,15 +17,15 @@ class Controllers:
         self.__learning_repository = learning_repository
 
     def ignore_lemma(self, user, lemma, source_language):
-        current_app.logger.info(f"Ignoring {user, lemma, source_language}")
-        start = int(time.time()*1000)
-        timestamp = int(time.time()*1000)
+        # current_app.logger.info(f"Ignoring {user, lemma, source_language}")
+        # start = int(time.time()*1000)
+        # timestamp = int(time.time()*1000)
         self.__learning_repository.delete(user, lemma, source_language)
-        current_app.logger.info(f'Deleting from learning collection took {(int(time.time()*1000))-timestamp}')
-        timestamp = int(time.time()*1000)
+        # current_app.logger.info(f'Deleting from learning collection took {(int(time.time()*1000))-timestamp}')
+        # timestamp = int(time.time()*1000)
         self.__ignore_repository.add(user, lemma, source_language)
-        current_app.logger.info(f'Adding to ignore collection took {(int(time.time()*1000))-timestamp}')
-        current_app.logger.info(f'Ignoring took {(int(time.time()*1000))-start}')
+        # current_app.logger.info(f'Adding to ignore collection took {(int(time.time()*1000))-timestamp}')
+        # current_app.logger.info(f'Ignoring took {(int(time.time()*1000))-start}')
 
     def add(self, user, message, lemmas, source_language, support_language):
         if message not in VALID_MESSAGES:
