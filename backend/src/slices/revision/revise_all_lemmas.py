@@ -9,7 +9,7 @@ from flask_jwt_extended import get_jwt_identity
 from db.collections import user_preferences_collection, examples_cache, ignored_set
 from lib.db import get_db
 from lib.json import JSONEncoder
-from bounded_contexts.library.repositories import ChunksRepository
+from slices.texts.repositories import ChunksRepository
 from mq.signals import LemmaExamplesWereFoundEvent, StopLearningLemmaEvent
 from slices.score_predictions import predict_scores_for_user
 from slices.data_interpretation import get_examples
@@ -35,7 +35,7 @@ class ReviseQueryDTO:
         return self
 
 
-def endpoint():
+def revise_all_lemmas_endpoint_impl():
     query = ReviseQueryDTO(
         username = get_jwt_identity()['username'],
         maximum_por = float(request.json['maximum_por']),

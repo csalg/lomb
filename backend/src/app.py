@@ -4,22 +4,26 @@ from flask import Flask, jsonify, request, send_from_directory, current_app
 from flask_cors import CORS
 
 from config import LANGUAGE_NAMES
-from bounded_contexts.library.controllers_rest_handlers import library_blueprint
+from slices.texts.controllers_rest_handlers import library_blueprint
 from slices.tracking.rest_api import tracking
-from bounded_contexts.user.rest_api import user_blueprint
-from slices.data_interpretation import ensure_datapoints_have_frequency_and_languages
-from slices.revision.drill_from_book import drill_from_book_slice
-from slices.data_interpretation import etl_from_scratch
-from slices.score_predictions import predict_scores_for_user
-from slices.data_interpretation import remove_ignored_datapoints
-from slices.revision.revise_all_lemmas import endpoint
+from slices.user.rest_api import user_blueprint
+
+from slices.data_interpretation import (
+                    etl_from_scratch,
+                    ensure_datapoints_have_frequency_and_languages,
+                    remove_ignored_datapoints
+                    )
+
+from slices.revision import (
+                    revise_all_lemmas_endpoint_impl,
+                    drill_from_book_endpoint_impl
+                    )
 from slices.stats import stats
 
 app = Flask(__name__)
 app.register_blueprint(tracking, url_prefix='/tracking')
 app.register_blueprint(library_blueprint, url_prefix='/library')
 app.register_blueprint(user_blueprint, url_prefix='/user')
-# CORS(app, resources={r'*': {'origins': ['http://localhost:3000', 'http://127.0.0.1:3000']}}, supports_credentials=True)
 CORS(app)
 
 app.config['JWT_SECRET_KEY'] = 'super-secret'
@@ -42,7 +46,7 @@ def langs():
 def drill_from_book(textfile_id):
     username = get_jwt_identity()['username']
     maximum_por = float(request.args.get('maximum_por'))
-    return drill_from_book_slice(username, textfile_id, maximum_por)
+    return drill_from_book_endpoint_impl(username, textfile_id, maximum_por)
 
 @app.route('/slices/stats')
 @jwt_required
@@ -56,17 +60,6 @@ def etl_from_scratch_endpoint():
     etl_from_scratch()
     return 'ok'
 
-@app.route('/slices/predict_scores/<username>')
-# @jwt_required
-def predict_scores(username):
-    predict_scores_for_user(username)
-    return 'ok'
-
-# @app.route('/slices/make_dataset')
-# def make_dataset_endpoint():
-#     make_dataset()
-#     return 'Done'
-
 @app.route('/slices/data.csv')
 def get_dataset():
     current_app.logger.info("YO!")
@@ -79,8 +72,8 @@ def add_frequency_and_support_language_to_datapoints_endpoint():
 
 @app.route('/vocabulary/revise', methods=['POST'])
 @jwt_required
-def revise():
-    return endpoint()
+def revise_all_lemmas_endpoint_route():
+    return revise_all_lemmas_endpoint_impl()
 
 @app.route('/slices/remove_ignored_datapoints')
 def remove_ignored_datapoints_endpoint():

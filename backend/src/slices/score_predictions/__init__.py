@@ -14,18 +14,20 @@ pd.options.mode.chained_assignment = None  # default='warn'
 MU_MAX = 10e10
 MU_MIN = 10e-10
 
+SLICE_FOLDER = 'src/slices/score_predictions'
+
 class MTR:
     def __init__(self):
         self.model = LinearRegression
         self.column_names = []
 
     def load(self):
-        self.model = keras.models.load_model('src/services/probabilities/keras_model')
+        self.model = keras.models.load_model(f'{SLICE_FOLDER}/keras_model')
 
-        with open('src/services/probabilities/column_names.pkl', 'rb') as file:
+        with open(f'{SLICE_FOLDER}/column_names.pkl', 'rb') as file:
             self.column_names = pickle.load(file)
 
-        with open('src/services/probabilities/scaler.pkl', 'rb') as file:
+        with open(f'{SLICE_FOLDER}/scaler.pkl', 'rb') as file:
             self.scaler = pickle.load(file)
 
     def predict_to_df(self, df):

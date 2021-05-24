@@ -1,0 +1,12 @@
+from mq.signals import StopLearningLemmaEvent, LemmaShouldBeLearntEvent
+from slices.data_interpretation._etl import on_stop_learning_remove_datapoint_from_datapoint_collection
+from slices.data_interpretation._caching import \
+    on_lemma_should_be_learnt_cache_examples_and_frequency
+
+
+LemmaShouldBeLearntEvent.addEventListener(
+    on_lemma_should_be_learnt_cache_examples_and_frequency)
+
+
+StopLearningLemmaEvent.addEventListener(
+    on_stop_learning_remove_datapoint_from_datapoint_collection)

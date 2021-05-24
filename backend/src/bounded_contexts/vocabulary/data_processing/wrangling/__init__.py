@@ -1,2 +1,0 @@
-def Log():
-    return None

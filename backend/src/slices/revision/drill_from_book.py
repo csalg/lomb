@@ -6,14 +6,12 @@ from bson import ObjectId
 
 from config import MAXIMUM_EXAMPLES_PER_LEMMA, IGNORED_LEMMAS_SET, CHUNKS_COLLECTION, MAX_ELAPSED
 from lib.db import get_db
-from bounded_contexts.library.repositories import ChunksRepository, TextfileRepository
-from bounded_contexts.vocabulary.controllers import Controllers
+from slices.texts.repositories import ChunksRepository, TextfileRepository
 from slices.score_predictions import predict_scores_for_user
 
 db = get_db()
 textfile_repository = TextfileRepository(db)
 chunks_repository = ChunksRepository(db)
-vocabulary_controllers = Controllers()
 
 
 @dataclass
@@ -28,7 +26,7 @@ class LemmaAndExamples:
         self.frequency += 1
 
 
-def drill_from_book_slice(username, textfile_id, maximum_por):
+def drill_from_book_endpoint_impl(username, textfile_id, maximum_por):
     # Grab all the chunks for a book
     chunks = list(chunks_repository.find_chunks_in_textfiles([ObjectId(textfile_id), ]))
     if not len(chunks):

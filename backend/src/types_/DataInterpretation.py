@@ -1,5 +1,7 @@
 from typing import TypedDict
 
+from collections import namedtuple
+
 
 class Score(TypedDict):
     successes: int
@@ -32,3 +34,15 @@ class DataFeatures(Features):
 
 class PastDatapoint(DataFeatures):
     score: float
+
+
+Interpretation = namedtuple('Interpretation', [
+    'features',
+    'previous_features',
+    'score',
+    'timestamp',
+    'user',
+    'lemma',
+    'source_language'
+])
+
