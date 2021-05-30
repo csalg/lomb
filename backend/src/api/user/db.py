@@ -2,8 +2,8 @@ from flask import current_app
 
 from config import USER_PREFERENCES_COLLECTION_NAME, USER_CREDENTIALS_COLLECTION_NAME
 from lib.db import get_db
-from slices.user.domain.credentials import CredentialsDTO, CredentialsReadModel
-from slices.user.domain.repository_interfaces import ICredentialsRepository
+from api.user.domain.credentials import CredentialsDTO, CredentialsReadModel
+from api.user.domain.repository_interfaces import ICredentialsRepository
 
 
 class MongoEntityPersistenceBase:

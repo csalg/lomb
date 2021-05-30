@@ -2,8 +2,8 @@
 # Parsers, DTOs...
 from jsonschema import validate
 
-from slices.user.domain.credentials import CredentialsWriteModel, CredentialsDTO
-from slices.user.domain.user_preferences import UserPreferences
+from api.user.domain.credentials import CredentialsWriteModel, CredentialsDTO
+from api.user.domain.user_preferences import UserPreferences
 
 
 class CredentialsParser:

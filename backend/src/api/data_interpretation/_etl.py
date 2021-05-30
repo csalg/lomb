@@ -19,8 +19,8 @@ from config import TRACKING_LOGS
 from db.collections import datapoint_collection, ignored_set, user_collection
 from lib.db import get_db
 
-from slices.data_interpretation._update_features import update_features, create_features
-from slices.data_interpretation._update_score import update_score, create_score, are_we_in_a_new_time_window
+from api.data_interpretation._update_features import update_features, create_features
+from api.data_interpretation._update_score import update_score, create_score, are_we_in_a_new_time_window
 
 db = get_db()
 logs_repository = db[TRACKING_LOGS]

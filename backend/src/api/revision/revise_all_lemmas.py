@@ -9,10 +9,10 @@ from flask_jwt_extended import get_jwt_identity
 from db.collections import user_preferences_collection, examples_cache, ignored_set
 from lib.db import get_db
 from lib.json import JSONEncoder
-from slices.texts.repositories import ChunksRepository
+from api.texts.repositories import ChunksRepository
 from mq.signals import LemmaExamplesWereFoundEvent, StopLearningLemmaEvent
-from slices.score_predictions import predict_scores_for_user
-from slices.data_interpretation import get_examples
+from api.score_predictions import predict_scores_for_user
+from api.data_interpretation import get_examples
 from types_ import User, DataFeatures, RevisionItem, RevisionExample, CachedExamples
 
 chunks_repo = ChunksRepository(get_db())
@@ -26,7 +26,6 @@ class ReviseQueryDTO:
     fetch_amount: int = 25
 
     def __post_init__(self):
-
         if self.maximum_days_elapsed < 0:
             raise Exception("Maximum days should be a non-negative integer")
         else:
@@ -35,38 +34,31 @@ class ReviseQueryDTO:
         return self
 
 
-def revise_all_lemmas_endpoint_impl():
+def revise_all_lemmas():
     query = ReviseQueryDTO(
         username = get_jwt_identity()['username'],
         maximum_por = float(request.json['maximum_por']),
         maximum_days_elapsed = request.json['maximum_days_elapsed'],
         fetch_amount = request.json['fetch_amount'],
     )
-    result = __smart_fetch_revision_items(query)
+    user: User = user_preferences_collection.find_one({'_id': query.username})
+    __assert_valid_user(query, user)
+    source_language, support_language = user['learning_languages'][0], user['known_languages'][0]
+    probabilities = __process_query(query)
+    result = __make_revision_items(probabilities, source_language, support_language, query.username)
     payload = JSONEncoder().encode(list(result))
     return payload, 200
 
-
-def __smart_fetch_revision_items(query: ReviseQueryDTO) -> List[RevisionItem]:
-    # Get source and support language for the user.
-    user: User = user_preferences_collection.find_one({'_id': query.username})
+def __assert_valid_user(query, user):
     if not user:
         raise Exception(f"User '{query.username}' does not exist!")
     if not user['learning_languages'] or not user['known_languages']:
         raise Exception(f'User {query.username} has no known or learning languages.')
-    source_language, support_language = user['learning_languages'][0], user['known_languages'][0]
-
-    probabilities = __process_query(query)
-    revision_items = __make_revision_items(probabilities, source_language, support_language, query.username)
-
-    return revision_items
 
 
 def __process_query(query):
-    # Get probabilities for user
     probabilities = predict_scores_for_user(query.username)
 
-    # Filters
     not_too_easy = probabilities['score_pred'] <= query.maximum_por
     not_too_old = probabilities['delta'] <= query.maximum_days_elapsed * 24 * 60 * 60
     if (query.maximum_days_elapsed == 0):
@@ -87,8 +79,6 @@ def __make_revision_items(probabilities: Iterable[DataFeatures], source_language
             continue
 
         examples = get_examples(source_language, support_language, lemma)
-
-
         result: RevisionItem = {
             'lemma': lemma,
             'frequency': frequency,
@@ -98,13 +88,12 @@ def __make_revision_items(probabilities: Iterable[DataFeatures], source_language
             'support_language': support_language
         }
         revision_items.append(result)
-
     return revision_items
 
 
 def __get_examples(source_language, support_language, lemma):
 
-    examples_from_cache: CachedExamples = examples_cache.find_one({'_id': toCachedExamplesId(source_language, support_language, lemma)})
+    examples_from_cache: CachedExamples = examples_cache.find_one({'_id': to_cached_examples_id(source_language, support_language, lemma)})
     if examples_from_cache:
         return examples_from_cache['examples']
 
@@ -114,25 +103,21 @@ def __get_examples(source_language, support_language, lemma):
         'text': chunk['text']
     }, chunks))
     entry: CachedExamples = {
-        '_id': toCachedExamplesId(source_language, support_language, lemma),
+        '_id': to_cached_examples_id(source_language, support_language, lemma),
         'examples': examples
     }
     examples_cache.insert_one(entry)
     return examples
 
-def toCachedExamplesId(source_language, support_language, lemma):
+def to_cached_examples_id(source_language, support_language, lemma):
     return f"{source_language}_{support_language}_{lemma}"
 
 
 def lemma_examples_were_found_handler(lemma_examples: LemmaExamplesWereFoundEvent):
     entry: CachedExamples = {
-        '_id': toCachedExamplesId(lemma_examples.source_language, lemma_examples.examples[0]['support_language'], lemma_examples.lemma),
+        '_id': to_cached_examples_id(lemma_examples.source_language, lemma_examples.examples[0]['support_language'], lemma_examples.lemma),
         'examples': lemma_examples.examples
     }
     examples_cache.insert_one(entry)
 
 LemmaExamplesWereFoundEvent.addEventListener(lemma_examples_were_found_handler)
-
-def migrate_examples():
-    # migrate examples from old cache system to new one
-    pass

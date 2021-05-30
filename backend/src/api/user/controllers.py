@@ -1,4 +1,4 @@
-from slices.user.db import CredentialsRepository, UserPreferencesRepository
+from api.user.db import CredentialsRepository, UserPreferencesRepository
 
 
 class Controllers:

@@ -1,6 +1,6 @@
 from flask_jwt_extended import get_jwt_identity
 
-from slices.texts.domain.entities import UserCredentials
+from api.texts.domain.entities import UserCredentials
 
 
 def get_credentials():

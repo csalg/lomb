@@ -1,7 +1,7 @@
 import bson
 import pytest
 
-from slices.texts.domain.entities import Textfile, IndexEntry
+from api.texts.domain.entities import Textfile, IndexEntry
 
 
 def test_Textfile():

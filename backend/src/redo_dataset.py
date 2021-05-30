@@ -1,7 +1,7 @@
 import time
 
-from slices.data_interpretation import etl_from_scratch
-from slices.data_interpretation._caching import ensure_datapoints_have_frequency_and_languages
+from api.data_interpretation import etl_from_scratch
+from api.data_interpretation._caching import ensure_datapoints_have_frequency_and_languages
 
 if __name__ == '__main__':
     print('Starting ETL from scratch.')

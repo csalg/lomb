@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from slices.user.domain.credentials import CredentialsWriteModel, CredentialsDTO
+from api.user.domain.credentials import CredentialsWriteModel, CredentialsDTO
 
 
 class ICredentialsRepository(ABC):

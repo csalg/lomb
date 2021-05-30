@@ -1,5 +1,5 @@
 from lib.db import get_db
-from slices.texts.controllers import create_controllers_with_mongo_repositories
+from api.texts.controllers import create_controllers_with_mongo_repositories
 
 controllers = create_controllers_with_mongo_repositories(get_db())
 

@@ -14,7 +14,7 @@ from db.collections import datapoint_collection, chunks_collection, examples_cac
 import db.users as users_collection
 from mq.signals import LemmaShouldBeLearntEvent
 from types_ import DataInterpretation, CachedExamples, RevisionExample
-from slices.texts.repositories import ChunksRepository
+from api.texts.repositories import ChunksRepository
 from lib.db import get_db
 
 chunks_repo = ChunksRepository(get_db())

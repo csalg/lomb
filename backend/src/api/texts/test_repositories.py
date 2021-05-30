@@ -5,8 +5,8 @@ import pytest
 from bson import ObjectId
 
 from config import CHUNKS_COLLECTION
-from slices.texts.domain.entities import Chunk, Textfile
-from slices.texts.repositories import ChunksRepository, TextfileRepository
+from api.texts.domain.entities import Chunk, Textfile
+from api.texts.repositories import ChunksRepository, TextfileRepository
 
 
 @pytest.fixture

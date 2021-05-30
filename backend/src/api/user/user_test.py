@@ -3,9 +3,9 @@ import pytest
 from config import LEARNING_LANGUAGES, KNOWN_LANGUAGES, USER_CREDENTIALS_COLLECTION_NAME, \
     USER_PREFERENCES_COLLECTION_NAME
 from lib.mocks import MockMongoCollection
-from slices.user.db import CredentialsRepository
-from slices.user.domain.credentials import CredentialsWriteModel, CredentialsDTO
-from slices.user.domain.user_preferences import UserPreferences
+from api.user.db import CredentialsRepository
+from api.user.domain.credentials import CredentialsWriteModel, CredentialsDTO
+from api.user.domain.user_preferences import UserPreferences
 
 
 def test_Credentials():

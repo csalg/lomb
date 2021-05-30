@@ -1,6 +1,6 @@
 from flask import current_app
 
-from slices.texts.domain.repositories import IChunksRepository, ITextfileRepository
+from api.texts.domain.repositories import IChunksRepository, ITextfileRepository
 
 
 class TextManagerService:

@@ -2,8 +2,8 @@ from bson import ObjectId
 
 from config import CHUNKS_COLLECTION, TEXTFILE_COLLECTION, MAXIMUM_EXAMPLES_PER_LEMMA
 from lib.db import MongoWriteRepository
-from slices.texts.domain.entities import PERMISSION_ENUM, PERMISSION_PUBLIC
-from slices.texts.domain.repositories import IChunksRepository, ITextfileRepository
+from api.texts.domain.entities import PERMISSION_ENUM, PERMISSION_PUBLIC
+from api.texts.domain.repositories import IChunksRepository, ITextfileRepository
 
 
 class ChunksRepository(IChunksRepository):

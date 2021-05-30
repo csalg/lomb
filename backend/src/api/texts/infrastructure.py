@@ -4,7 +4,7 @@ import hashlib
 from bs4 import BeautifulSoup
 
 from config import UPLOADS_FOLDER, TRANSLATABLE_EXTENSIONS
-from slices.texts.domain.entities import Chunk, Textfile
+from api.texts.domain.entities import Chunk, Textfile
 
 
 class TextfileFactory:

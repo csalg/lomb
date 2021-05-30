@@ -4,7 +4,7 @@ import numpy as np
 
 from config import TRACKING_LOGS, IGNORED_LEMMAS_SET, LEARNING_LEMMAS_SET
 from lib.db import get_db
-from slices.score_predictions import predict_scores_for_user
+from api.score_predictions import predict_scores_for_user
 
 db = get_db()
 

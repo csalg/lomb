@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from slices.texts.domain.entities import Textfile
+from api.texts.domain.entities import Textfile
 
 
 class ITextfileRepository(ABC):

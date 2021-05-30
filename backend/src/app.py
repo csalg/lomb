@@ -4,21 +4,21 @@ from flask import Flask, jsonify, request, send_from_directory, current_app
 from flask_cors import CORS
 
 from config import LANGUAGE_NAMES
-from slices.texts.controllers_rest_handlers import library_blueprint
-from slices.tracking.rest_api import tracking
-from slices.user.rest_api import user_blueprint
+from api.texts.controllers_rest_handlers import library_blueprint
+from api.tracking.rest_api import tracking
+from api.user.rest_api import user_blueprint
 
-from slices.data_interpretation import (
+from api.data_interpretation import (
                     etl_from_scratch,
                     ensure_datapoints_have_frequency_and_languages,
                     remove_ignored_datapoints
                     )
 
-from slices.revision import (
-                    revise_all_lemmas_endpoint_impl,
-                    drill_from_book_endpoint_impl
+from api.revision import (
+    revise_all_lemmas,
+    drill_from_book_endpoint_impl
                     )
-from slices.stats import stats
+from api.stats import stats
 
 app = Flask(__name__)
 app.register_blueprint(tracking, url_prefix='/tracking')
@@ -72,8 +72,8 @@ def add_frequency_and_support_language_to_datapoints_endpoint():
 
 @app.route('/vocabulary/revise', methods=['POST'])
 @jwt_required
-def revise_all_lemmas_endpoint_route():
-    return revise_all_lemmas_endpoint_impl()
+def revise_all_lemmas_endpoint():
+    return revise_all_lemmas()
 
 @app.route('/slices/remove_ignored_datapoints')
 def remove_ignored_datapoints_endpoint():
