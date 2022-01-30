@@ -34,11 +34,11 @@ def rest_handler():
         return str(e), 422
 
     message, lemmas, source_language, support_language = itemgetter('message', 'lemmas', 'source_language', 'support_language')(content)
-    current_app.logger.info(f"Tracking: {content}")
-    start = int(time.time()*1000)
+    # current_app.logger.info(f"Tracking: {content}")
+    # start = int(time.time()*1000)
 
     controllers.add(user, message, lemmas, source_language, support_language)
-    current_app.logger.info(f'Tracking took {int(time.time()*1000 - start)}')
+    # current_app.logger.info(f'Tracking took {int(time.time()*1000 - start)}')
 
     return 'ok',200
 

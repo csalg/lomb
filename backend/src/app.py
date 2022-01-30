@@ -21,7 +21,7 @@ from api.revision import (
 from api.stats import stats
 
 app = Flask(__name__)
-app.register_blueprint(tracking, url_prefix='/tracking')
+app.register_blueprint(tracking, url_prefix='/trk')
 app.register_blueprint(library_blueprint, url_prefix='/library')
 app.register_blueprint(user_blueprint, url_prefix='/user')
 CORS(app)
