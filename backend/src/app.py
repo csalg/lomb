@@ -16,7 +16,7 @@ from api.data_interpretation import (
 
 from api.revision import (
     revise_all_lemmas,
-    drill_from_book_endpoint_impl
+    drill_from_book
                     )
 from api.stats import stats
 
@@ -46,7 +46,7 @@ def langs():
 def drill_from_book(textfile_id):
     username = get_jwt_identity()['username']
     maximum_por = float(request.args.get('maximum_por'))
-    return drill_from_book_endpoint_impl(username, textfile_id, maximum_por)
+    return drill_from_book(username, textfile_id, maximum_por)
 
 @app.route('/slices/stats')
 @jwt_required

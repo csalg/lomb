@@ -26,7 +26,7 @@ class LemmaAndExamples:
         self.frequency += 1
 
 
-def drill_from_book_endpoint_impl(username, textfile_id, maximum_por):
+def drill_from_book(username, textfile_id, maximum_por):
     chunks = __find_chunks_for_text(textfile_id)
     source_language, support_language = __find_languages_from_chunk(chunks[0])
     ignore_set = __find_ignore_set_for_user(username)
@@ -37,18 +37,16 @@ def drill_from_book_endpoint_impl(username, textfile_id, maximum_por):
 
     result = []
     for lemma in lemmas_and_examples_sorted:
-        elapsed, por = MAX_ELAPSED, 0
+        if len(result) == 200:
+            break
+
         key = f"{source_language}_{lemma.lemma}"
-        if key in probabilities.index:
-            por = probabilities.loc[key, 'score_pred']
-        por = 0 if math.isnan(por) else por
+        por = math.isnan(probabilities.loc[key, 'score_pred']) if key in probabilities.index else 0
 
         if maximum_por < por:
             continue
         result.append({'lemma': lemma.lemma, 'examples': lemma.examples, 'frequency': lemma.frequency,
                        'probability_of_recall': por})
-        if len(result) == 200:
-            break
 
     return {
         'source_language': source_language,

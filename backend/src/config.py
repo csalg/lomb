@@ -29,7 +29,7 @@ UPLOADS_FOLDER = '/uploads'
 SMART_FETCH_BATCH_SIZE = 20
 
 # Memory tracing algorithm parameters
-EMA_SMOOTHING_COEFFICIENT = 0.5
+EMA_SMOOTHING_COEFFICIENT = 0.9
 TIME_WINDOW = 24*60*60
 
 # Max time elapsed: elapsed values which are
