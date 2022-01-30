@@ -200,7 +200,6 @@ def __remove_unnecessary_features(features):
     keys = copy(list(features.keys()))
     for key in keys:
         if ('last_seen' in key) \
-                # or ('timestamp' in key)\
                 or ('__previous' in key)\
                 or ('FIRST_EXPOSURE_timestamp' == key):
             features.pop(key)
