@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from enforce_typing import enforce_types
 from typing import List, Iterable
 
-from flask import request
+from flask import request, current_app
 from flask_jwt_extended import get_jwt_identity
 
 from db.collections import user_preferences_collection, examples_cache, ignored_set
