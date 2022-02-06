@@ -43,7 +43,7 @@ def langs():
 
 @app.route('/slices/drill_book/<textfile_id>')
 @jwt_required
-def drill_from_book(textfile_id):
+def drill_from_book_endpoint(textfile_id):
     username = get_jwt_identity()['username']
     maximum_por = float(request.args.get('maximum_por'))
     return drill_from_book(username, textfile_id, maximum_por)
