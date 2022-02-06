@@ -14,7 +14,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 MU_MAX = 10e10
 MU_MIN = 10e-10
 
-SLICE_FOLDER = 'src/slices/score_predictions'
+SLICE_FOLDER = 'src/api/score_predictions'
 
 class MTR:
     def __init__(self):
