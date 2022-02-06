@@ -20,7 +20,7 @@ export const UPDATE_TEXT_DIFFICULTIES = LIBRARY_ADMIN + '/update_text_difficulty
 export const VOCABULARY = API_URL + "/vocabulary"
 export const REVISE_URL = VOCABULARY + '/revise'
 
-export const INTERACTION_TRACKING_URL = API_URL+ '/tracking/'
+export const INTERACTION_TRACKING_URL = API_URL+ '/trk/'
 export const DELETE_URL = INTERACTION_TRACKING_URL + 'delete_word'
 
 export const BOOK_DRILL_URL = textfileId => API_URL + "/slices/drill_book/" + textfileId

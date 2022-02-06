@@ -65,6 +65,7 @@ def delete():
         username = get_jwt_identity()['username']
         lemma = request.json['lemma']
         language = request.json['source_language']
+        controllers.add(username, "WORD_WAS_IGNORED", [lemma], language, "")
         StopLearningLemmaEvent(username, lemma, language).dispatch()
         return f'Deleted {lemma}', 200
     except Exception as e:
