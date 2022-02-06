@@ -41,10 +41,14 @@ def drill_from_book(username, textfile_id, maximum_por):
             break
 
         key = f"{source_language}_{lemma.lemma}"
-        por = math.isnan(probabilities.loc[key, 'score_pred']) if key in probabilities.index else 0
-
+        por = 0
+        if key in probabilities.index:
+            por = probabilities.loc[key, 'score_pred']
+        if math.isnan(por):
+            por = 1
         if maximum_por < por:
             continue
+        
         result.append({'lemma': lemma.lemma, 'examples': lemma.examples, 'frequency': lemma.frequency,
                        'probability_of_recall': por})
 

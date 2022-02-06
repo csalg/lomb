@@ -144,7 +144,7 @@ class Lemma extends React.Component {
                 >
                     <td>{lemma_}</td>
                     <td>{frequency}</td>
-                    <td>{probability.toFixed(3)}</td>
+                    <td>{(probability || 0.0).toFixed(3)}</td>
                     <td>
                         <Tooltip title={`Remove ${lemma_} from my revision items`}>
                             <a onClick={_ => {
