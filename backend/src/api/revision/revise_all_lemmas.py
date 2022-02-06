@@ -41,10 +41,12 @@ def revise_all_lemmas():
         maximum_days_elapsed = request.json['maximum_days_elapsed'],
         fetch_amount = request.json['fetch_amount'],
     )
+    print('[revise_all_lemmas]', query)
     user: User = user_preferences_collection.find_one({'_id': query.username})
     __assert_valid_user(query, user)
     source_language, support_language = user['learning_languages'][0], user['known_languages'][0]
     probabilities = __process_query(query)
+    print('[revise_all_lemmas]', len(probabilities))
     result = __make_revision_items(probabilities, source_language, support_language, query.username)
     payload = JSONEncoder().encode(list(result))
     return payload, 200
