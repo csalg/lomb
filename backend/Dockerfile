@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.9.1
 
 RUN mkdir /app
 COPY requirements.txt /tmp

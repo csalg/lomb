@@ -19,7 +19,8 @@ export default class extends React.Component {
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         if (this.state.currentLemma !== nextState.currentLemma) {
             console.log(nextState)
-            const {sourceLanguage, supportLanguage, currentLemma } = nextState
+            const {sourceLanguage, currentLemma } = nextState
+            const supportLanguage = nextState.supportLanguage || 'en'
             if (USE_LINGUEE_SERVICES && sourceLanguage && supportLanguage && currentLemma) {
                 console.log(sourceLanguage,supportLanguage,currentLemma)
                 this.__updateDefinition(sourceLanguage, supportLanguage, currentLemma)
