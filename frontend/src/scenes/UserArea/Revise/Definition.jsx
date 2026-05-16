@@ -1,6 +1,6 @@
 import React from 'react'
-import {LANGUAGE_NAMES} from "../../../services/languages";
-import {USE_LINGUEE_SERVICES} from "../../../config";
+import { LANGUAGE_NAMES } from "../../../services/languages";
+import { USE_LINGUEE_SERVICES } from "../../../config";
 import './Definition.css';
 
 export default class extends React.Component {
@@ -19,10 +19,10 @@ export default class extends React.Component {
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         if (this.state.currentLemma !== nextState.currentLemma) {
             console.log(nextState)
-            const {sourceLanguage, currentLemma } = nextState
+            const { sourceLanguage, currentLemma } = nextState
             const supportLanguage = nextState.supportLanguage || 'en'
             if (USE_LINGUEE_SERVICES && sourceLanguage && supportLanguage && currentLemma) {
-                console.log(sourceLanguage,supportLanguage,currentLemma)
+                console.log(sourceLanguage, supportLanguage, currentLemma)
                 this.__updateDefinition(sourceLanguage, supportLanguage, currentLemma)
                 return true
             }
@@ -30,10 +30,10 @@ export default class extends React.Component {
         return false
     }
 
-    __updateDefinition(sourceLanguage, supportLanguage, newLemma){
-        let el  = document.body.querySelector('#revisionDefinition')
+    __updateDefinition(sourceLanguage, supportLanguage, newLemma) {
+        let el = document.body.querySelector('#revisionDefinition')
         let url = this.__makeDictionaryUrl(sourceLanguage, supportLanguage, newLemma)
-        changeFrameSrcWithoutAffectingBrowserHistory(el,url)
+        changeFrameSrcWithoutAffectingBrowserHistory(el, url)
     }
 
     __makeDictionaryUrl(sourceLanguage_, supportLanguage_, currentLemma) {
@@ -52,13 +52,13 @@ export default class extends React.Component {
 
     componentDidMount() {
         document.body.addEventListener('wordWasClicked', e => {
-                this.setState({...e.detail()})
-            }
+            this.setState({ ...e.detail() })
+        }
         )
     }
 
     render() {
-        return <iframe title='revisionDefinition' id='revisionDefinition'/>
+        return <iframe title='revisionDefinition' id='revisionDefinition' />
     }
 }
 
